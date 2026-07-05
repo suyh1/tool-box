@@ -18,6 +18,7 @@ describe('tool registry', () => {
     expect(getToolById('json-type')?.title).toBe('JSON 转类型')
     expect(getToolById('yaml-json')?.title).toBe('YAML / JSON 转换')
     expect(getToolById('cron')?.title).toBe('Cron 表达式解析')
+    expect(getToolById('csv-json')?.title).toBe('CSV / JSON 转换')
     expect(getToolById('curl')?.title).toBe('cURL 转代码')
     expect(getToolById('sql')?.title).toBe('SQL 格式化')
     expect(getToolById('toml')?.title).toBe('TOML 格式化 / JSON 转换')
@@ -146,6 +147,17 @@ describe('tool registry', () => {
       group: 'Config',
       aliases: expect.arrayContaining(['ini converter', 'properties converter']),
       order: 90,
+      status: 'active',
+    })
+  })
+
+  it('registers CSV JSON conversion in the CSV formatting group', () => {
+    expect(getToolById('csv-json')).toMatchObject({
+      path: '/tools/csv-json',
+      category: 'format',
+      group: 'CSV',
+      aliases: expect.arrayContaining(['csv to json', 'json to csv']),
+      order: 100,
       status: 'active',
     })
   })
