@@ -80,7 +80,7 @@ function isFavorite(toolId: string) {
     </header>
 
     <main class="mx-auto grid max-w-7xl gap-5 px-4 py-5 md:grid-cols-[17rem_minmax(0,1fr)] md:px-6 lg:py-7">
-      <aside class="self-start rounded-lg border border-border/80 bg-card/72 p-3">
+      <aside class="self-start overflow-hidden rounded-lg border border-border/80 bg-card/72 p-3">
         <div class="mb-3 flex items-center justify-between gap-3">
           <div class="min-w-0">
             <p class="truncate text-sm font-medium text-foreground">Tools</p>
@@ -92,11 +92,11 @@ function isFavorite(toolId: string) {
           </Badge>
         </div>
 
-        <nav class="grid gap-1">
+        <nav class="flex gap-1 overflow-x-auto pb-1 md:grid md:overflow-visible md:pb-0">
           <div
             v-for="tool in tools"
             :key="tool.id"
-            class="group grid grid-cols-[1fr_2rem] items-center gap-1 rounded-md"
+            class="group grid w-52 shrink-0 grid-cols-[1fr_2rem] items-center gap-1 rounded-md md:w-auto"
           >
             <RouterLink
               :to="tool.path"
