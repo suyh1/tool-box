@@ -11,7 +11,7 @@ export const tools: ToolDefinition[] = [
     category: 'format',
     keywords: ['json', 'formatter', 'validator', 'minify'],
     status: 'active',
-    component: comingSoon,
+    component: () => import('./json/JsonTool.vue'),
   },
   {
     id: 'base64',
