@@ -10,6 +10,10 @@ describe('tool registry', () => {
   it('looks up tools by id', () => {
     expect(getToolById('json')?.title).toBe('JSON 格式化')
     expect(getToolById('json-type')?.title).toBe('JSON 转类型')
+    expect(getToolById('yaml-json')?.title).toBe('YAML / JSON 转换')
+    expect(getToolById('cron')?.title).toBe('Cron 表达式解析')
+    expect(getToolById('curl')?.title).toBe('cURL 转代码')
+    expect(getToolById('sql')?.title).toBe('SQL 格式化')
     expect(getToolById('missing')).toBeUndefined()
   })
 
