@@ -9,6 +9,7 @@ describe('tool registry', () => {
 
   it('looks up tools by id', () => {
     expect(getToolById('json')?.title).toBe('JSON 格式化')
+    expect(getToolById('ini-properties')?.title).toBe('INI / Properties 转换')
     expect(getToolById('json-organize')?.title).toBe('JSON 排序 / 去重')
     expect(getToolById('json-patch')?.title).toBe('JSON Patch / Merge Patch')
     expect(getToolById('json-schema-generate')?.title).toBe('JSON Schema 生成器')
@@ -134,6 +135,17 @@ describe('tool registry', () => {
       group: 'Config',
       aliases: expect.arrayContaining(['toml formatter', 'toml to json']),
       order: 80,
+      status: 'active',
+    })
+  })
+
+  it('registers INI properties conversion in the config formatting group', () => {
+    expect(getToolById('ini-properties')).toMatchObject({
+      path: '/tools/ini-properties',
+      category: 'format',
+      group: 'Config',
+      aliases: expect.arrayContaining(['ini converter', 'properties converter']),
+      order: 90,
       status: 'active',
     })
   })
