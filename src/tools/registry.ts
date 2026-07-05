@@ -40,8 +40,8 @@ export const tools: ToolDefinition[] = [
     path: '/tools/timestamp',
     category: 'time',
     keywords: ['time', 'timestamp', 'unix', 'date'],
-    status: 'planned',
-    component: comingSoon,
+    status: 'active',
+    component: () => import('./timestamp/TimestampTool.vue'),
   },
   {
     id: 'jwt',
@@ -50,8 +50,8 @@ export const tools: ToolDefinition[] = [
     path: '/tools/jwt',
     category: 'security',
     keywords: ['jwt', 'token', 'decode', 'header', 'payload'],
-    status: 'planned',
-    component: comingSoon,
+    status: 'active',
+    component: () => import('./jwt/JwtTool.vue'),
   },
   {
     id: 'hash',
