@@ -9,6 +9,7 @@ describe('tool registry', () => {
 
   it('looks up tools by id', () => {
     expect(getToolById('json')?.title).toBe('JSON 格式化')
+    expect(getToolById('json-organize')?.title).toBe('JSON 排序 / 去重')
     expect(getToolById('json-type')?.title).toBe('JSON 转类型')
     expect(getToolById('yaml-json')?.title).toBe('YAML / JSON 转换')
     expect(getToolById('cron')?.title).toBe('Cron 表达式解析')
@@ -28,5 +29,16 @@ describe('tool registry', () => {
       expect(tool.order, `${tool.id} order`).toEqual(expect.any(Number))
       expect(tool.keywords.length, `${tool.id} keywords`).toBeGreaterThan(0)
     }
+  })
+
+  it('registers JSON organize in the JSON / YAML formatting group', () => {
+    expect(getToolById('json-organize')).toMatchObject({
+      path: '/tools/json-organize',
+      category: 'format',
+      group: 'JSON / YAML',
+      aliases: expect.arrayContaining(['json sort', 'json dedupe', 'json path']),
+      order: 15,
+      status: 'active',
+    })
   })
 })
