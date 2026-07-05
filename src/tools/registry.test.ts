@@ -12,8 +12,10 @@ describe('tool registry', () => {
     expect(getToolById('missing')).toBeUndefined()
   })
 
-  it('marks json as an active tool and the rest as planned at this stage', () => {
+  it('marks completed tools as active and the rest as planned at this stage', () => {
     expect(getToolById('json')?.status).toBe('active')
-    expect(tools.filter((tool) => tool.status === 'planned')).toHaveLength(9)
+    expect(getToolById('base64')?.status).toBe('active')
+    expect(getToolById('url')?.status).toBe('active')
+    expect(tools.filter((tool) => tool.status === 'planned')).toHaveLength(7)
   })
 })

@@ -20,8 +20,8 @@ export const tools: ToolDefinition[] = [
     path: '/tools/base64',
     category: 'encode',
     keywords: ['base64', 'encode', 'decode'],
-    status: 'planned',
-    component: comingSoon,
+    status: 'active',
+    component: () => import('./base64/Base64Tool.vue'),
   },
   {
     id: 'url',
@@ -30,8 +30,8 @@ export const tools: ToolDefinition[] = [
     path: '/tools/url',
     category: 'encode',
     keywords: ['url', 'uri', 'encode', 'decode'],
-    status: 'planned',
-    component: comingSoon,
+    status: 'active',
+    component: () => import('./url/UrlTool.vue'),
   },
   {
     id: 'timestamp',
