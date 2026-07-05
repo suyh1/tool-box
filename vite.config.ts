@@ -1,11 +1,28 @@
 import path from 'node:path'
 import tailwindcss from '@tailwindcss/vite'
 import vue from '@vitejs/plugin-vue'
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   base: './',
+  test: {
+    environment: 'jsdom',
+  },
+  build: {
+    rollupOptions: {
+      onwarn(warning, warn) {
+        if (
+          warning.code === 'INVALID_ANNOTATION' &&
+          warning.id?.includes('@vueuse/core')
+        ) {
+          return
+        }
+
+        warn(warning)
+      },
+    },
+  },
   plugins: [
     vue(),
     tailwindcss(),
