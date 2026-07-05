@@ -20,6 +20,7 @@ describe('tool registry', () => {
     expect(getToolById('curl')?.title).toBe('cURL 转代码')
     expect(getToolById('sql')?.title).toBe('SQL 格式化')
     expect(getToolById('xml')?.title).toBe('XML 格式化')
+    expect(getToolById('xml-json')?.title).toBe('XML / JSON 转换')
     expect(getToolById('missing')).toBeUndefined()
   })
 
@@ -98,6 +99,17 @@ describe('tool registry', () => {
       group: 'XML',
       aliases: expect.arrayContaining(['xml formatter', 'xml validator']),
       order: 50,
+      status: 'active',
+    })
+  })
+
+  it('registers XML JSON conversion in the XML formatting group', () => {
+    expect(getToolById('xml-json')).toMatchObject({
+      path: '/tools/xml-json',
+      category: 'format',
+      group: 'XML',
+      aliases: expect.arrayContaining(['xml to json', 'json to xml']),
+      order: 60,
       status: 'active',
     })
   })
