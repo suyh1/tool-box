@@ -19,7 +19,11 @@ export interface ToolDefinition {
   description: string
   path: string
   category: ToolCategory
+  group?: string
   keywords: string[]
+  aliases?: string[]
+  featured?: boolean
+  order?: number
   status: ToolStatus
   component: ToolComponentLoader
 }

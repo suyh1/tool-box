@@ -21,4 +21,12 @@ describe('tool registry', () => {
     expect(tools.every((tool) => tool.status === 'active')).toBe(true)
     expect(tools.filter((tool) => tool.status === 'planned')).toHaveLength(0)
   })
+
+  it('includes catalog metadata for directory browsing', () => {
+    for (const tool of tools) {
+      expect(tool.group, `${tool.id} group`).toBeTruthy()
+      expect(tool.order, `${tool.id} order`).toEqual(expect.any(Number))
+      expect(tool.keywords.length, `${tool.id} keywords`).toBeGreaterThan(0)
+    }
+  })
 })

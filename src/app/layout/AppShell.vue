@@ -36,6 +36,12 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
+import {
+  categoryCodes,
+  categoryLabels,
+  categoryOrder,
+  isToolCategory,
+} from '@/tools/catalog'
 import { getToolById, getToolByPath, tools } from '@/tools/registry'
 import { usePreferencesStore } from '@/stores/preferences'
 import { useToolsStore } from '@/stores/tools'
@@ -53,7 +59,12 @@ const commandFilter = ref<'all' | 'recent' | 'favorites' | ToolCategory>('all')
 let motionMedia: gsap.MatchMedia | null = null
 let routeTween: ReturnType<typeof gsap.fromTo> | null = null
 
-const currentTool = computed(() => getToolByPath(route.path) ?? tools[0])
+const currentTool = computed(() => getToolByPath(route.path))
+const currentCategory = computed(() => {
+  const value = String(route.params.category ?? '')
+  return isToolCategory(value) ? value : null
+})
+const isDirectoryRoute = computed(() => route.path === '/tools')
 const themeIcon = computed(() => preferences.effectiveTheme === 'dark' ? SunMedium : Moon)
 const themeLabel = computed(() => preferences.effectiveTheme === 'dark' ? '切换到亮色' : '切换到深色')
 const favoriteCount = computed(() => toolsStore.favoriteIds.length)
@@ -62,28 +73,6 @@ const recentTools = computed(() => toolsStore.recentIds
   .map((toolId) => getToolById(toolId))
   .filter((tool): tool is NonNullable<typeof tool> => Boolean(tool))
   .slice(0, 3))
-
-const categoryLabels: Record<ToolCategory, string> = {
-  format: '格式化',
-  encode: '编码',
-  time: '时间',
-  security: '安全',
-  generate: '生成',
-  code: '代码',
-  text: '文本',
-}
-
-const categoryOrder: ToolCategory[] = ['format', 'encode', 'time', 'security', 'generate', 'code', 'text']
-
-const categoryCodes: Record<ToolCategory, string> = {
-  format: 'FMT',
-  encode: 'ENC',
-  time: 'CLK',
-  security: 'SEC',
-  generate: 'GEN',
-  code: 'COD',
-  text: 'TXT',
-}
 
 const toolIconMap: Record<string, Component> = {
   json: FileJson2,
@@ -107,6 +96,50 @@ const categoryCounts = computed(() => tools.reduce((counts, tool) => {
   counts[tool.category] = (counts[tool.category] ?? 0) + 1
   return counts
 }, {} as Record<ToolCategory, number>))
+
+const pageTitle = computed(() => {
+  if (currentTool.value) {
+    return currentTool.value.title
+  }
+
+  if (currentCategory.value) {
+    return `${categoryLabels[currentCategory.value]}工具`
+  }
+
+  return '工具目录'
+})
+
+const pageDescription = computed(() => {
+  if (currentTool.value) {
+    return currentTool.value.description
+  }
+
+  if (currentCategory.value) {
+    return `浏览 ${categoryLabels[currentCategory.value]} 分类下的全部工具，按功能组整理。`
+  }
+
+  return '从目录、分类、最近使用和收藏中找到工具；命令面板继续支持快速跳转。'
+})
+
+const pageCategoryLabel = computed(() => {
+  if (currentTool.value) {
+    return categoryLabels[currentTool.value.category]
+  }
+
+  if (currentCategory.value) {
+    return categoryLabels[currentCategory.value]
+  }
+
+  return '目录'
+})
+
+const pageIcon = computed(() => {
+  if (currentTool.value) {
+    return getToolIcon(currentTool.value.id)
+  }
+
+  return TerminalSquare
+})
 
 const commandFilterLabel = computed(() => {
   if (commandFilter.value === 'all') {
@@ -168,13 +201,19 @@ const commandTools = computed(() => {
   return tools.filter((tool) => tool.category === commandFilter.value)
 })
 
-const statusLabel = computed(() => currentTool.value.status === 'active' ? '本地可用' : '规划中')
-const statusIcon = computed(() => currentTool.value.status === 'active' ? CheckCircle2 : WandSparkles)
+const statusLabel = computed(() => currentTool.value
+  ? currentTool.value.status === 'active' ? '本地可用' : '规划中'
+  : '工具目录')
+const statusIcon = computed(() => currentTool.value
+  ? currentTool.value.status === 'active' ? CheckCircle2 : WandSparkles
+  : CommandIcon)
 
 watch(
   currentTool,
   (tool) => {
-    toolsStore.recordRecent(tool.id)
+    if (tool) {
+      toolsStore.recordRecent(tool.id)
+    }
   },
   { immediate: true },
 )
@@ -209,10 +248,6 @@ function getToolIcon(toolId: string) {
 
 function toggleTheme() {
   preferences.setTheme(preferences.effectiveTheme === 'dark' ? 'light' : 'dark')
-}
-
-function isFavorite(toolId: string) {
-  return toolsStore.favoriteIds.includes(toolId)
 }
 
 function navigateToTool(path: string) {
@@ -282,7 +317,7 @@ onUnmounted(() => {
   <div ref="shellRoot" class="toolbox-shell min-h-[100dvh] bg-background text-foreground">
     <header class="shell-reveal sticky top-3 z-30 px-3 md:top-4 md:px-5">
       <div class="mx-auto flex h-16 max-w-[1500px] items-center justify-between gap-3 rounded-lg border border-border/70 bg-card/82 px-3 shadow-[0_18px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl md:px-4">
-        <RouterLink to="/tools/json" class="group flex min-w-0 items-center gap-3">
+        <RouterLink to="/tools" class="group flex min-w-0 items-center gap-3">
           <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-primary/35 bg-primary/14 text-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition-colors group-hover:bg-primary/20">
             <TerminalSquare class="h-5 w-5" />
           </span>
@@ -369,49 +404,84 @@ onUnmounted(() => {
           </div>
         </div>
 
-        <nav aria-label="工具导航" class="flex gap-2 overflow-x-auto pb-1 md:grid md:overflow-visible md:pb-0">
-          <div
-            v-for="tool in tools"
-            :key="tool.id"
-            class="tool-row group grid w-60 shrink-0 grid-cols-[1fr_2rem] items-center gap-1 rounded-md md:w-auto"
-          >
+        <nav aria-label="工具导航" class="grid gap-4">
+          <div class="grid gap-1">
             <RouterLink
-              :to="tool.path"
-              class="min-w-0 rounded-md px-3 py-2.5 transition-all"
+              to="/tools"
+              class="tool-row grid min-w-0 grid-cols-[1.5rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-3 py-2.5 transition-all"
               :class="[
-                route.path === tool.path
+                isDirectoryRoute
                   ? 'bg-primary/14 text-foreground ring-1 ring-primary/30'
                   : 'text-muted-foreground hover:bg-secondary/80 hover:text-foreground',
               ]"
             >
-              <span class="grid min-w-0 grid-cols-[1.5rem_minmax(0,1fr)] items-center gap-2">
-                <span
-                  class="flex h-6 w-6 items-center justify-center rounded border border-border/60 bg-background/45"
-                  :class="route.path === tool.path ? 'text-primary' : 'text-muted-foreground'"
-                >
-                  <component :is="getToolIcon(tool.id)" class="h-3.5 w-3.5" />
-                </span>
-                <span class="min-w-0">
-                  <span class="block truncate text-sm font-medium">{{ tool.title }}</span>
-                  <span class="mt-0.5 block truncate font-mono text-[10px] text-muted-foreground">
-                    {{ categoryCodes[tool.category] }} / {{ categoryCounts[tool.category] }}
-                  </span>
-                </span>
+              <span class="flex h-6 w-6 items-center justify-center rounded border border-border/60 bg-background/45">
+                <TerminalSquare class="h-3.5 w-3.5" />
               </span>
+              <span class="min-w-0">
+                <span class="block truncate text-sm font-medium">工具目录</span>
+                <span class="mt-0.5 block truncate font-mono text-[10px] text-muted-foreground">ALL / {{ activeToolCount }}</span>
+              </span>
+              <Badge variant="secondary">总览</Badge>
             </RouterLink>
-            <Button
-              variant="ghost"
-              size="icon"
-              type="button"
-              :aria-label="`${isFavorite(tool.id) ? '移除' : '添加'} ${tool.title} 收藏`"
-              class="h-8 w-8 text-muted-foreground hover:bg-secondary hover:text-foreground"
-              @click="toolsStore.toggleFavorite(tool.id)"
+
+            <RouterLink
+              to="/tools?view=recent"
+              class="tool-row grid min-w-0 grid-cols-[1.5rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-3 py-2.5 text-muted-foreground transition-all hover:bg-secondary/80 hover:text-foreground"
             >
-              <Star
-                class="h-4 w-4"
-                :class="isFavorite(tool.id) ? 'fill-primary text-primary' : ''"
-              />
-            </Button>
+              <span class="flex h-6 w-6 items-center justify-center rounded border border-border/60 bg-background/45">
+                <Clock3 class="h-3.5 w-3.5" />
+              </span>
+              <span class="min-w-0">
+                <span class="block truncate text-sm font-medium">最近使用</span>
+                <span class="mt-0.5 block truncate font-mono text-[10px] text-muted-foreground">RECENT</span>
+              </span>
+              <Badge variant="outline">{{ recentTools.length }}</Badge>
+            </RouterLink>
+
+            <RouterLink
+              to="/tools?view=favorites"
+              class="tool-row grid min-w-0 grid-cols-[1.5rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-3 py-2.5 text-muted-foreground transition-all hover:bg-secondary/80 hover:text-foreground"
+            >
+              <span class="flex h-6 w-6 items-center justify-center rounded border border-border/60 bg-background/45">
+                <Star class="h-3.5 w-3.5" />
+              </span>
+              <span class="min-w-0">
+                <span class="block truncate text-sm font-medium">收藏工具</span>
+                <span class="mt-0.5 block truncate font-mono text-[10px] text-muted-foreground">FAV</span>
+              </span>
+              <Badge variant="outline">{{ favoriteCount }}</Badge>
+            </RouterLink>
+          </div>
+
+          <div class="grid gap-2">
+            <div class="flex items-center justify-between px-1">
+              <p class="font-mono text-[11px] text-muted-foreground">categories</p>
+              <Badge variant="outline">{{ categoryOrder.length }}</Badge>
+            </div>
+            <RouterLink
+              v-for="category in categoryOrder"
+              :key="category"
+              :to="`/tools/category/${category}`"
+              class="tool-row grid min-w-0 grid-cols-[1.5rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-3 py-2.5 transition-all"
+              :class="[
+                (currentCategory === category || currentTool?.category === category)
+                  ? 'bg-primary/14 text-foreground ring-1 ring-primary/30'
+                  : 'text-muted-foreground hover:bg-secondary/80 hover:text-foreground',
+              ]"
+            >
+              <span class="flex h-6 w-6 items-center justify-center rounded border border-border/60 bg-background/45">
+                <component
+                  :is="category === 'time' ? Clock3 : category === 'security' ? ShieldCheck : category === 'generate' ? Fingerprint : category === 'code' ? Code2 : category === 'text' ? CaseSensitive : category === 'encode' ? Binary : FileJson2"
+                  class="h-3.5 w-3.5"
+                />
+              </span>
+              <span class="min-w-0">
+                <span class="block truncate text-sm font-medium">{{ categoryLabels[category] }}</span>
+                <span class="mt-0.5 block truncate font-mono text-[10px] text-muted-foreground">{{ categoryCodes[category] }}</span>
+              </span>
+              <Badge variant="outline">{{ categoryCounts[category] ?? 0 }}</Badge>
+            </RouterLink>
           </div>
         </nav>
       </aside>
@@ -425,18 +495,18 @@ onUnmounted(() => {
                   <component :is="statusIcon" class="h-3 w-3 text-primary" />
                   {{ statusLabel }}
                 </Badge>
-                <Badge variant="outline">{{ categoryLabels[currentTool.category] }}</Badge>
+                <Badge variant="outline">{{ pageCategoryLabel }}</Badge>
               </div>
               <div class="mt-4 flex min-w-0 items-center gap-3">
                 <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-primary/30 bg-primary/12 text-primary">
-                  <component :is="getToolIcon(currentTool.id)" class="h-6 w-6" />
+                  <component :is="pageIcon" class="h-6 w-6" />
                 </span>
                 <div class="min-w-0">
                   <h1 class="text-balance text-3xl font-semibold leading-tight tracking-tight text-foreground md:text-4xl">
-                    {{ currentTool.title }}
+                    {{ pageTitle }}
                   </h1>
                   <p class="mt-2 max-w-2xl text-pretty text-sm leading-6 text-muted-foreground md:text-base">
-                    {{ currentTool.description }}
+                    {{ pageDescription }}
                   </p>
                 </div>
               </div>
@@ -537,7 +607,7 @@ onUnmounted(() => {
           <CommandItem
             v-for="tool in commandTools"
             :key="tool.id"
-            :value="`${tool.title} ${tool.description} ${categoryLabels[tool.category]} ${tool.keywords.join(' ')}`"
+            :value="`${tool.title} ${tool.description} ${categoryLabels[tool.category]} ${tool.group ?? ''} ${tool.keywords.join(' ')} ${(tool.aliases ?? []).join(' ')}`"
             class="gap-3 rounded-md px-3 py-2.5"
             @select="navigateToTool(tool.path)"
             @click="navigateToTool(tool.path)"
@@ -549,7 +619,7 @@ onUnmounted(() => {
               <span class="block truncate text-sm font-medium">{{ tool.title }}</span>
               <span class="block truncate text-xs text-muted-foreground">{{ tool.description }}</span>
               <span class="sr-only">
-                {{ categoryLabels[tool.category] }} {{ tool.keywords.join(' ') }}
+                {{ categoryLabels[tool.category] }} {{ tool.group }} {{ tool.keywords.join(' ') }} {{ tool.aliases?.join(' ') }}
               </span>
             </span>
             <Badge variant="secondary" class="ml-auto">{{ categoryCodes[tool.category] }}</Badge>
