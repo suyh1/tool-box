@@ -1,7 +1,5 @@
 import type { ToolDefinition } from './types'
 
-const comingSoon = () => import('./_shared/ComingSoonTool.vue')
-
 export const tools: ToolDefinition[] = [
   {
     id: 'json',
@@ -80,8 +78,8 @@ export const tools: ToolDefinition[] = [
     path: '/tools/regex',
     category: 'text',
     keywords: ['regex', 'regexp', 'pattern', 'match'],
-    status: 'planned',
-    component: comingSoon,
+    status: 'active',
+    component: () => import('./regex/RegexTool.vue'),
   },
   {
     id: 'diff',
@@ -90,8 +88,8 @@ export const tools: ToolDefinition[] = [
     path: '/tools/diff',
     category: 'text',
     keywords: ['diff', 'compare', 'text'],
-    status: 'planned',
-    component: comingSoon,
+    status: 'active',
+    component: () => import('./diff/DiffTool.vue'),
   },
   {
     id: 'case',
@@ -100,8 +98,8 @@ export const tools: ToolDefinition[] = [
     path: '/tools/case',
     category: 'text',
     keywords: ['case', 'camel', 'snake', 'kebab', 'pascal'],
-    status: 'planned',
-    component: comingSoon,
+    status: 'active',
+    component: () => import('./case/CaseTool.vue'),
   },
 ]
 

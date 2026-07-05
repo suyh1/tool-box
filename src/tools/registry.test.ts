@@ -12,14 +12,8 @@ describe('tool registry', () => {
     expect(getToolById('missing')).toBeUndefined()
   })
 
-  it('marks completed tools as active and the rest as planned at this stage', () => {
-    expect(getToolById('json')?.status).toBe('active')
-    expect(getToolById('base64')?.status).toBe('active')
-    expect(getToolById('url')?.status).toBe('active')
-    expect(getToolById('timestamp')?.status).toBe('active')
-    expect(getToolById('jwt')?.status).toBe('active')
-    expect(getToolById('hash')?.status).toBe('active')
-    expect(getToolById('uuid')?.status).toBe('active')
-    expect(tools.filter((tool) => tool.status === 'planned')).toHaveLength(3)
+  it('marks all initial tools as active', () => {
+    expect(tools.every((tool) => tool.status === 'active')).toBe(true)
+    expect(tools.filter((tool) => tool.status === 'planned')).toHaveLength(0)
   })
 })
