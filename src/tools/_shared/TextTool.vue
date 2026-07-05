@@ -32,7 +32,7 @@ const props = defineProps<{
 const input = ref('')
 const output = ref('')
 const errorMessage = ref('')
-const meta = ref('Ready')
+const meta = ref('就绪')
 const copied = ref(false)
 
 const canCopy = computed(() => output.value.length > 0)
@@ -49,14 +49,14 @@ function runAction(action: (input: string) => ActionResult) {
   }
 
   output.value = result.value
-  meta.value = result.meta ?? 'Done'
+  meta.value = result.meta ?? '已完成'
 }
 
 function useSample() {
   input.value = props.sample
   output.value = ''
   errorMessage.value = ''
-  meta.value = 'Sample loaded'
+  meta.value = '示例已载入'
   copied.value = false
 }
 
@@ -64,7 +64,7 @@ function clearAll() {
   input.value = ''
   output.value = ''
   errorMessage.value = ''
-  meta.value = 'Ready'
+  meta.value = '就绪'
   copied.value = false
 }
 
@@ -100,16 +100,16 @@ async function copyOutput() {
         </Button>
         <Button type="button" variant="ghost" @click="useSample">
           <RotateCcw class="h-4 w-4" />
-          Sample
+          示例
         </Button>
         <Button type="button" variant="ghost" @click="clearAll">
           <Trash2 class="h-4 w-4" />
-          Clear
+          清空
         </Button>
         <Button type="button" variant="outline" :disabled="!canCopy" @click="copyOutput">
           <Check v-if="copied" class="h-4 w-4" />
           <Clipboard v-else class="h-4 w-4" />
-          Copy output
+          复制输出
         </Button>
       </div>
 
@@ -137,7 +137,7 @@ async function copyOutput() {
           :aria-label="outputAriaLabel"
           readonly
           spellcheck="false"
-          placeholder="Run an action to see output"
+          placeholder="执行操作后查看输出"
           class="min-h-[20rem] resize-y border-border bg-background/70 font-mono text-sm leading-6"
         />
       </label>

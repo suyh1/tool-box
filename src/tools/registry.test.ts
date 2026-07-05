@@ -8,7 +8,7 @@ describe('tool registry', () => {
   })
 
   it('looks up tools by id', () => {
-    expect(getToolById('json')?.title).toBe('JSON Formatter')
+    expect(getToolById('json')?.title).toBe('JSON 格式化')
     expect(getToolById('missing')).toBeUndefined()
   })
 

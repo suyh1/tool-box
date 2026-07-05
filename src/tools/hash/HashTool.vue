@@ -63,18 +63,18 @@ async function copyOutput() {
     <div class="rounded-lg border border-border bg-card p-4 md:p-5">
       <div class="flex flex-wrap items-start justify-between gap-3">
         <div class="min-w-0">
-          <h2 class="text-base font-semibold text-foreground">Hash generator</h2>
+          <h2 class="text-base font-semibold text-foreground">哈希生成</h2>
           <p class="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
-            Generate SHA digests with the browser Web Crypto API.
+            使用浏览器 Web Crypto API 生成 SHA 摘要。
           </p>
         </div>
-        <Badge variant="secondary">{{ isProcessing ? 'Hashing' : algorithm }}</Badge>
+        <Badge variant="secondary">{{ isProcessing ? '计算中' : algorithm }}</Badge>
       </div>
 
       <div class="mt-4 flex flex-wrap gap-2">
         <select
           v-model="algorithm"
-          aria-label="Hash algorithm"
+          aria-label="哈希算法"
           class="h-9 rounded-md border border-border bg-background px-3 text-sm text-foreground"
         >
           <option v-for="item in supportedHashAlgorithms" :key="item" :value="item">
@@ -82,20 +82,20 @@ async function copyOutput() {
           </option>
         </select>
         <Button type="button" :disabled="isProcessing" @click="generateHash">
-          Generate hash
+          生成哈希
         </Button>
         <Button type="button" variant="ghost" @click="useSample">
           <RotateCcw class="h-4 w-4" />
-          Sample
+          示例
         </Button>
         <Button type="button" variant="ghost" @click="clearAll">
           <Trash2 class="h-4 w-4" />
-          Clear
+          清空
         </Button>
         <Button type="button" variant="outline" :disabled="!canCopy" @click="copyOutput">
           <Check v-if="copied" class="h-4 w-4" />
           <Clipboard v-else class="h-4 w-4" />
-          Copy output
+          复制输出
         </Button>
       </div>
 
@@ -106,10 +106,10 @@ async function copyOutput() {
 
     <div class="grid gap-4 lg:grid-cols-2">
       <label class="grid gap-2 rounded-lg border border-border bg-card p-4">
-        <span class="text-sm font-medium text-foreground">Input</span>
+        <span class="text-sm font-medium text-foreground">输入</span>
         <Textarea
           v-model="input"
-          aria-label="Hash input"
+          aria-label="哈希输入"
           spellcheck="false"
           placeholder="hello"
           class="min-h-[20rem] resize-y border-border bg-background/70 font-mono text-sm leading-6"
@@ -117,13 +117,13 @@ async function copyOutput() {
       </label>
 
       <label class="grid gap-2 rounded-lg border border-border bg-card p-4">
-        <span class="text-sm font-medium text-foreground">Digest</span>
+        <span class="text-sm font-medium text-foreground">摘要</span>
         <Textarea
           v-model="output"
-          aria-label="Hash output"
+          aria-label="哈希输出"
           readonly
           spellcheck="false"
-          placeholder="Run Generate hash to see output"
+          placeholder="点击生成哈希后查看输出"
           class="min-h-[20rem] resize-y border-border bg-background/70 font-mono text-sm leading-6"
         />
       </label>

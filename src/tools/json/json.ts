@@ -47,11 +47,11 @@ export function parseJson(input: string): JsonParseResult {
       size: getJsonSize(value),
     }
   } catch (error) {
-    const reason = error instanceof Error ? error.message : 'Unknown parse failure'
+    const reason = error instanceof Error ? error.message : '未知解析错误'
 
     return {
       ok: false,
-      message: `Invalid JSON: ${reason}`,
+      message: `JSON 无效：${reason}`,
     }
   }
 }

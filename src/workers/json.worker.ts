@@ -41,7 +41,7 @@ self.onmessage = (event: MessageEvent<JsonWorkerRequest>) => {
   } catch (error) {
     self.postMessage({
       ok: false,
-      message: error instanceof Error ? error.message : 'JSON processing failed',
+      message: error instanceof Error ? error.message : 'JSON 处理失败',
     } satisfies JsonWorkerResponse)
   }
 }

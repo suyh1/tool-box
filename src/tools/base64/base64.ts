@@ -20,7 +20,7 @@ export function encodeBase64(input: string) {
 export function decodeBase64(input: string): DecodeResult {
   try {
     if (!/^[A-Za-z0-9+/]*={0,2}$/.test(input) || input.length % 4 === 1) {
-      throw new Error('Input is not valid Base64 text')
+      throw new Error('输入不是有效的 Base64 文本')
     }
 
     const binary = atob(input)
@@ -33,7 +33,7 @@ export function decodeBase64(input: string): DecodeResult {
   } catch (error) {
     return {
       ok: false,
-      message: error instanceof Error ? error.message : 'Unable to decode Base64 input',
+      message: error instanceof Error ? error.message : '无法解码 Base64 输入',
     }
   }
 }

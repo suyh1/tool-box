@@ -13,21 +13,20 @@ const tool = computed(() => getToolById(String(route.meta.toolId ?? route.params
     <div class="flex flex-wrap items-start justify-between gap-3">
       <div class="min-w-0">
         <Badge variant="secondary" class="mb-3">
-          Planned tool
+          规划中的工具
         </Badge>
         <h1 class="text-2xl font-semibold tracking-tight text-foreground">
-          {{ tool?.title ?? 'Tool not found' }}
+          {{ tool?.title ?? '未找到工具' }}
         </h1>
         <p class="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-          {{ tool?.description ?? 'This tool is not registered yet.' }}
+          {{ tool?.description ?? '这个工具尚未注册。' }}
         </p>
       </div>
     </div>
 
     <div class="mt-6 rounded-lg border border-dashed border-border bg-secondary/45 p-4">
       <p class="text-sm text-muted-foreground">
-        This slot is reserved in the toolbox registry. The implementation will use the same input, output, copy,
-        sample, clear, and error-state vocabulary as the active tools.
+        这个位置已在工具注册表中预留。后续实现会沿用现有工具的输入、输出、复制、示例、清空和错误状态文案。
       </p>
     </div>
   </section>

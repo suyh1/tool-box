@@ -10,7 +10,7 @@ const sampleToken = [
 
 const actions = [
   {
-    label: 'Decode JWT',
+    label: '解码 JWT',
     run: (input: string) => {
       const result = decodeJwt(input)
 
@@ -18,17 +18,17 @@ const actions = [
         ? {
             ok: true as const,
             value: [
-              'Signature status: not verified',
+              '签名状态：未验证',
               '',
-              'Header',
+              '标头',
               JSON.stringify(result.header, null, 2),
               '',
-              'Payload',
+              '载荷',
               JSON.stringify(result.payload, null, 2),
               '',
-              `Signature: ${result.signature}`,
+              `签名: ${result.signature}`,
             ].join('\n'),
-            meta: 'Decoded, not verified',
+            meta: '已解码，未验证',
           }
         : result
     },
@@ -38,12 +38,12 @@ const actions = [
 
 <template>
   <TextTool
-    title="JWT decoder"
-    description="Decode JWT header and payload locally. This tool does not verify signatures."
+    title="JWT 解码"
+    description="在本地解码 JWT 标头和载荷。此工具不会验证签名。"
     input-label="JWT"
-    output-label="Decoded token"
-    input-aria-label="JWT input"
-    output-aria-label="JWT output"
+    output-label="解码结果"
+    input-aria-label="JWT 输入"
+    output-aria-label="JWT 输出"
     placeholder="header.payload.signature"
     :sample="sampleToken"
     :actions="actions"

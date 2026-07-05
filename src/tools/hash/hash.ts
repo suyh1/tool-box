@@ -24,7 +24,7 @@ export async function digestText(input: string, algorithm: string): Promise<Hash
   if (!isHashAlgorithm(algorithm)) {
     return {
       ok: false,
-      message: `Unsupported hash algorithm: ${algorithm}`,
+      message: `不支持的哈希算法：${algorithm}`,
     }
   }
 
@@ -38,7 +38,7 @@ export async function digestText(input: string, algorithm: string): Promise<Hash
   } catch (error) {
     return {
       ok: false,
-      message: error instanceof Error ? error.message : 'Unable to generate hash',
+      message: error instanceof Error ? error.message : '无法生成哈希',
     }
   }
 }

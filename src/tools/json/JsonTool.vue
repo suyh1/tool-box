@@ -27,22 +27,29 @@ let worker: Worker | null = null
 
 const metadataLabel = computed(() => {
   if (!metadata.value?.ok) {
-    return 'Waiting for valid JSON'
+    return '等待有效 JSON'
   }
 
   const parsed = metadata.value
 
   if (parsed.kind === 'object') {
     const count = parsed.size ?? 0
-    return `Object with ${count} ${count === 1 ? 'key' : 'keys'}`
+    return `对象，${count} 个键`
   }
 
   if (parsed.kind === 'array') {
     const count = parsed.size ?? 0
-    return `Array with ${count} ${count === 1 ? 'item' : 'items'}`
+    return `数组，${count} 个项目`
   }
 
-  return `Valid ${parsed.kind}`
+  const kindLabels: Record<string, string> = {
+    string: '字符串',
+    number: '数字',
+    boolean: '布尔值',
+    null: 'null',
+  }
+
+  return `有效 ${kindLabels[parsed.kind] ?? parsed.kind}`
 })
 
 const canCopy = computed(() => output.value.length > 0)
@@ -68,7 +75,7 @@ function processWithWorker(mode: JsonMode, value: string) {
     }
 
     activeWorker.onerror = () => {
-      reject(new Error('JSON worker failed'))
+      reject(new Error('JSON Worker 处理失败'))
     }
 
     activeWorker.postMessage({ mode, input: value } satisfies JsonWorkerRequest)
@@ -162,10 +169,10 @@ onBeforeUnmount(() => {
         <div class="min-w-0">
           <div class="flex items-center gap-2">
             <FileJson2 class="h-4 w-4 text-primary" />
-            <h2 class="text-base font-semibold text-foreground">JSON workspace</h2>
+            <h2 class="text-base font-semibold text-foreground">JSON 工作区</h2>
           </div>
           <p class="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
-            Format, minify, and validate locally in your browser. Large inputs run off the main thread when workers are available.
+            在浏览器中本地格式化、压缩和校验 JSON。可用 Worker 时，大输入会在主线程之外处理。
           </p>
         </div>
         <Badge variant="secondary">{{ metadataLabel }}</Badge>
@@ -174,26 +181,26 @@ onBeforeUnmount(() => {
       <div class="mt-4 flex flex-wrap gap-2">
         <Button type="button" :disabled="isProcessing" @click="runJson('format')">
           <Sparkles class="h-4 w-4" />
-          Format JSON
+          格式化 JSON
         </Button>
         <Button type="button" variant="secondary" :disabled="isProcessing" @click="runJson('minify')">
-          Minify JSON
+          压缩 JSON
         </Button>
         <Button type="button" variant="outline" :disabled="isProcessing" @click="runJson('validate')">
-          Validate JSON
+          校验 JSON
         </Button>
         <Button type="button" variant="ghost" @click="useSample">
           <RotateCcw class="h-4 w-4" />
-          Sample
+          示例
         </Button>
         <Button type="button" variant="ghost" @click="clearAll">
           <Trash2 class="h-4 w-4" />
-          Clear
+          清空
         </Button>
         <Button type="button" variant="outline" :disabled="!canCopy" @click="copyOutput">
           <Check v-if="copied" class="h-4 w-4" />
           <Clipboard v-else class="h-4 w-4" />
-          Copy output
+          复制输出
         </Button>
       </div>
 
@@ -204,10 +211,10 @@ onBeforeUnmount(() => {
 
     <div class="grid gap-4 lg:grid-cols-2">
       <label class="grid gap-2 rounded-lg border border-border bg-card p-4">
-        <span class="text-sm font-medium text-foreground">Input</span>
+        <span class="text-sm font-medium text-foreground">输入</span>
         <Textarea
           v-model="input"
-          aria-label="JSON input"
+          aria-label="JSON 输入"
           spellcheck="false"
           placeholder='{"name":"Toolbox"}'
           class="min-h-[22rem] resize-y border-border bg-background/70 font-mono text-sm leading-6"
@@ -215,13 +222,13 @@ onBeforeUnmount(() => {
       </label>
 
       <label class="grid gap-2 rounded-lg border border-border bg-card p-4">
-        <span class="text-sm font-medium text-foreground">Output</span>
+        <span class="text-sm font-medium text-foreground">输出</span>
         <Textarea
           v-model="output"
-          aria-label="JSON output"
+          aria-label="JSON 输出"
           readonly
           spellcheck="false"
-          placeholder="Run a JSON action to see output"
+          placeholder="执行 JSON 操作后查看输出"
           class="min-h-[22rem] resize-y border-border bg-background/70 font-mono text-sm leading-6"
         />
       </label>

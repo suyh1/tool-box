@@ -12,7 +12,7 @@ function resultFromMilliseconds(milliseconds: number): TimestampResult {
   if (!Number.isFinite(milliseconds)) {
     return {
       ok: false,
-      message: 'Invalid timestamp',
+      message: '时间戳无效',
     }
   }
 
@@ -21,7 +21,7 @@ function resultFromMilliseconds(milliseconds: number): TimestampResult {
   if (Number.isNaN(date.getTime())) {
     return {
       ok: false,
-      message: 'Invalid timestamp',
+      message: '时间戳无效',
     }
   }
 
@@ -40,7 +40,7 @@ export function unixToIso(input: string, unit: 'seconds' | 'milliseconds'): Time
   if (!normalized || !Number.isFinite(value)) {
     return {
       ok: false,
-      message: 'Enter a Unix timestamp',
+      message: '请输入 Unix 时间戳',
     }
   }
 
@@ -54,7 +54,7 @@ export function dateToUnix(input: string): TimestampResult {
   if (Number.isNaN(milliseconds)) {
     return {
       ok: false,
-      message: 'Enter a valid date string',
+      message: '请输入有效的日期字符串',
     }
   }
 

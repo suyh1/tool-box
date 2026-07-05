@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button'
 import { getToolByPath, tools } from '@/tools/registry'
 import { usePreferencesStore } from '@/stores/preferences'
 import { useToolsStore } from '@/stores/tools'
+import type { ToolCategory } from '@/tools/types'
 
 const route = useRoute()
 const preferences = usePreferencesStore()
@@ -23,6 +24,14 @@ const toolsStore = useToolsStore()
 const currentTool = computed(() => getToolByPath(route.path) ?? tools[0])
 const themeIcon = computed(() => preferences.effectiveTheme === 'dark' ? SunMedium : Moon)
 const favoriteCount = computed(() => toolsStore.favoriteIds.length)
+const categoryLabels: Record<ToolCategory, string> = {
+  format: '格式化',
+  encode: '编码',
+  time: '时间',
+  security: '安全',
+  generate: '生成',
+  text: '文本',
+}
 
 watch(
   currentTool,
@@ -50,8 +59,8 @@ function isFavorite(toolId: string) {
             <TerminalSquare class="h-4 w-4" />
           </span>
           <span class="min-w-0">
-            <span class="block truncate text-sm font-semibold tracking-wide">Developer Toolbox</span>
-            <span class="block truncate text-xs text-muted-foreground">LAN-ready local utilities</span>
+            <span class="block truncate text-sm font-semibold tracking-wide">开发者工具箱</span>
+            <span class="block truncate text-xs text-muted-foreground">局域网可用的本地工具</span>
           </span>
         </RouterLink>
 
@@ -60,7 +69,7 @@ function isFavorite(toolId: string) {
             variant="outline"
             size="icon"
             type="button"
-            aria-label="Search tools"
+            aria-label="搜索工具"
             class="h-9 w-9 border-border/90 bg-card/70 text-muted-foreground hover:bg-secondary hover:text-foreground"
           >
             <Search class="h-4 w-4" />
@@ -69,7 +78,7 @@ function isFavorite(toolId: string) {
             variant="outline"
             size="icon"
             type="button"
-            aria-label="Toggle theme"
+            aria-label="切换主题"
             class="h-9 w-9 border-border/90 bg-card/70 text-muted-foreground hover:bg-secondary hover:text-foreground"
             @click="toggleTheme"
           >
@@ -83,12 +92,12 @@ function isFavorite(toolId: string) {
       <aside class="self-start overflow-hidden rounded-lg border border-border/80 bg-card/72 p-3">
         <div class="mb-3 flex items-center justify-between gap-3">
           <div class="min-w-0">
-            <p class="truncate text-sm font-medium text-foreground">Tools</p>
-            <p class="truncate text-xs text-muted-foreground">{{ favoriteCount }} favorites</p>
+            <p class="truncate text-sm font-medium text-foreground">工具</p>
+            <p class="truncate text-xs text-muted-foreground">{{ favoriteCount }} 个收藏</p>
           </div>
           <Badge variant="secondary" class="h-6 gap-1">
             <CircleDot class="h-3 w-3 text-primary" />
-            Offline
+            离线
           </Badge>
         </div>
 
@@ -117,7 +126,7 @@ function isFavorite(toolId: string) {
               variant="ghost"
               size="icon"
               type="button"
-              :aria-label="`${isFavorite(tool.id) ? 'Remove' : 'Add'} ${tool.title} favorite`"
+              :aria-label="`${isFavorite(tool.id) ? '移除' : '添加'} ${tool.title}收藏`"
               class="h-8 w-8 text-muted-foreground hover:bg-secondary hover:text-foreground"
               @click="toolsStore.toggleFavorite(tool.id)"
             >
@@ -133,13 +142,13 @@ function isFavorite(toolId: string) {
       <section class="min-w-0">
         <div class="mb-5 flex flex-wrap items-end justify-between gap-3">
           <div class="min-w-0">
-            <p class="text-sm text-muted-foreground">{{ currentTool.category }} / browser-only</p>
+            <p class="text-sm text-muted-foreground">{{ categoryLabels[currentTool.category] }} / 仅浏览器</p>
             <h1 class="mt-1 truncate text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
               {{ currentTool.title }}
             </h1>
           </div>
           <Badge :variant="currentTool.status === 'active' ? 'default' : 'secondary'">
-            {{ currentTool.status === 'active' ? 'Active' : 'Planned' }}
+            {{ currentTool.status === 'active' ? '可用' : '规划中' }}
           </Badge>
         </div>
 

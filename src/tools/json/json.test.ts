@@ -22,7 +22,7 @@ describe('json utilities', () => {
   it('returns a concise error for invalid JSON', () => {
     expect(parseJson('{"name":}')).toMatchObject({
       ok: false,
-      message: expect.stringContaining('Invalid JSON'),
+      message: expect.stringContaining('JSON 无效'),
     })
   })
 })

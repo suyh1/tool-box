@@ -11,7 +11,7 @@ export type JwtDecodeResult = {
 
 function decodeBase64Url(part: string) {
   if (!/^[A-Za-z0-9_-]+$/.test(part)) {
-    throw new Error('Invalid Base64URL segment')
+    throw new Error('Base64URL 片段无效')
   }
 
   const padded = part.replace(/-/g, '+').replace(/_/g, '/').padEnd(Math.ceil(part.length / 4) * 4, '=')
@@ -31,7 +31,7 @@ export function decodeJwt(token: string): JwtDecodeResult {
   if (parts.length !== 3 || parts.some((part) => !part)) {
     return {
       ok: false,
-      message: 'JWT must contain header, payload, and signature segments',
+      message: 'JWT 必须包含标头、载荷和签名片段',
     }
   }
 
@@ -46,7 +46,7 @@ export function decodeJwt(token: string): JwtDecodeResult {
   } catch (error) {
     return {
       ok: false,
-      message: error instanceof Error ? error.message : 'Unable to decode JWT',
+      message: error instanceof Error ? error.message : '无法解码 JWT',
     }
   }
 }

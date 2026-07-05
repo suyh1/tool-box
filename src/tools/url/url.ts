@@ -19,7 +19,7 @@ export function decodeUrlComponent(input: string): DecodeResult {
   } catch (error) {
     return {
       ok: false,
-      message: error instanceof Error ? error.message : 'Unable to decode URL component',
+      message: 'URL 组件解码失败',
     }
   }
 }
