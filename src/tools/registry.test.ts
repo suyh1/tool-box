@@ -10,6 +10,7 @@ describe('tool registry', () => {
   it('looks up tools by id', () => {
     expect(getToolById('json')?.title).toBe('JSON 格式化')
     expect(getToolById('json-organize')?.title).toBe('JSON 排序 / 去重')
+    expect(getToolById('json-schema-generate')?.title).toBe('JSON Schema 生成器')
     expect(getToolById('json-schema-validate')?.title).toBe('JSON Schema 校验')
     expect(getToolById('jsonpath')?.title).toBe('JSONPath 查询器')
     expect(getToolById('json-type')?.title).toBe('JSON 转类型')
@@ -61,6 +62,17 @@ describe('tool registry', () => {
       category: 'format',
       group: 'Schema',
       aliases: expect.arrayContaining(['json schema validator', 'schema validation']),
+      order: 40,
+      status: 'active',
+    })
+  })
+
+  it('registers JSON Schema generation in the schema code group', () => {
+    expect(getToolById('json-schema-generate')).toMatchObject({
+      path: '/tools/json-schema-generate',
+      category: 'code',
+      group: 'Schema',
+      aliases: expect.arrayContaining(['schema generator', 'json schema infer']),
       order: 40,
       status: 'active',
     })
