@@ -72,6 +72,16 @@ export const tools: ToolDefinition[] = [
     component: () => import('./uuid/UuidTool.vue'),
   },
   {
+    id: 'json-type',
+    title: 'JSON 转类型',
+    description: '从 JSON 样例生成 TypeScript、Java、Go 和 Zod 类型。',
+    path: '/tools/json-type',
+    category: 'code',
+    keywords: ['json', 'type', 'typescript', 'interface', 'java', 'go', 'zod', 'schema'],
+    status: 'active',
+    component: () => import('./json-type/JsonTypeTool.vue'),
+  },
+  {
     id: 'regex',
     title: '正则测试',
     description: '用示例文本测试正则表达式。',

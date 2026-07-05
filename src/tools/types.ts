@@ -8,6 +8,7 @@ export type ToolCategory =
   | 'time'
   | 'security'
   | 'generate'
+  | 'code'
   | 'text'
 
 export type ToolComponentLoader = () => Promise<{ default: Component }>

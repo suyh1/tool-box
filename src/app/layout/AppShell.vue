@@ -68,10 +68,11 @@ const categoryLabels: Record<ToolCategory, string> = {
   time: '时间',
   security: '安全',
   generate: '生成',
+  code: '代码',
   text: '文本',
 }
 
-const categoryOrder: ToolCategory[] = ['format', 'encode', 'time', 'security', 'generate', 'text']
+const categoryOrder: ToolCategory[] = ['format', 'encode', 'time', 'security', 'generate', 'code', 'text']
 
 const categoryCodes: Record<ToolCategory, string> = {
   format: 'FMT',
@@ -79,6 +80,7 @@ const categoryCodes: Record<ToolCategory, string> = {
   time: 'CLK',
   security: 'SEC',
   generate: 'GEN',
+  code: 'COD',
   text: 'TXT',
 }
 
@@ -90,6 +92,7 @@ const toolIconMap: Record<string, Component> = {
   jwt: KeyRound,
   hash: Hash,
   uuid: Fingerprint,
+  'json-type': Code2,
   regex: Regex,
   diff: GitCompare,
   case: CaseSensitive,

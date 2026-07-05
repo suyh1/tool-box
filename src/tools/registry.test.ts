@@ -9,6 +9,7 @@ describe('tool registry', () => {
 
   it('looks up tools by id', () => {
     expect(getToolById('json')?.title).toBe('JSON 格式化')
+    expect(getToolById('json-type')?.title).toBe('JSON 转类型')
     expect(getToolById('missing')).toBeUndefined()
   })
 
