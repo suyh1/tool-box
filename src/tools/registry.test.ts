@@ -10,6 +10,7 @@ describe('tool registry', () => {
   it('looks up tools by id', () => {
     expect(getToolById('json')?.title).toBe('JSON 格式化')
     expect(getToolById('json-organize')?.title).toBe('JSON 排序 / 去重')
+    expect(getToolById('json-patch')?.title).toBe('JSON Patch / Merge Patch')
     expect(getToolById('json-schema-generate')?.title).toBe('JSON Schema 生成器')
     expect(getToolById('json-schema-validate')?.title).toBe('JSON Schema 校验')
     expect(getToolById('jsonpath')?.title).toBe('JSONPath 查询器')
@@ -74,6 +75,17 @@ describe('tool registry', () => {
       group: 'Schema',
       aliases: expect.arrayContaining(['schema generator', 'json schema infer']),
       order: 40,
+      status: 'active',
+    })
+  })
+
+  it('registers JSON Patch in the JSON / YAML code group', () => {
+    expect(getToolById('json-patch')).toMatchObject({
+      path: '/tools/json-patch',
+      category: 'code',
+      group: 'JSON / YAML',
+      aliases: expect.arrayContaining(['json diff', 'rfc6902', 'rfc7396']),
+      order: 50,
       status: 'active',
     })
   })
