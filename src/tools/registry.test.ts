@@ -19,6 +19,7 @@ describe('tool registry', () => {
     expect(getToolById('cron')?.title).toBe('Cron 表达式解析')
     expect(getToolById('curl')?.title).toBe('cURL 转代码')
     expect(getToolById('sql')?.title).toBe('SQL 格式化')
+    expect(getToolById('toml')?.title).toBe('TOML 格式化 / JSON 转换')
     expect(getToolById('xml')?.title).toBe('XML 格式化')
     expect(getToolById('xml-json')?.title).toBe('XML / JSON 转换')
     expect(getToolById('xml-xpath')?.title).toBe('XML 校验 / XPath 测试')
@@ -122,6 +123,17 @@ describe('tool registry', () => {
       group: 'XML',
       aliases: expect.arrayContaining(['xpath tester', 'xml query']),
       order: 70,
+      status: 'active',
+    })
+  })
+
+  it('registers TOML conversion in the config formatting group', () => {
+    expect(getToolById('toml')).toMatchObject({
+      path: '/tools/toml',
+      category: 'format',
+      group: 'Config',
+      aliases: expect.arrayContaining(['toml formatter', 'toml to json']),
+      order: 80,
       status: 'active',
     })
   })
