@@ -60,8 +60,8 @@ export const tools: ToolDefinition[] = [
     path: '/tools/hash',
     category: 'security',
     keywords: ['hash', 'sha', 'digest', 'crypto'],
-    status: 'planned',
-    component: comingSoon,
+    status: 'active',
+    component: () => import('./hash/HashTool.vue'),
   },
   {
     id: 'uuid',
@@ -70,8 +70,8 @@ export const tools: ToolDefinition[] = [
     path: '/tools/uuid',
     category: 'generate',
     keywords: ['uuid', 'guid', 'random'],
-    status: 'planned',
-    component: comingSoon,
+    status: 'active',
+    component: () => import('./uuid/UuidTool.vue'),
   },
   {
     id: 'regex',
