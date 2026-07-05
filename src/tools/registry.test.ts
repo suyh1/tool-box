@@ -10,6 +10,7 @@ describe('tool registry', () => {
   it('looks up tools by id', () => {
     expect(getToolById('json')?.title).toBe('JSON 格式化')
     expect(getToolById('json-organize')?.title).toBe('JSON 排序 / 去重')
+    expect(getToolById('jsonpath')?.title).toBe('JSONPath 查询器')
     expect(getToolById('json-type')?.title).toBe('JSON 转类型')
     expect(getToolById('yaml-json')?.title).toBe('YAML / JSON 转换')
     expect(getToolById('cron')?.title).toBe('Cron 表达式解析')
@@ -38,6 +39,17 @@ describe('tool registry', () => {
       group: 'JSON / YAML',
       aliases: expect.arrayContaining(['json sort', 'json dedupe', 'json path']),
       order: 15,
+      status: 'active',
+    })
+  })
+
+  it('registers JSONPath in the query code group', () => {
+    expect(getToolById('jsonpath')).toMatchObject({
+      path: '/tools/jsonpath',
+      category: 'code',
+      group: 'Query',
+      aliases: expect.arrayContaining(['json query', 'json path tester']),
+      order: 30,
       status: 'active',
     })
   })
