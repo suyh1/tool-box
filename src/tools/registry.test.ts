@@ -19,6 +19,7 @@ describe('tool registry', () => {
     expect(getToolById('cron')?.title).toBe('Cron 表达式解析')
     expect(getToolById('curl')?.title).toBe('cURL 转代码')
     expect(getToolById('sql')?.title).toBe('SQL 格式化')
+    expect(getToolById('xml')?.title).toBe('XML 格式化')
     expect(getToolById('missing')).toBeUndefined()
   })
 
@@ -85,6 +86,17 @@ describe('tool registry', () => {
       category: 'code',
       group: 'JSON / YAML',
       aliases: expect.arrayContaining(['json diff', 'rfc6902', 'rfc7396']),
+      order: 50,
+      status: 'active',
+    })
+  })
+
+  it('registers XML formatting in the XML formatting group', () => {
+    expect(getToolById('xml')).toMatchObject({
+      path: '/tools/xml',
+      category: 'format',
+      group: 'XML',
+      aliases: expect.arrayContaining(['xml formatter', 'xml validator']),
       order: 50,
       status: 'active',
     })
