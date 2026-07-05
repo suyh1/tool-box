@@ -21,6 +21,7 @@ describe('tool registry', () => {
     expect(getToolById('sql')?.title).toBe('SQL 格式化')
     expect(getToolById('xml')?.title).toBe('XML 格式化')
     expect(getToolById('xml-json')?.title).toBe('XML / JSON 转换')
+    expect(getToolById('xml-xpath')?.title).toBe('XML 校验 / XPath 测试')
     expect(getToolById('missing')).toBeUndefined()
   })
 
@@ -110,6 +111,17 @@ describe('tool registry', () => {
       group: 'XML',
       aliases: expect.arrayContaining(['xml to json', 'json to xml']),
       order: 60,
+      status: 'active',
+    })
+  })
+
+  it('registers XML XPath in the XML formatting group', () => {
+    expect(getToolById('xml-xpath')).toMatchObject({
+      path: '/tools/xml-xpath',
+      category: 'format',
+      group: 'XML',
+      aliases: expect.arrayContaining(['xpath tester', 'xml query']),
+      order: 70,
       status: 'active',
     })
   })
