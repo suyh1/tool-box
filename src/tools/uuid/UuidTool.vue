@@ -31,6 +31,8 @@ const actions = [
     input-aria-label="UUID 输入"
     output-aria-label="UUID 输出"
     placeholder="输入可留空"
+    input-empty-message="UUID 生成不需要输入。直接点击生成 UUID 或生成 10 个。"
+    output-empty-message="生成的 UUID v4 会显示在这里，每行一个。"
     sample=""
     :actions="actions"
   />

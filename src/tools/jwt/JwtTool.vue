@@ -45,6 +45,8 @@ const actions = [
     input-aria-label="JWT 输入"
     output-aria-label="JWT 输出"
     placeholder="header.payload.signature"
+    input-empty-message="粘贴 JWT 字符串。工具只解码标头和载荷，不验证签名。"
+    output-empty-message="解码后会显示标头、载荷和签名片段。"
     :sample="sampleToken"
     :actions="actions"
   />

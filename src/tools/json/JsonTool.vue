@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { Check, Clipboard, FileJson2, RotateCcw, Sparkles, Trash2 } from '@lucide/vue'
 import { computed, onBeforeUnmount, ref } from 'vue'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
+import ToolActionBar from '@/tools/_shared/ToolActionBar.vue'
+import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
+import ToolPanel from '@/tools/_shared/ToolPanel.vue'
+import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import type { JsonParseResult } from './json'
 import { formatJson, minifyJson, parseJson } from './json'
 import type { JsonWorkerRequest, JsonWorkerResponse } from '@/workers/json.worker'
@@ -23,6 +25,7 @@ const errorMessage = ref('')
 const metadata = ref<JsonParseResult | null>(null)
 const isProcessing = ref(false)
 const copied = ref(false)
+const liveMessage = ref('')
 let worker: Worker | null = null
 
 const metadataLabel = computed(() => {
@@ -111,22 +114,34 @@ async function runJson(mode: JsonMode) {
     if (!result.ok) {
       errorMessage.value = result.message
       metadata.value = result
+      liveMessage.value = result.message
       return
     }
 
     output.value = result.output
     metadata.value = result.metadata
+    liveMessage.value = mode === 'format'
+      ? 'JSON 已格式化'
+      : mode === 'minify'
+        ? 'JSON 已压缩'
+        : 'JSON 校验通过'
   } catch {
     const result = processWithoutWorker(mode, input.value)
 
     if (!result.ok) {
       errorMessage.value = result.message
       metadata.value = result
+      liveMessage.value = result.message
       return
     }
 
     output.value = result.output
     metadata.value = result.metadata
+    liveMessage.value = mode === 'format'
+      ? 'JSON 已格式化'
+      : mode === 'minify'
+        ? 'JSON 已压缩'
+        : 'JSON 校验通过'
   } finally {
     isProcessing.value = false
   }
@@ -138,6 +153,7 @@ function useSample() {
   errorMessage.value = ''
   metadata.value = null
   copied.value = false
+  liveMessage.value = 'JSON 示例已载入'
 }
 
 function clearAll() {
@@ -146,6 +162,7 @@ function clearAll() {
   errorMessage.value = ''
   metadata.value = null
   copied.value = false
+  liveMessage.value = 'JSON 工作区已清空'
 }
 
 async function copyOutput() {
@@ -155,6 +172,7 @@ async function copyOutput() {
 
   await navigator.clipboard.writeText(output.value)
   copied.value = true
+  liveMessage.value = 'JSON 输出已复制'
 }
 
 onBeforeUnmount(() => {
@@ -164,74 +182,75 @@ onBeforeUnmount(() => {
 
 <template>
   <section class="grid gap-4">
-    <div class="rounded-lg border border-border bg-card p-4 md:p-5">
-      <div class="flex flex-wrap items-center justify-between gap-3">
-        <div class="min-w-0">
-          <div class="flex items-center gap-2">
-            <FileJson2 class="h-4 w-4 text-primary" />
-            <h2 class="text-base font-semibold text-foreground">JSON 工作区</h2>
-          </div>
-          <p class="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
-            在浏览器中本地格式化、压缩和校验 JSON。可用 Worker 时，大输入会在主线程之外处理。
-          </p>
-        </div>
-        <Badge variant="secondary">{{ metadataLabel }}</Badge>
-      </div>
+    <ToolAnnouncer :message="liveMessage" />
+    <ToolPanel
+      title="JSON 工作区"
+      description="在浏览器中本地格式化、压缩和校验 JSON。可用 Worker 时，大输入会在主线程之外处理。"
+      :meta="metadataLabel"
+    >
+      <template #icon>
+        <FileJson2 class="h-4 w-4 text-primary" />
+      </template>
 
-      <div class="mt-4 flex flex-wrap gap-2">
-        <Button type="button" :disabled="isProcessing" @click="runJson('format')">
-          <Sparkles class="h-4 w-4" />
-          格式化 JSON
-        </Button>
-        <Button type="button" variant="secondary" :disabled="isProcessing" @click="runJson('minify')">
-          压缩 JSON
-        </Button>
-        <Button type="button" variant="outline" :disabled="isProcessing" @click="runJson('validate')">
-          校验 JSON
-        </Button>
-        <Button type="button" variant="ghost" @click="useSample">
-          <RotateCcw class="h-4 w-4" />
-          示例
-        </Button>
-        <Button type="button" variant="ghost" @click="clearAll">
-          <Trash2 class="h-4 w-4" />
-          清空
-        </Button>
-        <Button type="button" variant="outline" :disabled="!canCopy" @click="copyOutput">
-          <Check v-if="copied" class="h-4 w-4" />
-          <Clipboard v-else class="h-4 w-4" />
-          复制输出
-        </Button>
-      </div>
+      <ToolActionBar>
+        <template #primary>
+          <Button type="button" :disabled="isProcessing" @click="runJson('format')">
+            <Sparkles class="h-4 w-4" />
+            格式化 JSON
+          </Button>
+        </template>
 
-      <p v-if="errorMessage" class="mt-3 rounded-md border border-destructive/45 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+        <template #secondary>
+          <Button type="button" variant="secondary" :disabled="isProcessing" @click="runJson('minify')">
+            压缩 JSON
+          </Button>
+          <Button type="button" variant="outline" :disabled="isProcessing" @click="runJson('validate')">
+            校验 JSON
+          </Button>
+          <Button type="button" variant="ghost" @click="useSample">
+            <RotateCcw class="h-4 w-4" />
+            示例
+          </Button>
+          <Button type="button" variant="ghost" @click="clearAll">
+            <Trash2 class="h-4 w-4" />
+            清空
+          </Button>
+          <Button type="button" variant="outline" :disabled="!canCopy" @click="copyOutput">
+            <Check v-if="copied" class="h-4 w-4" />
+            <Clipboard v-else class="h-4 w-4" />
+            复制输出
+          </Button>
+        </template>
+      </ToolActionBar>
+
+      <p
+        v-if="errorMessage"
+        role="alert"
+        class="mt-3 rounded-md border border-destructive/45 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+      >
         {{ errorMessage }}
       </p>
-    </div>
+    </ToolPanel>
 
     <div class="grid gap-4 lg:grid-cols-2">
-      <label class="grid gap-2 rounded-lg border border-border bg-card p-4">
-        <span class="text-sm font-medium text-foreground">输入</span>
-        <Textarea
-          v-model="input"
-          aria-label="JSON 输入"
-          spellcheck="false"
-          placeholder='{"name":"Toolbox"}'
-          class="min-h-[22rem] resize-y border-border bg-background/70 font-mono text-sm leading-6"
-        />
-      </label>
+      <ToolTextareaPanel
+        v-model="input"
+        label="输入"
+        ariaLabel="JSON 输入"
+        placeholder='{"name":"Toolbox"}'
+        min-height-class="min-h-[22rem]"
+        empty-message="粘贴对象、数组或任意有效 JSON。内容只在浏览器中处理。"
+      />
 
-      <label class="grid gap-2 rounded-lg border border-border bg-card p-4">
-        <span class="text-sm font-medium text-foreground">输出</span>
-        <Textarea
-          v-model="output"
-          aria-label="JSON 输出"
-          readonly
-          spellcheck="false"
-          placeholder="执行 JSON 操作后查看输出"
-          class="min-h-[22rem] resize-y border-border bg-background/70 font-mono text-sm leading-6"
-        />
-      </label>
+      <ToolTextareaPanel
+        v-model="output"
+        label="输出"
+        ariaLabel="JSON 输出"
+        readonly
+        placeholder="执行 JSON 操作后查看输出"
+        min-height-class="min-h-[22rem]"
+        empty-message="格式化、压缩或校验后，结果会留在本机浏览器。"
+      />
     </div>
   </section>
 </template>

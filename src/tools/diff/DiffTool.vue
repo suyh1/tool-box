@@ -3,7 +3,10 @@ import { Check, Clipboard, GitCompare, RotateCcw, Trash2 } from '@lucide/vue'
 import { computed, ref } from 'vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
+import ToolActionBar from '@/tools/_shared/ToolActionBar.vue'
+import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
+import ToolPanel from '@/tools/_shared/ToolPanel.vue'
+import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { diffLines, summarizeDiff, type DiffRow, type DiffSummary } from './diff'
 
 const sampleLeft = 'alpha\nbravo\ncharlie\ndelta'
@@ -15,6 +18,7 @@ const rows = ref<DiffRow[]>([])
 const summary = ref<DiffSummary>({ added: 0, removed: 0, unchanged: 0 })
 const hasRun = ref(false)
 const copied = ref(false)
+const liveMessage = ref('')
 
 const resultLabel = computed(() => {
   if (!hasRun.value) {
@@ -31,6 +35,7 @@ function runDiff() {
   summary.value = summarizeDiff(rows.value)
   hasRun.value = true
   copied.value = false
+  liveMessage.value = `文本对比完成，新增 ${summary.value.added} 行，删除 ${summary.value.removed} 行`
 }
 
 function useSample() {
@@ -40,6 +45,7 @@ function useSample() {
   summary.value = { added: 0, removed: 0, unchanged: 0 }
   hasRun.value = false
   copied.value = false
+  liveMessage.value = '文本对比示例已载入'
 }
 
 function clearAll() {
@@ -49,6 +55,7 @@ function clearAll() {
   summary.value = { added: 0, removed: 0, unchanged: 0 }
   hasRun.value = false
   copied.value = false
+  liveMessage.value = '文本对比工作区已清空'
 }
 
 function rowMarker(row: DiffRow) {
@@ -65,7 +72,7 @@ function rowMarker(row: DiffRow) {
 
 function rowClass(row: DiffRow) {
   if (row.type === 'added') {
-    return 'border-emerald-500/25 bg-emerald-500/10 text-emerald-900 dark:text-emerald-100'
+    return 'border-sky-500/30 bg-sky-500/10 text-sky-950 dark:text-sky-100'
   }
 
   if (row.type === 'removed') {
@@ -89,68 +96,69 @@ async function copyDiff() {
 
   await navigator.clipboard.writeText(copyText.value)
   copied.value = true
+  liveMessage.value = '文本差异已复制'
 }
 </script>
 
 <template>
   <section class="grid gap-4">
-    <div class="rounded-lg border border-border bg-card p-4 md:p-5">
-      <div class="flex flex-wrap items-start justify-between gap-3">
-        <div class="min-w-0">
-          <h2 class="text-base font-semibold text-foreground">文本对比</h2>
-          <p class="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
-            在浏览器中按行对比两段文本，标记新增、删除和未变化内容。
-          </p>
-        </div>
-        <Badge variant="secondary">{{ resultLabel }}</Badge>
-      </div>
+    <ToolAnnouncer :message="liveMessage" />
+    <ToolPanel
+      title="文本对比"
+      description="在浏览器中按行对比两段文本，标记新增、删除和未变化内容。"
+      :meta="resultLabel"
+    >
+      <template #icon>
+        <GitCompare class="h-4 w-4 text-primary" />
+      </template>
 
-      <div class="mt-4 flex flex-wrap gap-2">
-        <Button type="button" @click="runDiff">
-          <GitCompare class="h-4 w-4" />
-          对比文本
-        </Button>
-        <Button type="button" variant="ghost" @click="useSample">
-          <RotateCcw class="h-4 w-4" />
-          示例
-        </Button>
-        <Button type="button" variant="ghost" @click="clearAll">
-          <Trash2 class="h-4 w-4" />
-          清空
-        </Button>
-        <Button type="button" variant="outline" :disabled="!copyText" @click="copyDiff">
-          <Check v-if="copied" class="h-4 w-4" />
-          <Clipboard v-else class="h-4 w-4" />
-          复制差异
-        </Button>
-      </div>
-    </div>
+      <ToolActionBar>
+        <template #primary>
+          <Button type="button" @click="runDiff">
+            <GitCompare class="h-4 w-4" />
+            对比文本
+          </Button>
+        </template>
+
+        <template #secondary>
+          <Button type="button" variant="ghost" @click="useSample">
+            <RotateCcw class="h-4 w-4" />
+            示例
+          </Button>
+          <Button type="button" variant="ghost" @click="clearAll">
+            <Trash2 class="h-4 w-4" />
+            清空
+          </Button>
+          <Button type="button" variant="outline" :disabled="!copyText" @click="copyDiff">
+            <Check v-if="copied" class="h-4 w-4" />
+            <Clipboard v-else class="h-4 w-4" />
+            复制差异
+          </Button>
+        </template>
+      </ToolActionBar>
+    </ToolPanel>
 
     <div class="grid gap-4 lg:grid-cols-2">
-      <label class="grid gap-2 rounded-lg border border-border bg-card p-4">
-        <span class="text-sm font-medium text-foreground">原文本</span>
-        <Textarea
-          v-model="leftText"
-          aria-label="文本对比原文本"
-          spellcheck="false"
-          placeholder="alpha&#10;bravo"
-          class="min-h-[18rem] resize-y border-border bg-background/70 font-mono text-sm leading-6"
-        />
-      </label>
+      <ToolTextareaPanel
+        v-model="leftText"
+        label="原文本"
+        ariaLabel="文本对比原文本"
+        placeholder="alpha&#10;bravo"
+        min-height-class="min-h-[18rem]"
+        empty-message="粘贴旧版本文本。对比只在浏览器内完成。"
+      />
 
-      <label class="grid gap-2 rounded-lg border border-border bg-card p-4">
-        <span class="text-sm font-medium text-foreground">新文本</span>
-        <Textarea
-          v-model="rightText"
-          aria-label="文本对比新文本"
-          spellcheck="false"
-          placeholder="alpha&#10;bravo updated"
-          class="min-h-[18rem] resize-y border-border bg-background/70 font-mono text-sm leading-6"
-        />
-      </label>
+      <ToolTextareaPanel
+        v-model="rightText"
+        label="新文本"
+        ariaLabel="文本对比新文本"
+        placeholder="alpha&#10;bravo updated"
+        min-height-class="min-h-[18rem]"
+        empty-message="粘贴新版本文本，然后点击对比文本查看行级差异。"
+      />
     </div>
 
-    <div class="rounded-lg border border-border bg-card p-4">
+    <div class="tool-field rounded-lg border border-border bg-card p-4">
       <div class="mb-3 flex flex-wrap items-center gap-2">
         <Badge variant="secondary">新增 {{ summary.added }}</Badge>
         <Badge variant="secondary">删除 {{ summary.removed }}</Badge>
@@ -158,7 +166,9 @@ async function copyDiff() {
       </div>
 
       <div class="min-h-[16rem] overflow-auto rounded-md border border-border bg-background/70 p-2">
-        <p v-if="!hasRun" class="p-2 text-sm text-muted-foreground">点击对比文本后查看差异</p>
+        <p v-if="!hasRun" class="p-2 text-sm leading-6 text-muted-foreground">
+          点击对比文本后查看差异。新增、删除和未变化行会按顺序显示在这里。
+        </p>
         <p v-else-if="rows.length === 0" class="p-2 text-sm text-muted-foreground">两侧文本都为空</p>
         <div v-else class="grid gap-1">
           <div

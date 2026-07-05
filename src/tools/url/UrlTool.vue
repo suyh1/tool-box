@@ -33,6 +33,8 @@ const actions = [
     input-aria-label="URL 输入"
     output-aria-label="URL 输出"
     placeholder="a b+c"
+    input-empty-message="粘贴 URL 组件、查询参数值或路径片段。"
+    output-empty-message="执行编码或解码后，安全转义后的文本会显示在这里。"
     sample="a b+c"
     :actions="actions"
   />

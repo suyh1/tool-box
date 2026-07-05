@@ -14,5 +14,5 @@ test('shows invalid JSON errors', async ({ page }) => {
   await page.getByLabel('JSON 输入').fill('{"name":}')
   await page.getByRole('button', { name: '格式化 JSON' }).click()
 
-  await expect(page.getByText(/JSON 无效/)).toBeVisible()
+  await expect(page.getByRole('alert').filter({ hasText: /JSON 无效/ })).toBeVisible()
 })

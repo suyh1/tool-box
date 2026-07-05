@@ -33,6 +33,8 @@ const actions = [
     input-aria-label="Base64 输入"
     output-aria-label="Base64 输出"
     placeholder="hello"
+    input-empty-message="粘贴 UTF-8 文本或 Base64 字符串。编码和解码都在本机浏览器完成。"
+    output-empty-message="执行编码或解码后，结果会显示在这里。"
     sample="hello"
     :actions="actions"
   />

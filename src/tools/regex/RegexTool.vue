@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { Check, Clipboard, Play, RotateCcw, Trash2 } from '@lucide/vue'
+import { Check, Clipboard, Play, Regex as RegexIcon, RotateCcw, Trash2 } from '@lucide/vue'
 import { computed, ref } from 'vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import ToolActionBar from '@/tools/_shared/ToolActionBar.vue'
+import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
+import ToolPanel from '@/tools/_shared/ToolPanel.vue'
+import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { testRegex, type RegexMatch, type RegexResult } from './regex'
 
 const samplePattern = '(?<key>[a-z]+)=(\\d+)'
@@ -15,6 +18,7 @@ const flags = ref('g')
 const text = ref('')
 const result = ref<RegexResult | null>(null)
 const copied = ref(false)
+const liveMessage = ref('')
 
 const matches = computed<RegexMatch[]>(() => result.value?.ok ? result.value.matches : [])
 const errorMessage = computed(() => result.value && !result.value.ok ? result.value.message : '')
@@ -36,6 +40,15 @@ const copyText = computed(() => matches.value.map(formatMatch).join('\n\n'))
 function runTest() {
   result.value = testRegex(pattern.value, flags.value, text.value)
   copied.value = false
+
+  if (!result.value.ok) {
+    liveMessage.value = result.value.message
+    return
+  }
+
+  liveMessage.value = result.value.matches.length > 0
+    ? `找到 ${result.value.matches.length} 个匹配`
+    : '没有匹配结果'
 }
 
 function useSample() {
@@ -44,6 +57,7 @@ function useSample() {
   text.value = sampleText
   result.value = null
   copied.value = false
+  liveMessage.value = '正则示例已载入'
 }
 
 function clearAll() {
@@ -52,6 +66,7 @@ function clearAll() {
   text.value = ''
   result.value = null
   copied.value = false
+  liveMessage.value = '正则工作区已清空'
 }
 
 function hasNamedGroups(match: RegexMatch) {
@@ -79,21 +94,21 @@ async function copyMatches() {
 
   await navigator.clipboard.writeText(copyText.value)
   copied.value = true
+  liveMessage.value = '正则匹配结果已复制'
 }
 </script>
 
 <template>
   <section class="grid gap-4">
-    <div class="rounded-lg border border-border bg-card p-4 md:p-5">
-      <div class="flex flex-wrap items-start justify-between gap-3">
-        <div class="min-w-0">
-          <h2 class="text-base font-semibold text-foreground">正则测试</h2>
-          <p class="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
-            在本地编译正则表达式，查看匹配位置、捕获组和命名捕获组。
-          </p>
-        </div>
-        <Badge variant="secondary">{{ resultLabel }}</Badge>
-      </div>
+    <ToolAnnouncer :message="liveMessage" />
+    <ToolPanel
+      title="正则测试"
+      description="在本地编译正则表达式，查看匹配位置、捕获组和命名捕获组。"
+      :meta="resultLabel"
+    >
+      <template #icon>
+        <RegexIcon class="h-4 w-4 text-primary" />
+      </template>
 
       <div class="mt-4 grid gap-3 md:grid-cols-[minmax(0,1fr)_8rem]">
         <label class="grid gap-2">
@@ -118,47 +133,56 @@ async function copyMatches() {
         </label>
       </div>
 
-      <div class="mt-4 flex flex-wrap gap-2">
-        <Button type="button" @click="runTest">
-          <Play class="h-4 w-4" />
-          测试正则
-        </Button>
-        <Button type="button" variant="ghost" @click="useSample">
-          <RotateCcw class="h-4 w-4" />
-          示例
-        </Button>
-        <Button type="button" variant="ghost" @click="clearAll">
-          <Trash2 class="h-4 w-4" />
-          清空
-        </Button>
-        <Button type="button" variant="outline" :disabled="!copyText" @click="copyMatches">
-          <Check v-if="copied" class="h-4 w-4" />
-          <Clipboard v-else class="h-4 w-4" />
-          复制匹配
-        </Button>
-      </div>
+      <ToolActionBar>
+        <template #primary>
+          <Button type="button" @click="runTest">
+            <Play class="h-4 w-4" />
+            测试正则
+          </Button>
+        </template>
 
-      <p v-if="errorMessage" class="mt-3 rounded-md border border-destructive/45 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+        <template #secondary>
+          <Button type="button" variant="ghost" @click="useSample">
+            <RotateCcw class="h-4 w-4" />
+            示例
+          </Button>
+          <Button type="button" variant="ghost" @click="clearAll">
+            <Trash2 class="h-4 w-4" />
+            清空
+          </Button>
+          <Button type="button" variant="outline" :disabled="!copyText" @click="copyMatches">
+            <Check v-if="copied" class="h-4 w-4" />
+            <Clipboard v-else class="h-4 w-4" />
+            复制匹配
+          </Button>
+        </template>
+      </ToolActionBar>
+
+      <p
+        v-if="errorMessage"
+        role="alert"
+        class="mt-3 rounded-md border border-destructive/45 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+      >
         {{ errorMessage }}
       </p>
-    </div>
+    </ToolPanel>
 
     <div class="grid gap-4 lg:grid-cols-2">
-      <label class="grid gap-2 rounded-lg border border-border bg-card p-4">
-        <span class="text-sm font-medium text-foreground">测试文本</span>
-        <Textarea
-          v-model="text"
-          aria-label="正则测试文本"
-          spellcheck="false"
-          placeholder="port=443"
-          class="min-h-[24rem] resize-y border-border bg-background/70 font-mono text-sm leading-6"
-        />
-      </label>
+      <ToolTextareaPanel
+        v-model="text"
+        label="测试文本"
+        ariaLabel="正则测试文本"
+        placeholder="port=443"
+        min-height-class="min-h-[24rem]"
+        empty-message="粘贴需要测试的文本。工具会在本地显示匹配位置和捕获组。"
+      />
 
-      <div class="grid gap-2 rounded-lg border border-border bg-card p-4">
+      <div class="tool-field grid gap-2 rounded-lg border border-border bg-card p-4">
         <span class="text-sm font-medium text-foreground">匹配结果</span>
         <div class="min-h-[24rem] overflow-auto rounded-md border border-border bg-background/70 p-3">
-          <p v-if="!result" class="text-sm text-muted-foreground">点击测试正则后查看匹配结果</p>
+          <p v-if="!result" class="text-sm leading-6 text-muted-foreground">
+            填写 Pattern 和测试文本，然后点击测试正则。匹配、捕获组和命名捕获组会显示在这里。
+          </p>
           <p v-else-if="hasSuccessfulResult && matches.length === 0" class="text-sm text-muted-foreground">
             没有匹配结果
           </p>

@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { Check, Clipboard, RotateCcw, Trash2 } from '@lucide/vue'
+import { CaseSensitive, Check, Clipboard, RotateCcw, Trash2 } from '@lucide/vue'
 import { computed, ref } from 'vue'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
+import ToolActionBar from '@/tools/_shared/ToolActionBar.vue'
+import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
+import ToolPanel from '@/tools/_shared/ToolPanel.vue'
+import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { convertCases, type CaseConversions } from './case'
 
 type CaseKey = keyof CaseConversions
@@ -11,9 +13,11 @@ type CaseKey = keyof CaseConversions
 const sample = 'user profile URL_id'
 const input = ref('')
 const copiedKey = ref<CaseKey | ''>('')
+const liveMessage = ref('')
 
 const converted = computed(() => convertCases(input.value))
 const wordCount = computed(() => converted.value.snake.split('_').filter(Boolean).length)
+const metaLabel = computed(() => wordCount.value > 0 ? `${wordCount.value} 个词` : '等待输入')
 
 const formats: Array<{ key: CaseKey; label: string; hint: string }> = [
   { key: 'camel', label: 'camelCase', hint: 'JavaScript 变量' },
@@ -27,11 +31,13 @@ const formats: Array<{ key: CaseKey; label: string; hint: string }> = [
 function useSample() {
   input.value = sample
   copiedKey.value = ''
+  liveMessage.value = '命名示例已载入'
 }
 
 function clearAll() {
   input.value = ''
   copiedKey.value = ''
+  liveMessage.value = '命名工作区已清空'
 }
 
 async function copyValue(key: CaseKey) {
@@ -43,51 +49,66 @@ async function copyValue(key: CaseKey) {
 
   await navigator.clipboard.writeText(value)
   copiedKey.value = key
+  liveMessage.value = `${formats.find((item) => item.key === key)?.label ?? '结果'} 已复制`
 }
 </script>
 
 <template>
   <section class="grid gap-4">
-    <div class="rounded-lg border border-border bg-card p-4 md:p-5">
-      <div class="flex flex-wrap items-start justify-between gap-3">
-        <div class="min-w-0">
-          <h2 class="text-base font-semibold text-foreground">命名格式转换</h2>
-          <p class="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
-            将自然文本、下划线、短横线或 camelCase 输入转换成常用代码命名格式。
-          </p>
-        </div>
-        <Badge variant="secondary">{{ wordCount > 0 ? `${wordCount} 个词` : '等待输入' }}</Badge>
-      </div>
+    <ToolAnnouncer :message="liveMessage" />
+    <ToolPanel
+      title="命名格式转换"
+      description="将自然文本、下划线、短横线或 camelCase 输入实时转换成常用代码命名格式。"
+      :meta="metaLabel"
+    >
+      <template #icon>
+        <CaseSensitive class="h-4 w-4 text-primary" />
+      </template>
 
-      <div class="mt-4 flex flex-wrap gap-2">
-        <Button type="button" variant="ghost" @click="useSample">
-          <RotateCcw class="h-4 w-4" />
-          示例
-        </Button>
-        <Button type="button" variant="ghost" @click="clearAll">
-          <Trash2 class="h-4 w-4" />
-          清空
-        </Button>
-      </div>
-    </div>
+      <ToolActionBar>
+        <template #primary>
+          <Button type="button" :disabled="!converted.camel" @click="copyValue('camel')">
+            <Check v-if="copiedKey === 'camel'" class="h-4 w-4" />
+            <Clipboard v-else class="h-4 w-4" />
+            复制 camelCase
+          </Button>
+        </template>
+
+        <template #secondary>
+          <Button type="button" variant="ghost" @click="useSample">
+            <RotateCcw class="h-4 w-4" />
+            示例
+          </Button>
+          <Button type="button" variant="ghost" @click="clearAll">
+            <Trash2 class="h-4 w-4" />
+            清空
+          </Button>
+        </template>
+      </ToolActionBar>
+    </ToolPanel>
 
     <div class="grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-      <label class="grid gap-2 rounded-lg border border-border bg-card p-4">
-        <span class="text-sm font-medium text-foreground">输入</span>
-        <Textarea
-          v-model="input"
-          aria-label="命名格式输入"
-          spellcheck="false"
-          placeholder="user profile URL_id"
-          class="min-h-[22rem] resize-y border-border bg-background/70 font-mono text-sm leading-6"
-        />
-      </label>
+      <ToolTextareaPanel
+        v-model="input"
+        label="输入"
+        ariaLabel="命名格式输入"
+        placeholder="user profile URL_id"
+        min-height-class="min-h-[22rem]"
+        empty-message="输入变量名、短语或路径片段，右侧会实时生成常用命名格式。"
+      />
 
       <div class="grid gap-3">
         <div
+          v-if="!input"
+          class="tool-field rounded-lg border border-border bg-card p-4 text-sm leading-6 text-muted-foreground"
+        >
+          结果会随输入实时更新。常用格式可以逐项复制，不需要离开键盘工作流。
+        </div>
+
+        <div
           v-for="item in formats"
           :key="item.key"
-          class="grid gap-2 rounded-lg border border-border bg-card p-4"
+          class="tool-field grid gap-2 rounded-lg border border-border bg-card p-4"
         >
           <div class="flex items-start justify-between gap-3">
             <div class="min-w-0">

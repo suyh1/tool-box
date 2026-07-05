@@ -69,6 +69,8 @@ const actions = [
     input-aria-label="时间戳输入"
     output-aria-label="时间戳输出"
     placeholder="1970-01-01T00:00:01.000Z"
+    input-empty-message="输入 Unix 秒、Unix 毫秒或可解析日期字符串。"
+    output-empty-message="转换结果会列出 ISO 时间、秒和毫秒，方便直接复制。"
     sample="1970-01-01T00:00:01.000Z"
     :actions="actions"
   />
