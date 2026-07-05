@@ -1,0 +1,114 @@
+import type { ToolDefinition } from './types'
+
+const comingSoon = () => import('./_shared/ComingSoonTool.vue')
+
+export const tools: ToolDefinition[] = [
+  {
+    id: 'json',
+    title: 'JSON Formatter',
+    description: 'Format, minify, and validate JSON safely in the browser.',
+    path: '/tools/json',
+    category: 'format',
+    keywords: ['json', 'formatter', 'validator', 'minify'],
+    status: 'active',
+    component: comingSoon,
+  },
+  {
+    id: 'base64',
+    title: 'Base64',
+    description: 'Encode and decode Base64 text.',
+    path: '/tools/base64',
+    category: 'encode',
+    keywords: ['base64', 'encode', 'decode'],
+    status: 'planned',
+    component: comingSoon,
+  },
+  {
+    id: 'url',
+    title: 'URL Codec',
+    description: 'Encode and decode URL components.',
+    path: '/tools/url',
+    category: 'encode',
+    keywords: ['url', 'uri', 'encode', 'decode'],
+    status: 'planned',
+    component: comingSoon,
+  },
+  {
+    id: 'timestamp',
+    title: 'Timestamp Converter',
+    description: 'Convert Unix timestamps and local date strings.',
+    path: '/tools/timestamp',
+    category: 'time',
+    keywords: ['time', 'timestamp', 'unix', 'date'],
+    status: 'planned',
+    component: comingSoon,
+  },
+  {
+    id: 'jwt',
+    title: 'JWT Decoder',
+    description: 'Decode JWT headers and payloads without sending tokens anywhere.',
+    path: '/tools/jwt',
+    category: 'security',
+    keywords: ['jwt', 'token', 'decode', 'header', 'payload'],
+    status: 'planned',
+    component: comingSoon,
+  },
+  {
+    id: 'hash',
+    title: 'Hash Generator',
+    description: 'Generate browser-native SHA digests.',
+    path: '/tools/hash',
+    category: 'security',
+    keywords: ['hash', 'sha', 'digest', 'crypto'],
+    status: 'planned',
+    component: comingSoon,
+  },
+  {
+    id: 'uuid',
+    title: 'UUID Generator',
+    description: 'Generate random UUID values.',
+    path: '/tools/uuid',
+    category: 'generate',
+    keywords: ['uuid', 'guid', 'random'],
+    status: 'planned',
+    component: comingSoon,
+  },
+  {
+    id: 'regex',
+    title: 'Regex Tester',
+    description: 'Test regular expressions against sample text.',
+    path: '/tools/regex',
+    category: 'text',
+    keywords: ['regex', 'regexp', 'pattern', 'match'],
+    status: 'planned',
+    component: comingSoon,
+  },
+  {
+    id: 'diff',
+    title: 'Text Diff',
+    description: 'Compare two text snippets in the browser.',
+    path: '/tools/diff',
+    category: 'text',
+    keywords: ['diff', 'compare', 'text'],
+    status: 'planned',
+    component: comingSoon,
+  },
+  {
+    id: 'case',
+    title: 'Case Converter',
+    description: 'Convert text between common naming cases.',
+    path: '/tools/case',
+    category: 'text',
+    keywords: ['case', 'camel', 'snake', 'kebab', 'pascal'],
+    status: 'planned',
+    component: comingSoon,
+  },
+]
+
+export function getToolById(toolId: string) {
+  return tools.find((tool) => tool.id === toolId)
+}
+
+export function getToolByPath(path: string) {
+  return tools.find((tool) => tool.path === path)
+}

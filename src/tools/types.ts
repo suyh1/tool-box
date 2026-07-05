@@ -1,0 +1,24 @@
+import type { Component } from 'vue'
+
+export type ToolStatus = 'active' | 'planned'
+
+export type ToolCategory =
+  | 'format'
+  | 'encode'
+  | 'time'
+  | 'security'
+  | 'generate'
+  | 'text'
+
+export type ToolComponentLoader = () => Promise<{ default: Component }>
+
+export interface ToolDefinition {
+  id: string
+  title: string
+  description: string
+  path: string
+  category: ToolCategory
+  keywords: string[]
+  status: ToolStatus
+  component: ToolComponentLoader
+}
