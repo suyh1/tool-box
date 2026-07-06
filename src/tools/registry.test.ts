@@ -50,6 +50,7 @@ describe('tool registry', () => {
     expect(getToolById('xml')?.title).toBe('XML 格式化')
     expect(getToolById('xml-json')?.title).toBe('XML / JSON 转换')
     expect(getToolById('xml-xpath')?.title).toBe('XML 校验 / XPath 测试')
+    expect(getToolById('csr')?.title).toBe('CSR 解析')
     expect(getToolById('x509-cert')?.title).toBe('X.509 证书解析')
     expect(getToolById('missing')).toBeUndefined()
   })
@@ -470,6 +471,17 @@ describe('tool registry', () => {
       group: 'Certificate',
       aliases: expect.arrayContaining(['certificate parser', 'tls cert']),
       order: 10,
+      status: 'active',
+    })
+  })
+
+  it('registers CSR parsing in the certificate security group', () => {
+    expect(getToolById('csr')).toMatchObject({
+      path: '/tools/csr',
+      category: 'security',
+      group: 'Certificate',
+      aliases: expect.arrayContaining(['csr parser', 'certificate request']),
+      order: 20,
       status: 'active',
     })
   })
