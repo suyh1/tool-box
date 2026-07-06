@@ -16,6 +16,7 @@ describe('tool registry', () => {
     expect(getToolById('json-schema-validate')?.title).toBe('JSON Schema 校验')
     expect(getToolById('jsonpath')?.title).toBe('JSONPath 查询器')
     expect(getToolById('json-type')?.title).toBe('JSON 转类型')
+    expect(getToolById('ascii')?.title).toBe('ASCII / 字符码表')
     expect(getToolById('binary')?.title).toBe('Binary 编解码')
     expect(getToolById('markdown-preview')?.title).toBe('Markdown 预览')
     expect(getToolById('markdown-toc')?.title).toBe('Markdown TOC 生成')
@@ -314,6 +315,17 @@ describe('tool registry', () => {
       group: 'Number Bases',
       aliases: expect.arrayContaining(['base converter', 'radix']),
       order: 70,
+      status: 'active',
+    })
+  })
+
+  it('registers ASCII character code table in the reference group', () => {
+    expect(getToolById('ascii')).toMatchObject({
+      path: '/tools/ascii',
+      category: 'encode',
+      group: 'Reference',
+      aliases: expect.arrayContaining(['ascii table', 'character code']),
+      order: 80,
       status: 'active',
     })
   })
