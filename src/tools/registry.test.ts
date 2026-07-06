@@ -26,6 +26,7 @@ describe('tool registry', () => {
     expect(getToolById('css')?.title).toBe('CSS 格式化')
     expect(getToolById('curl')?.title).toBe('cURL 转代码')
     expect(getToolById('html')?.title).toBe('HTML 格式化')
+    expect(getToolById('js-ts-format')?.title).toBe('JavaScript / TypeScript 格式化')
     expect(getToolById('sql')?.title).toBe('SQL 格式化')
     expect(getToolById('toml')?.title).toBe('TOML 格式化 / JSON 转换')
     expect(getToolById('xml')?.title).toBe('XML 格式化')
@@ -230,6 +231,17 @@ describe('tool registry', () => {
       group: 'Web Code',
       aliases: expect.arrayContaining(['css formatter', 'css minifier']),
       order: 140,
+      status: 'active',
+    })
+  })
+
+  it('registers JavaScript TypeScript formatting in the web code formatting group', () => {
+    expect(getToolById('js-ts-format')).toMatchObject({
+      path: '/tools/js-ts-format',
+      category: 'format',
+      group: 'Web Code',
+      aliases: expect.arrayContaining(['javascript formatter', 'typescript formatter']),
+      order: 150,
       status: 'active',
     })
   })

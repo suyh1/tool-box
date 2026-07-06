@@ -11,6 +11,7 @@ export default defineConfig({
     include: ['src/**/*.test.ts'],
   },
   build: {
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       onwarn(warning, warn) {
         if (
