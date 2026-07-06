@@ -18,6 +18,7 @@ describe('tool registry', () => {
     expect(getToolById('json-type')?.title).toBe('JSON 转类型')
     expect(getToolById('ascii')?.title).toBe('ASCII / 字符码表')
     expect(getToolById('binary')?.title).toBe('Binary 编解码')
+    expect(getToolById('brotli')?.title).toBe('Brotli 压缩 / 解压')
     expect(getToolById('gzip')?.title).toBe('Gzip 压缩 / 解压')
     expect(getToolById('markdown-preview')?.title).toBe('Markdown 预览')
     expect(getToolById('markdown-toc')?.title).toBe('Markdown TOC 生成')
@@ -338,6 +339,17 @@ describe('tool registry', () => {
       group: 'Compression',
       aliases: expect.arrayContaining(['gzip decode', 'gzip base64']),
       order: 90,
+      status: 'active',
+    })
+  })
+
+  it('registers Brotli compression in the compression group', () => {
+    expect(getToolById('brotli')).toMatchObject({
+      path: '/tools/brotli',
+      category: 'encode',
+      group: 'Compression',
+      aliases: expect.arrayContaining(['brotli decode', 'br base64']),
+      order: 100,
       status: 'active',
     })
   })
