@@ -19,6 +19,7 @@ describe('tool registry', () => {
     expect(getToolById('yaml-json')?.title).toBe('YAML / JSON 转换')
     expect(getToolById('cron')?.title).toBe('Cron 表达式解析')
     expect(getToolById('csv-json')?.title).toBe('CSV / JSON 转换')
+    expect(getToolById('csv-table')?.title).toBe('CSV 表格查看器')
     expect(getToolById('curl')?.title).toBe('cURL 转代码')
     expect(getToolById('sql')?.title).toBe('SQL 格式化')
     expect(getToolById('toml')?.title).toBe('TOML 格式化 / JSON 转换')
@@ -158,6 +159,17 @@ describe('tool registry', () => {
       group: 'CSV',
       aliases: expect.arrayContaining(['csv to json', 'json to csv']),
       order: 100,
+      status: 'active',
+    })
+  })
+
+  it('registers CSV table viewer in the CSV formatting group', () => {
+    expect(getToolById('csv-table')).toMatchObject({
+      path: '/tools/csv-table',
+      category: 'format',
+      group: 'CSV',
+      aliases: expect.arrayContaining(['csv viewer', 'table preview']),
+      order: 110,
       status: 'active',
     })
   })
