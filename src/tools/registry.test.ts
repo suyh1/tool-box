@@ -33,6 +33,7 @@ describe('tool registry', () => {
     expect(getToolById('html')?.title).toBe('HTML 格式化')
     expect(getToolById('html-entity')?.title).toBe('HTML Entity 编解码')
     expect(getToolById('hex')?.title).toBe('Hex 编解码')
+    expect(getToolById('hmac')?.title).toBe('HMAC 生成')
     expect(getToolById('jwk-pem')?.title).toBe('JWK / PEM 转换')
     expect(getToolById('jwt-sign')?.title).toBe('JWT 编码 / 签名 / 验签')
     expect(getToolById('js-ts-format')?.title).toBe('JavaScript / TypeScript 格式化')
@@ -374,6 +375,17 @@ describe('tool registry', () => {
       group: 'Key',
       aliases: expect.arrayContaining(['jwk to pem', 'pem to jwk']),
       order: 20,
+      status: 'active',
+    })
+  })
+
+  it('registers HMAC generation in the digest security group', () => {
+    expect(getToolById('hmac')).toMatchObject({
+      path: '/tools/hmac',
+      category: 'security',
+      group: 'Digest',
+      aliases: expect.arrayContaining(['hmac sha256', 'signature hash']),
+      order: 30,
       status: 'active',
     })
   })
