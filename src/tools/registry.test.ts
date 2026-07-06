@@ -33,6 +33,8 @@ describe('tool registry', () => {
     expect(getToolById('snowflake')?.title).toBe('Snowflake ID 解析 / 生成')
     expect(getToolById('ulid')?.title).toBe('ULID 生成')
     expect(getToolById('nanoid')?.title).toBe('Nano ID 生成')
+    expect(getToolById('qr-code')?.title).toBe('QR Code 生成')
+    expect(getToolById('qr-decode')?.title).toBe('QR Code 解码')
     expect(getToolById('yaml-json')?.title).toBe('YAML / JSON 转换')
     expect(getToolById('cron')?.title).toBe('Cron 表达式解析')
     expect(getToolById('csv-json')?.title).toBe('CSV / JSON 转换')
@@ -568,6 +570,28 @@ describe('tool registry', () => {
       group: 'Identifiers',
       aliases: expect.arrayContaining(['nano id', 'nanoid']),
       order: 40,
+      status: 'active',
+    })
+  })
+
+  it('registers QR Code generation in the QR Code generator group', () => {
+    expect(getToolById('qr-code')).toMatchObject({
+      path: '/tools/qr-code',
+      category: 'generate',
+      group: 'QR Code',
+      aliases: expect.arrayContaining(['qr generator', 'qrcode']),
+      order: 10,
+      status: 'active',
+    })
+  })
+
+  it('registers QR Code decoding in the QR Code encoding group', () => {
+    expect(getToolById('qr-decode')).toMatchObject({
+      path: '/tools/qr-decode',
+      category: 'encode',
+      group: 'QR Code',
+      aliases: expect.arrayContaining(['qr decoder', 'scan qr']),
+      order: 10,
       status: 'active',
     })
   })
