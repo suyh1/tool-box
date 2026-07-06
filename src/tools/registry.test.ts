@@ -18,6 +18,7 @@ describe('tool registry', () => {
     expect(getToolById('json-type')?.title).toBe('JSON 转类型')
     expect(getToolById('ascii')?.title).toBe('ASCII / 字符码表')
     expect(getToolById('binary')?.title).toBe('Binary 编解码')
+    expect(getToolById('gzip')?.title).toBe('Gzip 压缩 / 解压')
     expect(getToolById('markdown-preview')?.title).toBe('Markdown 预览')
     expect(getToolById('markdown-toc')?.title).toBe('Markdown TOC 生成')
     expect(getToolById('number-base')?.title).toBe('Number Base 转换')
@@ -326,6 +327,17 @@ describe('tool registry', () => {
       group: 'Reference',
       aliases: expect.arrayContaining(['ascii table', 'character code']),
       order: 80,
+      status: 'active',
+    })
+  })
+
+  it('registers Gzip compression in the compression group', () => {
+    expect(getToolById('gzip')).toMatchObject({
+      path: '/tools/gzip',
+      category: 'encode',
+      group: 'Compression',
+      aliases: expect.arrayContaining(['gzip decode', 'gzip base64']),
+      order: 90,
       status: 'active',
     })
   })
