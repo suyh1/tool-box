@@ -23,6 +23,7 @@ describe('tool registry', () => {
     expect(getToolById('csv-json')?.title).toBe('CSV / JSON 转换')
     expect(getToolById('csv-sql')?.title).toBe('CSV / SQL INSERT 生成')
     expect(getToolById('csv-table')?.title).toBe('CSV 表格查看器')
+    expect(getToolById('css')?.title).toBe('CSS 格式化')
     expect(getToolById('curl')?.title).toBe('cURL 转代码')
     expect(getToolById('html')?.title).toBe('HTML 格式化')
     expect(getToolById('sql')?.title).toBe('SQL 格式化')
@@ -218,6 +219,17 @@ describe('tool registry', () => {
       group: 'Web Markup',
       aliases: expect.arrayContaining(['html formatter', 'html minifier']),
       order: 130,
+      status: 'active',
+    })
+  })
+
+  it('registers CSS formatting in the web code formatting group', () => {
+    expect(getToolById('css')).toMatchObject({
+      path: '/tools/css',
+      category: 'format',
+      group: 'Web Code',
+      aliases: expect.arrayContaining(['css formatter', 'css minifier']),
+      order: 140,
       status: 'active',
     })
   })
