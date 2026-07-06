@@ -73,6 +73,10 @@ describe('tool registry', () => {
     expect(getToolById('sql-bind')?.title).toBe('SQL 参数绑定预览')
     expect(getToolById('mongo-objectid')?.title).toBe('Mongo ObjectId 解析')
     expect(getToolById('redis-command')?.title).toBe('Redis 命令格式化')
+    expect(getToolById('env-convert')?.title).toBe('.env 解析 / JSON 转换')
+    expect(getToolById('docker-compose')?.title).toBe('Docker Compose 校验 / 展开')
+    expect(getToolById('kubernetes-yaml')?.title).toBe('Kubernetes YAML 快速检查')
+    expect(getToolById('semver')?.title).toBe('SemVer 比较器')
     expect(getToolById('curl')?.title).toBe('cURL 转代码')
     expect(getToolById('html')?.title).toBe('HTML 格式化')
     expect(getToolById('html-entity')?.title).toBe('HTML Entity 编解码')
@@ -998,6 +1002,50 @@ describe('tool registry', () => {
       group: 'Database',
       aliases: expect.arrayContaining(['redis resp', 'redis formatter']),
       order: 75,
+      status: 'active',
+    })
+  })
+
+  it('registers env JSON conversion in the config formatting group', () => {
+    expect(getToolById('env-convert')).toMatchObject({
+      path: '/tools/env-convert',
+      category: 'format',
+      group: 'Config',
+      aliases: expect.arrayContaining(['.env parser', 'env to json']),
+      order: 100,
+      status: 'active',
+    })
+  })
+
+  it('registers Docker Compose inspection in the DevOps code group', () => {
+    expect(getToolById('docker-compose')).toMatchObject({
+      path: '/tools/docker-compose',
+      category: 'code',
+      group: 'DevOps',
+      aliases: expect.arrayContaining(['compose validator', 'docker compose']),
+      order: 10,
+      status: 'active',
+    })
+  })
+
+  it('registers Kubernetes YAML inspection in the DevOps code group', () => {
+    expect(getToolById('kubernetes-yaml')).toMatchObject({
+      path: '/tools/kubernetes-yaml',
+      category: 'code',
+      group: 'DevOps',
+      aliases: expect.arrayContaining(['k8s yaml', 'kubernetes validator']),
+      order: 20,
+      status: 'active',
+    })
+  })
+
+  it('registers SemVer comparison in the release code group', () => {
+    expect(getToolById('semver')).toMatchObject({
+      path: '/tools/semver',
+      category: 'code',
+      group: 'Release',
+      aliases: expect.arrayContaining(['semantic version', 'version range']),
+      order: 10,
       status: 'active',
     })
   })
