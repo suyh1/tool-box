@@ -41,6 +41,7 @@ describe('tool registry', () => {
     expect(getToolById('csv-sql')?.title).toBe('CSV / SQL INSERT 生成')
     expect(getToolById('csv-table')?.title).toBe('CSV 表格查看器')
     expect(getToolById('css')?.title).toBe('CSS 格式化')
+    expect(getToolById('color')?.title).toBe('Color Picker / 转换')
     expect(getToolById('curl')?.title).toBe('cURL 转代码')
     expect(getToolById('html')?.title).toBe('HTML 格式化')
     expect(getToolById('html-entity')?.title).toBe('HTML Entity 编解码')
@@ -273,6 +274,17 @@ describe('tool registry', () => {
       group: 'Web Code',
       aliases: expect.arrayContaining(['javascript formatter', 'typescript formatter']),
       order: 150,
+      status: 'active',
+    })
+  })
+
+  it('registers color conversion in the color formatting group', () => {
+    expect(getToolById('color')).toMatchObject({
+      path: '/tools/color',
+      category: 'format',
+      group: 'Color',
+      aliases: expect.arrayContaining(['color converter', 'hex rgb hsl']),
+      order: 160,
       status: 'active',
     })
   })
