@@ -19,6 +19,7 @@ describe('tool registry', () => {
     expect(getToolById('binary')?.title).toBe('Binary 编解码')
     expect(getToolById('markdown-preview')?.title).toBe('Markdown 预览')
     expect(getToolById('markdown-toc')?.title).toBe('Markdown TOC 生成')
+    expect(getToolById('number-base')?.title).toBe('Number Base 转换')
     expect(getToolById('yaml-json')?.title).toBe('YAML / JSON 转换')
     expect(getToolById('cron')?.title).toBe('Cron 表达式解析')
     expect(getToolById('csv-json')?.title).toBe('CSV / JSON 转换')
@@ -302,6 +303,17 @@ describe('tool registry', () => {
       group: 'Number Bases',
       aliases: expect.arrayContaining(['binary decode', 'base2']),
       order: 60,
+      status: 'active',
+    })
+  })
+
+  it('registers number base conversion in the number bases group', () => {
+    expect(getToolById('number-base')).toMatchObject({
+      path: '/tools/number-base',
+      category: 'encode',
+      group: 'Number Bases',
+      aliases: expect.arrayContaining(['base converter', 'radix']),
+      order: 70,
       status: 'active',
     })
   })
