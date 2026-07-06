@@ -33,6 +33,7 @@ describe('tool registry', () => {
     expect(getToolById('html')?.title).toBe('HTML 格式化')
     expect(getToolById('html-entity')?.title).toBe('HTML Entity 编解码')
     expect(getToolById('hex')?.title).toBe('Hex 编解码')
+    expect(getToolById('jwk-pem')?.title).toBe('JWK / PEM 转换')
     expect(getToolById('jwt-sign')?.title).toBe('JWT 编码 / 签名 / 验签')
     expect(getToolById('js-ts-format')?.title).toBe('JavaScript / TypeScript 格式化')
     expect(getToolById('sitemap')?.title).toBe('XML Sitemap 格式化')
@@ -362,6 +363,17 @@ describe('tool registry', () => {
       group: 'Token',
       aliases: expect.arrayContaining(['jwt sign', 'jwt verify']),
       order: 15,
+      status: 'active',
+    })
+  })
+
+  it('registers JWK PEM conversion in the key security group', () => {
+    expect(getToolById('jwk-pem')).toMatchObject({
+      path: '/tools/jwk-pem',
+      category: 'security',
+      group: 'Key',
+      aliases: expect.arrayContaining(['jwk to pem', 'pem to jwk']),
+      order: 20,
       status: 'active',
     })
   })
