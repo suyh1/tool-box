@@ -30,6 +30,9 @@ describe('tool registry', () => {
     expect(getToolById('lorem-ipsum')?.title).toBe('Lorem Ipsum 生成器')
     expect(getToolById('mock-json')?.title).toBe('Mock JSON 数据生成')
     expect(getToolById('random-string')?.title).toBe('随机字符串生成器')
+    expect(getToolById('snowflake')?.title).toBe('Snowflake ID 解析 / 生成')
+    expect(getToolById('ulid')?.title).toBe('ULID 生成')
+    expect(getToolById('nanoid')?.title).toBe('Nano ID 生成')
     expect(getToolById('yaml-json')?.title).toBe('YAML / JSON 转换')
     expect(getToolById('cron')?.title).toBe('Cron 表达式解析')
     expect(getToolById('csv-json')?.title).toBe('CSV / JSON 转换')
@@ -532,6 +535,39 @@ describe('tool registry', () => {
       group: 'Random',
       aliases: expect.arrayContaining(['random text', 'random chars']),
       order: 10,
+      status: 'active',
+    })
+  })
+
+  it('registers Snowflake ID generation in the identifiers generator group', () => {
+    expect(getToolById('snowflake')).toMatchObject({
+      path: '/tools/snowflake',
+      category: 'generate',
+      group: 'Identifiers',
+      aliases: expect.arrayContaining(['twitter snowflake', 'discord snowflake']),
+      order: 20,
+      status: 'active',
+    })
+  })
+
+  it('registers ULID generation in the identifiers generator group', () => {
+    expect(getToolById('ulid')).toMatchObject({
+      path: '/tools/ulid',
+      category: 'generate',
+      group: 'Identifiers',
+      aliases: expect.arrayContaining(['sortable id', 'ulid generator']),
+      order: 30,
+      status: 'active',
+    })
+  })
+
+  it('registers Nano ID generation in the identifiers generator group', () => {
+    expect(getToolById('nanoid')).toMatchObject({
+      path: '/tools/nanoid',
+      category: 'generate',
+      group: 'Identifiers',
+      aliases: expect.arrayContaining(['nano id', 'nanoid']),
+      order: 40,
       status: 'active',
     })
   })
