@@ -42,6 +42,11 @@ describe('tool registry', () => {
     expect(getToolById('csv-table')?.title).toBe('CSV 表格查看器')
     expect(getToolById('css')?.title).toBe('CSS 格式化')
     expect(getToolById('color')?.title).toBe('Color Picker / 转换')
+    expect(getToolById('palette')?.title).toBe('调色板生成')
+    expect(getToolById('contrast')?.title).toBe('对比度检查器')
+    expect(getToolById('regex-helper')?.title).toBe('正则解释 / 生成辅助')
+    expect(getToolById('text-stats')?.title).toBe('文本统计')
+    expect(getToolById('line-tools')?.title).toBe('行排序 / 去重')
     expect(getToolById('curl')?.title).toBe('cURL 转代码')
     expect(getToolById('html')?.title).toBe('HTML 格式化')
     expect(getToolById('html-entity')?.title).toBe('HTML Entity 编解码')
@@ -285,6 +290,28 @@ describe('tool registry', () => {
       group: 'Color',
       aliases: expect.arrayContaining(['color converter', 'hex rgb hsl']),
       order: 160,
+      status: 'active',
+    })
+  })
+
+  it('registers palette generation in the color generator group', () => {
+    expect(getToolById('palette')).toMatchObject({
+      path: '/tools/palette',
+      category: 'generate',
+      group: 'Color',
+      aliases: expect.arrayContaining(['palette generator', 'color harmony']),
+      order: 50,
+      status: 'active',
+    })
+  })
+
+  it('registers contrast checking in the color formatting group', () => {
+    expect(getToolById('contrast')).toMatchObject({
+      path: '/tools/contrast',
+      category: 'format',
+      group: 'Color',
+      aliases: expect.arrayContaining(['contrast checker', 'wcag contrast']),
+      order: 170,
       status: 'active',
     })
   })
@@ -626,6 +653,39 @@ describe('tool registry', () => {
       group: 'Certificate',
       aliases: expect.arrayContaining(['csr parser', 'certificate request']),
       order: 20,
+      status: 'active',
+    })
+  })
+
+  it('registers regex helper in the text analysis group', () => {
+    expect(getToolById('regex-helper')).toMatchObject({
+      path: '/tools/regex-helper',
+      category: 'text',
+      group: 'Text Analysis',
+      aliases: expect.arrayContaining(['regex explain', 'regex builder']),
+      order: 15,
+      status: 'active',
+    })
+  })
+
+  it('registers text stats in the text analysis group', () => {
+    expect(getToolById('text-stats')).toMatchObject({
+      path: '/tools/text-stats',
+      category: 'text',
+      group: 'Text Analysis',
+      aliases: expect.arrayContaining(['word count', 'character count']),
+      order: 25,
+      status: 'active',
+    })
+  })
+
+  it('registers line tools in the list text group', () => {
+    expect(getToolById('line-tools')).toMatchObject({
+      path: '/tools/line-tools',
+      category: 'text',
+      group: 'List',
+      aliases: expect.arrayContaining(['line sort', 'dedupe lines']),
+      order: 10,
       status: 'active',
     })
   })
