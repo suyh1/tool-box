@@ -39,6 +39,7 @@ describe('tool registry', () => {
     expect(getToolById('jwt-sign')?.title).toBe('JWT 编码 / 签名 / 验签')
     expect(getToolById('js-ts-format')?.title).toBe('JavaScript / TypeScript 格式化')
     expect(getToolById('rsa-key')?.title).toBe('RSA 密钥生成')
+    expect(getToolById('rsa-sign')?.title).toBe('RSA 签名 / 验签')
     expect(getToolById('sitemap')?.title).toBe('XML Sitemap 格式化')
     expect(getToolById('sql')?.title).toBe('SQL 格式化')
     expect(getToolById('toml')?.title).toBe('TOML 格式化 / JSON 转换')
@@ -410,6 +411,17 @@ describe('tool registry', () => {
       group: 'Key',
       aliases: expect.arrayContaining(['rsa generator', 'rsa keypair']),
       order: 30,
+      status: 'active',
+    })
+  })
+
+  it('registers RSA signing in the signature security group', () => {
+    expect(getToolById('rsa-sign')).toMatchObject({
+      path: '/tools/rsa-sign',
+      category: 'security',
+      group: 'Signature',
+      aliases: expect.arrayContaining(['rsa verify', 'rsa signature']),
+      order: 10,
       status: 'active',
     })
   })
