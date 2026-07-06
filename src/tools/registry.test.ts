@@ -47,6 +47,11 @@ describe('tool registry', () => {
     expect(getToolById('regex-helper')?.title).toBe('正则解释 / 生成辅助')
     expect(getToolById('text-stats')?.title).toBe('文本统计')
     expect(getToolById('line-tools')?.title).toBe('行排序 / 去重')
+    expect(getToolById('list-random')?.title).toBe('列表随机化 / 抽样')
+    expect(getToolById('delimiter-convert')?.title).toBe('分隔符转换')
+    expect(getToolById('string-escape')?.title).toBe('字符串转义')
+    expect(getToolById('slug')?.title).toBe('Slug 生成')
+    expect(getToolById('pinyin')?.title).toBe('拼音转换')
     expect(getToolById('curl')?.title).toBe('cURL 转代码')
     expect(getToolById('html')?.title).toBe('HTML 格式化')
     expect(getToolById('html-entity')?.title).toBe('HTML Entity 编解码')
@@ -686,6 +691,61 @@ describe('tool registry', () => {
       group: 'List',
       aliases: expect.arrayContaining(['line sort', 'dedupe lines']),
       order: 10,
+      status: 'active',
+    })
+  })
+
+  it('registers list randomization in the list text group', () => {
+    expect(getToolById('list-random')).toMatchObject({
+      path: '/tools/list-random',
+      category: 'text',
+      group: 'List',
+      aliases: expect.arrayContaining(['shuffle list', 'random sample']),
+      order: 20,
+      status: 'active',
+    })
+  })
+
+  it('registers delimiter conversion in the list text group', () => {
+    expect(getToolById('delimiter-convert')).toMatchObject({
+      path: '/tools/delimiter-convert',
+      category: 'text',
+      group: 'List',
+      aliases: expect.arrayContaining(['delimiter converter', 'list separator']),
+      order: 30,
+      status: 'active',
+    })
+  })
+
+  it('registers string escaping in the string escape text group', () => {
+    expect(getToolById('string-escape')).toMatchObject({
+      path: '/tools/string-escape',
+      category: 'text',
+      group: 'String Escape',
+      aliases: expect.arrayContaining(['string escape', 'json escape']),
+      order: 10,
+      status: 'active',
+    })
+  })
+
+  it('registers slug generation in the text transform group', () => {
+    expect(getToolById('slug')).toMatchObject({
+      path: '/tools/slug',
+      category: 'text',
+      group: 'Text Transform',
+      aliases: expect.arrayContaining(['slug generator', 'url slug']),
+      order: 40,
+      status: 'active',
+    })
+  })
+
+  it('registers pinyin conversion in the text transform group', () => {
+    expect(getToolById('pinyin')).toMatchObject({
+      path: '/tools/pinyin',
+      category: 'text',
+      group: 'Text Transform',
+      aliases: expect.arrayContaining(['chinese pinyin', 'hanzi pinyin']),
+      order: 50,
       status: 'active',
     })
   })
