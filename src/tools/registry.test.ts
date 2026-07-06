@@ -59,6 +59,12 @@ describe('tool registry', () => {
     expect(getToolById('http-headers')?.title).toBe('HTTP Header 解析器')
     expect(getToolById('cookie-parser')?.title).toBe('Cookie 解析器')
     expect(getToolById('user-agent')?.title).toBe('User-Agent 解析器')
+    expect(getToolById('oauth-url')?.title).toBe('OAuth URL 生成器')
+    expect(getToolById('openapi-viewer')?.title).toBe('OpenAPI Viewer / Validator')
+    expect(getToolById('graphql-format')?.title).toBe('GraphQL Formatter')
+    expect(getToolById('graphql-variables')?.title).toBe('GraphQL Variables 合并检查')
+    expect(getToolById('websocket-echo')?.title).toBe('WebSocket Echo Client')
+    expect(getToolById('har-viewer')?.title).toBe('HAR Viewer')
     expect(getToolById('curl')?.title).toBe('cURL 转代码')
     expect(getToolById('html')?.title).toBe('HTML 格式化')
     expect(getToolById('html-entity')?.title).toBe('HTML Entity 编解码')
@@ -830,6 +836,72 @@ describe('tool registry', () => {
       group: 'HTTP',
       aliases: expect.arrayContaining(['user agent parser', 'ua parser']),
       order: 70,
+      status: 'active',
+    })
+  })
+
+  it('registers OAuth URL generation in the OAuth security group', () => {
+    expect(getToolById('oauth-url')).toMatchObject({
+      path: '/tools/oauth-url',
+      category: 'security',
+      group: 'OAuth',
+      aliases: expect.arrayContaining(['oauth authorize url', 'authorization url']),
+      order: 10,
+      status: 'active',
+    })
+  })
+
+  it('registers OpenAPI validation in the API schema code group', () => {
+    expect(getToolById('openapi-viewer')).toMatchObject({
+      path: '/tools/openapi-viewer',
+      category: 'code',
+      group: 'API Schema',
+      aliases: expect.arrayContaining(['openapi validator', 'swagger viewer']),
+      order: 10,
+      status: 'active',
+    })
+  })
+
+  it('registers GraphQL formatting in the API schema formatting group', () => {
+    expect(getToolById('graphql-format')).toMatchObject({
+      path: '/tools/graphql-format',
+      category: 'format',
+      group: 'API Schema',
+      aliases: expect.arrayContaining(['graphql formatter', 'gql format']),
+      order: 20,
+      status: 'active',
+    })
+  })
+
+  it('registers GraphQL variables checking in the API schema code group', () => {
+    expect(getToolById('graphql-variables')).toMatchObject({
+      path: '/tools/graphql-variables',
+      category: 'code',
+      group: 'API Schema',
+      aliases: expect.arrayContaining(['graphql variables', 'gql variables']),
+      order: 30,
+      status: 'active',
+    })
+  })
+
+  it('registers WebSocket echo in the HTTP code group', () => {
+    expect(getToolById('websocket-echo')).toMatchObject({
+      path: '/tools/websocket-echo',
+      category: 'code',
+      group: 'HTTP',
+      aliases: expect.arrayContaining(['websocket client', 'ws echo']),
+      order: 80,
+      status: 'active',
+    })
+  })
+
+  it('registers HAR viewing in the HTTP code group', () => {
+    expect(getToolById('har-viewer')).toMatchObject({
+      path: '/tools/har-viewer',
+      category: 'code',
+      group: 'HTTP',
+      aliases: expect.arrayContaining(['har parser', 'network log']),
+      order: 90,
       status: 'active',
     })
   })
