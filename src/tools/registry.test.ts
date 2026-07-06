@@ -17,6 +17,7 @@ describe('tool registry', () => {
     expect(getToolById('jsonpath')?.title).toBe('JSONPath 查询器')
     expect(getToolById('json-type')?.title).toBe('JSON 转类型')
     expect(getToolById('markdown-preview')?.title).toBe('Markdown 预览')
+    expect(getToolById('markdown-toc')?.title).toBe('Markdown TOC 生成')
     expect(getToolById('yaml-json')?.title).toBe('YAML / JSON 转换')
     expect(getToolById('cron')?.title).toBe('Cron 表达式解析')
     expect(getToolById('csv-json')?.title).toBe('CSV / JSON 转换')
@@ -194,6 +195,17 @@ describe('tool registry', () => {
       group: 'Markdown',
       aliases: expect.arrayContaining(['markdown renderer', 'md preview']),
       order: 120,
+      status: 'active',
+    })
+  })
+
+  it('registers Markdown TOC generation in the Markdown text group', () => {
+    expect(getToolById('markdown-toc')).toMatchObject({
+      path: '/tools/markdown-toc',
+      category: 'text',
+      group: 'Markdown',
+      aliases: expect.arrayContaining(['markdown toc', 'table of contents']),
+      order: 40,
       status: 'active',
     })
   })
