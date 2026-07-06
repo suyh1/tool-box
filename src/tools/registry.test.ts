@@ -27,6 +27,7 @@ describe('tool registry', () => {
     expect(getToolById('curl')?.title).toBe('cURL 转代码')
     expect(getToolById('html')?.title).toBe('HTML 格式化')
     expect(getToolById('js-ts-format')?.title).toBe('JavaScript / TypeScript 格式化')
+    expect(getToolById('sitemap')?.title).toBe('XML Sitemap 格式化')
     expect(getToolById('sql')?.title).toBe('SQL 格式化')
     expect(getToolById('toml')?.title).toBe('TOML 格式化 / JSON 转换')
     expect(getToolById('xml')?.title).toBe('XML 格式化')
@@ -242,6 +243,17 @@ describe('tool registry', () => {
       group: 'Web Code',
       aliases: expect.arrayContaining(['javascript formatter', 'typescript formatter']),
       order: 150,
+      status: 'active',
+    })
+  })
+
+  it('registers XML Sitemap formatting in the web markup formatting group', () => {
+    expect(getToolById('sitemap')).toMatchObject({
+      path: '/tools/sitemap',
+      category: 'format',
+      group: 'Web Markup',
+      aliases: expect.arrayContaining(['sitemap validator', 'xml sitemap']),
+      order: 135,
       status: 'active',
     })
   })
