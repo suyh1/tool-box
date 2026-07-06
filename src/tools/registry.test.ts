@@ -52,6 +52,13 @@ describe('tool registry', () => {
     expect(getToolById('string-escape')?.title).toBe('字符串转义')
     expect(getToolById('slug')?.title).toBe('Slug 生成')
     expect(getToolById('pinyin')?.title).toBe('拼音转换')
+    expect(getToolById('extractor')?.title).toBe('提取 URL / 邮箱 / IP')
+    expect(getToolById('template-replace')?.title).toBe('文本模板替换')
+    expect(getToolById('url-parser')?.title).toBe('URL 解析器')
+    expect(getToolById('query-editor')?.title).toBe('Query 参数编辑器')
+    expect(getToolById('http-headers')?.title).toBe('HTTP Header 解析器')
+    expect(getToolById('cookie-parser')?.title).toBe('Cookie 解析器')
+    expect(getToolById('user-agent')?.title).toBe('User-Agent 解析器')
     expect(getToolById('curl')?.title).toBe('cURL 转代码')
     expect(getToolById('html')?.title).toBe('HTML 格式化')
     expect(getToolById('html-entity')?.title).toBe('HTML Entity 编解码')
@@ -746,6 +753,83 @@ describe('tool registry', () => {
       group: 'Text Transform',
       aliases: expect.arrayContaining(['chinese pinyin', 'hanzi pinyin']),
       order: 50,
+      status: 'active',
+    })
+  })
+
+  it('registers entity extraction in the extractor text group', () => {
+    expect(getToolById('extractor')).toMatchObject({
+      path: '/tools/extractor',
+      category: 'text',
+      group: 'Extractor',
+      aliases: expect.arrayContaining(['extract urls', 'email extractor']),
+      order: 10,
+      status: 'active',
+    })
+  })
+
+  it('registers template replacement in the text transform group', () => {
+    expect(getToolById('template-replace')).toMatchObject({
+      path: '/tools/template-replace',
+      category: 'text',
+      group: 'Text Transform',
+      aliases: expect.arrayContaining(['template replace', 'variable replacement']),
+      order: 60,
+      status: 'active',
+    })
+  })
+
+  it('registers URL parsing in the HTTP code group', () => {
+    expect(getToolById('url-parser')).toMatchObject({
+      path: '/tools/url-parser',
+      category: 'code',
+      group: 'HTTP',
+      aliases: expect.arrayContaining(['url parse', 'uri parser']),
+      order: 30,
+      status: 'active',
+    })
+  })
+
+  it('registers query editing in the HTTP code group', () => {
+    expect(getToolById('query-editor')).toMatchObject({
+      path: '/tools/query-editor',
+      category: 'code',
+      group: 'HTTP',
+      aliases: expect.arrayContaining(['query params', 'url parameters']),
+      order: 40,
+      status: 'active',
+    })
+  })
+
+  it('registers HTTP header parsing in the HTTP code group', () => {
+    expect(getToolById('http-headers')).toMatchObject({
+      path: '/tools/http-headers',
+      category: 'code',
+      group: 'HTTP',
+      aliases: expect.arrayContaining(['header parser', 'http headers']),
+      order: 50,
+      status: 'active',
+    })
+  })
+
+  it('registers cookie parsing in the HTTP code group', () => {
+    expect(getToolById('cookie-parser')).toMatchObject({
+      path: '/tools/cookie-parser',
+      category: 'code',
+      group: 'HTTP',
+      aliases: expect.arrayContaining(['cookie parser', 'set-cookie']),
+      order: 60,
+      status: 'active',
+    })
+  })
+
+  it('registers user agent parsing in the HTTP code group', () => {
+    expect(getToolById('user-agent')).toMatchObject({
+      path: '/tools/user-agent',
+      category: 'code',
+      group: 'HTTP',
+      aliases: expect.arrayContaining(['user agent parser', 'ua parser']),
+      order: 70,
       status: 'active',
     })
   })
