@@ -65,6 +65,10 @@ describe('tool registry', () => {
     expect(getToolById('graphql-variables')?.title).toBe('GraphQL Variables 合并检查')
     expect(getToolById('websocket-echo')?.title).toBe('WebSocket Echo Client')
     expect(getToolById('har-viewer')?.title).toBe('HAR Viewer')
+    expect(getToolById('ip-cidr')?.title).toBe('IP / CIDR 计算器')
+    expect(getToolById('ip-convert')?.title).toBe('IPv4 / IPv6 转换')
+    expect(getToolById('mac-address')?.title).toBe('MAC 地址格式化 / 厂商查询')
+    expect(getToolById('dns-query')?.title).toBe('DNS 查询')
     expect(getToolById('curl')?.title).toBe('cURL 转代码')
     expect(getToolById('html')?.title).toBe('HTML 格式化')
     expect(getToolById('html-entity')?.title).toBe('HTML Entity 编解码')
@@ -902,6 +906,50 @@ describe('tool registry', () => {
       group: 'HTTP',
       aliases: expect.arrayContaining(['har parser', 'network log']),
       order: 90,
+      status: 'active',
+    })
+  })
+
+  it('registers IP CIDR calculation in the network security group', () => {
+    expect(getToolById('ip-cidr')).toMatchObject({
+      path: '/tools/ip-cidr',
+      category: 'security',
+      group: 'Network',
+      aliases: expect.arrayContaining(['cidr calculator', 'subnet calculator']),
+      order: 10,
+      status: 'active',
+    })
+  })
+
+  it('registers IP conversion in the network security group', () => {
+    expect(getToolById('ip-convert')).toMatchObject({
+      path: '/tools/ip-convert',
+      category: 'security',
+      group: 'Network',
+      aliases: expect.arrayContaining(['ipv4 converter', 'ipv6 mapped']),
+      order: 20,
+      status: 'active',
+    })
+  })
+
+  it('registers MAC formatting in the network security group', () => {
+    expect(getToolById('mac-address')).toMatchObject({
+      path: '/tools/mac-address',
+      category: 'security',
+      group: 'Network',
+      aliases: expect.arrayContaining(['mac formatter', 'oui lookup']),
+      order: 30,
+      status: 'active',
+    })
+  })
+
+  it('registers DNS querying in the network code group', () => {
+    expect(getToolById('dns-query')).toMatchObject({
+      path: '/tools/dns-query',
+      category: 'code',
+      group: 'Network',
+      aliases: expect.arrayContaining(['dns lookup', 'doh query']),
+      order: 10,
       status: 'active',
     })
   })
