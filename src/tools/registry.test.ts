@@ -16,6 +16,7 @@ describe('tool registry', () => {
     expect(getToolById('json-schema-validate')?.title).toBe('JSON Schema 校验')
     expect(getToolById('jsonpath')?.title).toBe('JSONPath 查询器')
     expect(getToolById('json-type')?.title).toBe('JSON 转类型')
+    expect(getToolById('aes')?.title).toBe('AES 加密 / 解密')
     expect(getToolById('ascii')?.title).toBe('ASCII / 字符码表')
     expect(getToolById('binary')?.title).toBe('Binary 编解码')
     expect(getToolById('brotli')?.title).toBe('Brotli 压缩 / 解压')
@@ -386,6 +387,17 @@ describe('tool registry', () => {
       group: 'Digest',
       aliases: expect.arrayContaining(['hmac sha256', 'signature hash']),
       order: 30,
+      status: 'active',
+    })
+  })
+
+  it('registers AES encryption in the encryption security group', () => {
+    expect(getToolById('aes')).toMatchObject({
+      path: '/tools/aes',
+      category: 'security',
+      group: 'Encryption',
+      aliases: expect.arrayContaining(['aes gcm', 'aes decrypt']),
+      order: 10,
       status: 'active',
     })
   })
