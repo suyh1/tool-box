@@ -19,6 +19,7 @@ describe('tool registry', () => {
     expect(getToolById('yaml-json')?.title).toBe('YAML / JSON 转换')
     expect(getToolById('cron')?.title).toBe('Cron 表达式解析')
     expect(getToolById('csv-json')?.title).toBe('CSV / JSON 转换')
+    expect(getToolById('csv-sql')?.title).toBe('CSV / SQL INSERT 生成')
     expect(getToolById('csv-table')?.title).toBe('CSV 表格查看器')
     expect(getToolById('curl')?.title).toBe('cURL 转代码')
     expect(getToolById('sql')?.title).toBe('SQL 格式化')
@@ -170,6 +171,17 @@ describe('tool registry', () => {
       group: 'CSV',
       aliases: expect.arrayContaining(['csv viewer', 'table preview']),
       order: 110,
+      status: 'active',
+    })
+  })
+
+  it('registers CSV SQL insert generator in the database code group', () => {
+    expect(getToolById('csv-sql')).toMatchObject({
+      path: '/tools/csv-sql',
+      category: 'code',
+      group: 'Database',
+      aliases: expect.arrayContaining(['csv to sql', 'insert generator']),
+      order: 35,
       status: 'active',
     })
   })
