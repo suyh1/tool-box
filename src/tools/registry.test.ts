@@ -26,6 +26,7 @@ describe('tool registry', () => {
     expect(getToolById('css')?.title).toBe('CSS 格式化')
     expect(getToolById('curl')?.title).toBe('cURL 转代码')
     expect(getToolById('html')?.title).toBe('HTML 格式化')
+    expect(getToolById('html-entity')?.title).toBe('HTML Entity 编解码')
     expect(getToolById('js-ts-format')?.title).toBe('JavaScript / TypeScript 格式化')
     expect(getToolById('sitemap')?.title).toBe('XML Sitemap 格式化')
     expect(getToolById('sql')?.title).toBe('SQL 格式化')
@@ -254,6 +255,17 @@ describe('tool registry', () => {
       group: 'Web Markup',
       aliases: expect.arrayContaining(['sitemap validator', 'xml sitemap']),
       order: 135,
+      status: 'active',
+    })
+  })
+
+  it('registers HTML Entity encoding in the text encoding group', () => {
+    expect(getToolById('html-entity')).toMatchObject({
+      path: '/tools/html-entity',
+      category: 'encode',
+      group: 'Text Encoding',
+      aliases: expect.arrayContaining(['html entities', 'entity decode']),
+      order: 30,
       status: 'active',
     })
   })
