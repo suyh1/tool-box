@@ -44,6 +44,7 @@ describe('tool registry', () => {
     expect(getToolById('rsa-sign')?.title).toBe('RSA 签名 / 验签')
     expect(getToolById('sitemap')?.title).toBe('XML Sitemap 格式化')
     expect(getToolById('sql')?.title).toBe('SQL 格式化')
+    expect(getToolById('totp')?.title).toBe('TOTP 生成 / 校验')
     expect(getToolById('toml')?.title).toBe('TOML 格式化 / JSON 转换')
     expect(getToolById('unicode-escape')?.title).toBe('Unicode Escape 编解码')
     expect(getToolById('xml')?.title).toBe('XML 格式化')
@@ -446,6 +447,17 @@ describe('tool registry', () => {
       group: 'Password',
       aliases: expect.arrayContaining(['bcrypt verify', 'password hash']),
       order: 10,
+      status: 'active',
+    })
+  })
+
+  it('registers TOTP generation in the token security group', () => {
+    expect(getToolById('totp')).toMatchObject({
+      path: '/tools/totp',
+      category: 'security',
+      group: 'Token',
+      aliases: expect.arrayContaining(['otp', '2fa']),
+      order: 20,
       status: 'active',
     })
   })
