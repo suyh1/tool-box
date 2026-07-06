@@ -16,6 +16,7 @@ describe('tool registry', () => {
     expect(getToolById('json-schema-validate')?.title).toBe('JSON Schema 校验')
     expect(getToolById('jsonpath')?.title).toBe('JSONPath 查询器')
     expect(getToolById('json-type')?.title).toBe('JSON 转类型')
+    expect(getToolById('binary')?.title).toBe('Binary 编解码')
     expect(getToolById('markdown-preview')?.title).toBe('Markdown 预览')
     expect(getToolById('markdown-toc')?.title).toBe('Markdown TOC 生成')
     expect(getToolById('yaml-json')?.title).toBe('YAML / JSON 转换')
@@ -290,6 +291,17 @@ describe('tool registry', () => {
       group: 'Number Bases',
       aliases: expect.arrayContaining(['hex decode', 'hexadecimal']),
       order: 50,
+      status: 'active',
+    })
+  })
+
+  it('registers Binary encoding in the number bases group', () => {
+    expect(getToolById('binary')).toMatchObject({
+      path: '/tools/binary',
+      category: 'encode',
+      group: 'Number Bases',
+      aliases: expect.arrayContaining(['binary decode', 'base2']),
+      order: 60,
       status: 'active',
     })
   })
