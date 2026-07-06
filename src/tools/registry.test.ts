@@ -26,6 +26,10 @@ describe('tool registry', () => {
     expect(getToolById('markdown-toc')?.title).toBe('Markdown TOC 生成')
     expect(getToolById('number-base')?.title).toBe('Number Base 转换')
     expect(getToolById('password')?.title).toBe('密码生成器')
+    expect(getToolById('passphrase')?.title).toBe('Passphrase 生成器')
+    expect(getToolById('lorem-ipsum')?.title).toBe('Lorem Ipsum 生成器')
+    expect(getToolById('mock-json')?.title).toBe('Mock JSON 数据生成')
+    expect(getToolById('random-string')?.title).toBe('随机字符串生成器')
     expect(getToolById('yaml-json')?.title).toBe('YAML / JSON 转换')
     expect(getToolById('cron')?.title).toBe('Cron 表达式解析')
     expect(getToolById('csv-json')?.title).toBe('CSV / JSON 转换')
@@ -483,6 +487,50 @@ describe('tool registry', () => {
       category: 'generate',
       group: 'Password',
       aliases: expect.arrayContaining(['password generator', 'random password']),
+      order: 10,
+      status: 'active',
+    })
+  })
+
+  it('registers passphrase generation in the password generator group', () => {
+    expect(getToolById('passphrase')).toMatchObject({
+      path: '/tools/passphrase',
+      category: 'generate',
+      group: 'Password',
+      aliases: expect.arrayContaining(['passphrase generator', 'diceware']),
+      order: 20,
+      status: 'active',
+    })
+  })
+
+  it('registers Lorem Ipsum generation in the mock data generator group', () => {
+    expect(getToolById('lorem-ipsum')).toMatchObject({
+      path: '/tools/lorem-ipsum',
+      category: 'generate',
+      group: 'Mock Data',
+      aliases: expect.arrayContaining(['lorem ipsum', 'dummy text']),
+      order: 10,
+      status: 'active',
+    })
+  })
+
+  it('registers Mock JSON generation in the mock data generator group', () => {
+    expect(getToolById('mock-json')).toMatchObject({
+      path: '/tools/mock-json',
+      category: 'generate',
+      group: 'Mock Data',
+      aliases: expect.arrayContaining(['mock data', 'json faker']),
+      order: 20,
+      status: 'active',
+    })
+  })
+
+  it('registers random string generation in the random generator group', () => {
+    expect(getToolById('random-string')).toMatchObject({
+      path: '/tools/random-string',
+      category: 'generate',
+      group: 'Random',
+      aliases: expect.arrayContaining(['random text', 'random chars']),
       order: 10,
       status: 'active',
     })
