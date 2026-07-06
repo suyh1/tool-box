@@ -25,6 +25,7 @@ describe('tool registry', () => {
     expect(getToolById('markdown-preview')?.title).toBe('Markdown 预览')
     expect(getToolById('markdown-toc')?.title).toBe('Markdown TOC 生成')
     expect(getToolById('number-base')?.title).toBe('Number Base 转换')
+    expect(getToolById('password')?.title).toBe('密码生成器')
     expect(getToolById('yaml-json')?.title).toBe('YAML / JSON 转换')
     expect(getToolById('cron')?.title).toBe('Cron 表达式解析')
     expect(getToolById('csv-json')?.title).toBe('CSV / JSON 转换')
@@ -472,6 +473,17 @@ describe('tool registry', () => {
       group: 'Token',
       aliases: expect.arrayContaining(['otp', '2fa']),
       order: 20,
+      status: 'active',
+    })
+  })
+
+  it('registers password generation in the password generator group', () => {
+    expect(getToolById('password')).toMatchObject({
+      path: '/tools/password',
+      category: 'generate',
+      group: 'Password',
+      aliases: expect.arrayContaining(['password generator', 'random password']),
+      order: 10,
       status: 'active',
     })
   })
