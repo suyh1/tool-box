@@ -35,6 +35,7 @@ describe('tool registry', () => {
     expect(getToolById('html-entity')?.title).toBe('HTML Entity 编解码')
     expect(getToolById('hex')?.title).toBe('Hex 编解码')
     expect(getToolById('hmac')?.title).toBe('HMAC 生成')
+    expect(getToolById('ecdsa-sign')?.title).toBe('ECDSA 签名 / 验签')
     expect(getToolById('jwk-pem')?.title).toBe('JWK / PEM 转换')
     expect(getToolById('jwt-sign')?.title).toBe('JWT 编码 / 签名 / 验签')
     expect(getToolById('js-ts-format')?.title).toBe('JavaScript / TypeScript 格式化')
@@ -422,6 +423,17 @@ describe('tool registry', () => {
       group: 'Signature',
       aliases: expect.arrayContaining(['rsa verify', 'rsa signature']),
       order: 10,
+      status: 'active',
+    })
+  })
+
+  it('registers ECDSA signing in the signature security group', () => {
+    expect(getToolById('ecdsa-sign')).toMatchObject({
+      path: '/tools/ecdsa-sign',
+      category: 'security',
+      group: 'Signature',
+      aliases: expect.arrayContaining(['ecdsa verify', 'ec signature']),
+      order: 20,
       status: 'active',
     })
   })
