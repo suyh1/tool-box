@@ -27,6 +27,7 @@ describe('tool registry', () => {
     expect(getToolById('curl')?.title).toBe('cURL 转代码')
     expect(getToolById('html')?.title).toBe('HTML 格式化')
     expect(getToolById('html-entity')?.title).toBe('HTML Entity 编解码')
+    expect(getToolById('hex')?.title).toBe('Hex 编解码')
     expect(getToolById('js-ts-format')?.title).toBe('JavaScript / TypeScript 格式化')
     expect(getToolById('sitemap')?.title).toBe('XML Sitemap 格式化')
     expect(getToolById('sql')?.title).toBe('SQL 格式化')
@@ -278,6 +279,17 @@ describe('tool registry', () => {
       group: 'Text Encoding',
       aliases: expect.arrayContaining(['unicode escape', 'u escape']),
       order: 40,
+      status: 'active',
+    })
+  })
+
+  it('registers Hex encoding in the number bases group', () => {
+    expect(getToolById('hex')).toMatchObject({
+      path: '/tools/hex',
+      category: 'encode',
+      group: 'Number Bases',
+      aliases: expect.arrayContaining(['hex decode', 'hexadecimal']),
+      order: 50,
       status: 'active',
     })
   })
