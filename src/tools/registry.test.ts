@@ -42,6 +42,7 @@ describe('tool registry', () => {
     expect(getToolById('js-ts-format')?.title).toBe('JavaScript / TypeScript 格式化')
     expect(getToolById('rsa-key')?.title).toBe('RSA 密钥生成')
     expect(getToolById('rsa-sign')?.title).toBe('RSA 签名 / 验签')
+    expect(getToolById('ssh-key')?.title).toBe('SSH Key Inspector')
     expect(getToolById('sitemap')?.title).toBe('XML Sitemap 格式化')
     expect(getToolById('sql')?.title).toBe('SQL 格式化')
     expect(getToolById('totp')?.title).toBe('TOTP 生成 / 校验')
@@ -416,6 +417,17 @@ describe('tool registry', () => {
       group: 'Key',
       aliases: expect.arrayContaining(['rsa generator', 'rsa keypair']),
       order: 30,
+      status: 'active',
+    })
+  })
+
+  it('registers SSH key inspection in the key security group', () => {
+    expect(getToolById('ssh-key')).toMatchObject({
+      path: '/tools/ssh-key',
+      category: 'security',
+      group: 'Key',
+      aliases: expect.arrayContaining(['ssh public key', 'authorized_keys']),
+      order: 40,
       status: 'active',
     })
   })
