@@ -24,6 +24,7 @@ describe('tool registry', () => {
     expect(getToolById('csv-sql')?.title).toBe('CSV / SQL INSERT 生成')
     expect(getToolById('csv-table')?.title).toBe('CSV 表格查看器')
     expect(getToolById('curl')?.title).toBe('cURL 转代码')
+    expect(getToolById('html')?.title).toBe('HTML 格式化')
     expect(getToolById('sql')?.title).toBe('SQL 格式化')
     expect(getToolById('toml')?.title).toBe('TOML 格式化 / JSON 转换')
     expect(getToolById('xml')?.title).toBe('XML 格式化')
@@ -206,6 +207,17 @@ describe('tool registry', () => {
       group: 'Markdown',
       aliases: expect.arrayContaining(['markdown toc', 'table of contents']),
       order: 40,
+      status: 'active',
+    })
+  })
+
+  it('registers HTML formatting in the web markup formatting group', () => {
+    expect(getToolById('html')).toMatchObject({
+      path: '/tools/html',
+      category: 'format',
+      group: 'Web Markup',
+      aliases: expect.arrayContaining(['html formatter', 'html minifier']),
+      order: 130,
       status: 'active',
     })
   })
