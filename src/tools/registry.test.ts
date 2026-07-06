@@ -18,6 +18,7 @@ describe('tool registry', () => {
     expect(getToolById('json-type')?.title).toBe('JSON 转类型')
     expect(getToolById('aes')?.title).toBe('AES 加密 / 解密')
     expect(getToolById('ascii')?.title).toBe('ASCII / 字符码表')
+    expect(getToolById('bcrypt')?.title).toBe('bcrypt 哈希 / 校验')
     expect(getToolById('binary')?.title).toBe('Binary 编解码')
     expect(getToolById('brotli')?.title).toBe('Brotli 压缩 / 解压')
     expect(getToolById('gzip')?.title).toBe('Gzip 压缩 / 解压')
@@ -434,6 +435,17 @@ describe('tool registry', () => {
       group: 'Signature',
       aliases: expect.arrayContaining(['ecdsa verify', 'ec signature']),
       order: 20,
+      status: 'active',
+    })
+  })
+
+  it('registers bcrypt hashing in the password security group', () => {
+    expect(getToolById('bcrypt')).toMatchObject({
+      path: '/tools/bcrypt',
+      category: 'security',
+      group: 'Password',
+      aliases: expect.arrayContaining(['bcrypt verify', 'password hash']),
+      order: 10,
       status: 'active',
     })
   })
