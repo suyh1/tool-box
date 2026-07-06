@@ -31,6 +31,7 @@ describe('tool registry', () => {
     expect(getToolById('sitemap')?.title).toBe('XML Sitemap 格式化')
     expect(getToolById('sql')?.title).toBe('SQL 格式化')
     expect(getToolById('toml')?.title).toBe('TOML 格式化 / JSON 转换')
+    expect(getToolById('unicode-escape')?.title).toBe('Unicode Escape 编解码')
     expect(getToolById('xml')?.title).toBe('XML 格式化')
     expect(getToolById('xml-json')?.title).toBe('XML / JSON 转换')
     expect(getToolById('xml-xpath')?.title).toBe('XML 校验 / XPath 测试')
@@ -266,6 +267,17 @@ describe('tool registry', () => {
       group: 'Text Encoding',
       aliases: expect.arrayContaining(['html entities', 'entity decode']),
       order: 30,
+      status: 'active',
+    })
+  })
+
+  it('registers Unicode escape encoding in the text encoding group', () => {
+    expect(getToolById('unicode-escape')).toMatchObject({
+      path: '/tools/unicode-escape',
+      category: 'encode',
+      group: 'Text Encoding',
+      aliases: expect.arrayContaining(['unicode escape', 'u escape']),
+      order: 40,
       status: 'active',
     })
   })
