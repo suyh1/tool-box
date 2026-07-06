@@ -50,6 +50,7 @@ describe('tool registry', () => {
     expect(getToolById('xml')?.title).toBe('XML 格式化')
     expect(getToolById('xml-json')?.title).toBe('XML / JSON 转换')
     expect(getToolById('xml-xpath')?.title).toBe('XML 校验 / XPath 测试')
+    expect(getToolById('x509-cert')?.title).toBe('X.509 证书解析')
     expect(getToolById('missing')).toBeUndefined()
   })
 
@@ -458,6 +459,17 @@ describe('tool registry', () => {
       group: 'Token',
       aliases: expect.arrayContaining(['otp', '2fa']),
       order: 20,
+      status: 'active',
+    })
+  })
+
+  it('registers X.509 certificate parsing in the certificate security group', () => {
+    expect(getToolById('x509-cert')).toMatchObject({
+      path: '/tools/x509-cert',
+      category: 'security',
+      group: 'Certificate',
+      aliases: expect.arrayContaining(['certificate parser', 'tls cert']),
+      order: 10,
       status: 'active',
     })
   })
