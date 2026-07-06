@@ -38,6 +38,7 @@ describe('tool registry', () => {
     expect(getToolById('jwk-pem')?.title).toBe('JWK / PEM 转换')
     expect(getToolById('jwt-sign')?.title).toBe('JWT 编码 / 签名 / 验签')
     expect(getToolById('js-ts-format')?.title).toBe('JavaScript / TypeScript 格式化')
+    expect(getToolById('rsa-key')?.title).toBe('RSA 密钥生成')
     expect(getToolById('sitemap')?.title).toBe('XML Sitemap 格式化')
     expect(getToolById('sql')?.title).toBe('SQL 格式化')
     expect(getToolById('toml')?.title).toBe('TOML 格式化 / JSON 转换')
@@ -398,6 +399,17 @@ describe('tool registry', () => {
       group: 'Encryption',
       aliases: expect.arrayContaining(['aes gcm', 'aes decrypt']),
       order: 10,
+      status: 'active',
+    })
+  })
+
+  it('registers RSA key generation in the key security group', () => {
+    expect(getToolById('rsa-key')).toMatchObject({
+      path: '/tools/rsa-key',
+      category: 'security',
+      group: 'Key',
+      aliases: expect.arrayContaining(['rsa generator', 'rsa keypair']),
+      order: 30,
       status: 'active',
     })
   })
