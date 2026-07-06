@@ -17,6 +17,9 @@ import type { ToolDefinition } from '@/tools/types'
 const route = useRoute()
 const toolsStore = useToolsStore()
 const query = ref('')
+const emit = defineEmits<{
+  (event: 'open-tool', toolId: string): void
+}>()
 
 const favoriteTools = computed(() => tools
   .filter((tool) => toolsStore.favoriteIds.includes(tool.id)))
@@ -30,6 +33,10 @@ const view = computed(() => typeof route.query.view === 'string' ? route.query.v
 
 function toggleFavorite(toolId: string) {
   toolsStore.toggleFavorite(toolId)
+}
+
+function openTool(toolId: string) {
+  emit('open-tool', toolId)
 }
 </script>
 
@@ -60,13 +67,13 @@ function toggleFavorite(toolId: string) {
       </div>
       <div v-if="recentTools.length" class="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
         <article v-for="tool in recentTools" :key="tool.id" class="rounded-md border border-border bg-background/55 p-3">
-          <RouterLink :to="tool.path" class="block">
+          <button type="button" class="block w-full text-left" @click="openTool(tool.id)">
             <div class="flex items-center justify-between gap-2">
               <h3 class="truncate text-sm font-medium text-foreground">{{ tool.title }}</h3>
               <Badge variant="outline">{{ categoryCodes[tool.category] }}</Badge>
             </div>
             <p class="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">{{ tool.description }}</p>
-          </RouterLink>
+          </button>
         </article>
       </div>
       <p v-else class="text-sm text-muted-foreground">打开任意工具后，它会出现在这里。</p>
@@ -82,13 +89,13 @@ function toggleFavorite(toolId: string) {
       </div>
       <div v-if="favoriteTools.length" class="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
         <article v-for="tool in favoriteTools" :key="tool.id" class="rounded-md border border-border bg-background/55 p-3">
-          <RouterLink :to="tool.path" class="block">
+          <button type="button" class="block w-full text-left" @click="openTool(tool.id)">
             <div class="flex items-center justify-between gap-2">
               <h3 class="truncate text-sm font-medium text-foreground">{{ tool.title }}</h3>
               <Badge variant="outline">{{ categoryCodes[tool.category] }}</Badge>
             </div>
             <p class="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">{{ tool.description }}</p>
-          </RouterLink>
+          </button>
         </article>
       </div>
       <p v-else class="text-sm text-muted-foreground">在目录或工具页点击星标后，常用工具会固定在这里。</p>
@@ -103,10 +110,10 @@ function toggleFavorite(toolId: string) {
         <div class="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
           <article v-for="tool in featuredTools" :key="tool.id" class="rounded-md border border-border bg-background/55 p-3">
             <div class="flex items-start justify-between gap-2">
-              <RouterLink :to="tool.path" class="min-w-0">
+              <button type="button" class="min-w-0 text-left" @click="openTool(tool.id)">
                 <h3 class="truncate text-sm font-medium text-foreground">{{ tool.title }}</h3>
                 <p class="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">{{ tool.description }}</p>
-              </RouterLink>
+              </button>
               <Button
                 type="button"
                 variant="ghost"

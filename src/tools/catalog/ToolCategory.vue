@@ -17,6 +17,9 @@ import { tools } from '@/tools/registry'
 const route = useRoute()
 const toolsStore = useToolsStore()
 const query = ref('')
+const emit = defineEmits<{
+  (event: 'open-tool', toolId: string): void
+}>()
 
 const category = computed(() => {
   const value = String(route.params.category ?? '')
@@ -32,6 +35,10 @@ const groups = computed(() => category.value
 
 function toggleFavorite(toolId: string) {
   toolsStore.toggleFavorite(toolId)
+}
+
+function openTool(toolId: string) {
+  emit('open-tool', toolId)
 }
 </script>
 
@@ -89,7 +96,7 @@ function toggleFavorite(toolId: string) {
             :key="tool.id"
             class="grid gap-3 rounded-md border border-border bg-background/55 p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"
           >
-            <RouterLink :to="tool.path" class="min-w-0">
+            <button type="button" class="min-w-0 text-left" @click="openTool(tool.id)">
               <div class="flex flex-wrap items-center gap-2">
                 <h4 class="text-sm font-medium text-foreground">{{ tool.title }}</h4>
                 <Badge variant="secondary">{{ categoryCodes[tool.category] }}</Badge>
@@ -98,7 +105,7 @@ function toggleFavorite(toolId: string) {
               <p v-if="tool.keywords.length" class="mt-2 truncate font-mono text-[10px] text-muted-foreground">
                 {{ tool.keywords.join(' / ') }}
               </p>
-            </RouterLink>
+            </button>
             <Button
               type="button"
               variant="ghost"

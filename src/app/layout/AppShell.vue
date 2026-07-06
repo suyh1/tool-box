@@ -24,7 +24,7 @@ import {
   WandSparkles,
 } from '@lucide/vue'
 import { gsap } from 'gsap'
-import { computed, nextTick, onMounted, onUnmounted, ref, watch, type Component } from 'vue'
+import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref, shallowRef, watch, type Component } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -37,15 +37,23 @@ import {
   CommandList,
 } from '@/components/ui/command'
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
   categoryCodes,
   categoryLabels,
   categoryOrder,
   isToolCategory,
 } from '@/tools/catalog'
+import { shouldOpenToolInDialog } from '@/tools/open-mode'
 import { getToolById, getToolByPath, tools } from '@/tools/registry'
 import { usePreferencesStore } from '@/stores/preferences'
 import { useToolsStore } from '@/stores/tools'
-import type { ToolCategory } from '@/tools/types'
+import type { ToolCategory, ToolDefinition } from '@/tools/types'
 
 const route = useRoute()
 const router = useRouter()
@@ -56,6 +64,9 @@ const shellRoot = ref<HTMLElement | null>(null)
 const contentPanel = ref<HTMLElement | null>(null)
 const searchOpen = ref(false)
 const commandFilter = ref<'all' | 'recent' | 'favorites' | ToolCategory>('all')
+const toolDialogOpen = ref(false)
+const dialogTool = ref<ToolDefinition | null>(null)
+const dialogToolComponent = shallowRef<Component | null>(null)
 let motionMedia: gsap.MatchMedia | null = null
 let routeTween: ReturnType<typeof gsap.fromTo> | null = null
 
@@ -207,6 +218,14 @@ const statusLabel = computed(() => currentTool.value
 const statusIcon = computed(() => currentTool.value
   ? currentTool.value.status === 'active' ? CheckCircle2 : WandSparkles
   : CommandIcon)
+const dialogToolIcon = computed(() => dialogTool.value ? getToolIcon(dialogTool.value.id) : Code2)
+const dialogFavoriteLabel = computed(() => {
+  if (!dialogTool.value) {
+    return '切换收藏'
+  }
+
+  return `${toolsStore.favoriteIds.includes(dialogTool.value.id) ? '移除' : '添加'} ${dialogTool.value.title} 收藏`
+})
 
 watch(
   currentTool,
@@ -242,6 +261,15 @@ watch(
   },
 )
 
+watch(toolDialogOpen, (open) => {
+  if (open) {
+    return
+  }
+
+  dialogTool.value = null
+  dialogToolComponent.value = null
+})
+
 function getToolIcon(toolId: string) {
   return toolIconMap[toolId] ?? Code2
 }
@@ -250,11 +278,36 @@ function toggleTheme() {
   preferences.setTheme(preferences.effectiveTheme === 'dark' ? 'light' : 'dark')
 }
 
-function navigateToTool(path: string) {
+function openToolDialog(tool: ToolDefinition) {
+  dialogTool.value = tool
+  dialogToolComponent.value = defineAsyncComponent(tool.component)
+  toolDialogOpen.value = true
+  toolsStore.recordRecent(tool.id)
+}
+
+function openToolByPath(path: string) {
   searchOpen.value = false
+  const tool = getToolByPath(path)
+
+  if (!tool) {
+    return
+  }
+
+  if (shouldOpenToolInDialog(route.path, tool.path)) {
+    openToolDialog(tool)
+    return
+  }
 
   if (route.path !== path) {
     router.push(path)
+  }
+}
+
+function openToolFromCatalog(toolId: string) {
+  const tool = getToolById(toolId)
+
+  if (tool) {
+    openToolDialog(tool)
   }
 }
 
@@ -526,24 +579,83 @@ onUnmounted(() => {
                 <span class="rounded border border-border/70 bg-background/60 px-1.5 py-0.5 font-mono text-[10px]">⌘K</span>
               </button>
               <div v-if="recentTools.length > 0" class="flex flex-wrap gap-1.5 pt-1">
-                <RouterLink
+                <button
                   v-for="tool in recentTools"
                   :key="tool.id"
-                  :to="tool.path"
+                  type="button"
                   class="rounded border border-border/60 bg-card/58 px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                  @click="openToolByPath(tool.path)"
                 >
                   {{ tool.title }}
-                </RouterLink>
+                </button>
               </div>
             </div>
           </div>
         </div>
 
         <div ref="contentPanel" class="shell-reveal min-w-0">
-          <RouterView :key="route.fullPath" />
+          <RouterView v-slot="{ Component }">
+            <component
+              :is="Component"
+              :key="route.fullPath"
+              @open-tool="openToolFromCatalog"
+            />
+          </RouterView>
         </div>
       </section>
     </main>
+
+    <Dialog v-model:open="toolDialogOpen">
+      <DialogContent
+        class="max-h-[calc(100dvh-2rem)] w-[min(1280px,calc(100vw-2rem))] max-w-none gap-0 overflow-hidden border border-border/80 bg-popover/98 p-0 shadow-[0_32px_110px_rgba(0,0,0,0.42)] sm:max-w-none"
+      >
+        <DialogHeader
+          v-if="dialogTool"
+          class="border-b border-border/70 bg-card/72 px-4 py-3 pr-14 md:px-5"
+        >
+          <div class="flex flex-wrap items-start justify-between gap-3">
+            <div class="flex min-w-0 items-start gap-3">
+              <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-primary/30 bg-primary/12 text-primary">
+                <component :is="dialogToolIcon" class="h-5 w-5" />
+              </span>
+              <div class="min-w-0">
+                <DialogTitle class="truncate text-base font-semibold leading-6 text-foreground">
+                  {{ dialogTool.title }}
+                </DialogTitle>
+                <DialogDescription class="mt-1 line-clamp-2 text-sm leading-5">
+                  {{ dialogTool.description }}
+                </DialogDescription>
+                <div class="mt-2 flex flex-wrap gap-1.5">
+                  <Badge variant="secondary">{{ categoryLabels[dialogTool.category] }}</Badge>
+                  <Badge v-if="dialogTool.group" variant="outline">{{ dialogTool.group }}</Badge>
+                  <Badge variant="outline">本地可用</Badge>
+                </div>
+              </div>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              class="h-8 w-8 shrink-0"
+              :aria-label="dialogFavoriteLabel"
+              @click="toolsStore.toggleFavorite(dialogTool.id)"
+            >
+              <Star
+                class="h-4 w-4"
+                :class="toolsStore.favoriteIds.includes(dialogTool.id) ? 'fill-primary text-primary' : 'text-muted-foreground'"
+              />
+            </Button>
+          </div>
+        </DialogHeader>
+
+        <div class="max-h-[calc(100dvh-8.75rem)] overflow-auto bg-background/55 p-3 md:p-5">
+          <component
+            :is="dialogToolComponent"
+            v-if="dialogTool && dialogToolComponent"
+          />
+        </div>
+      </DialogContent>
+    </Dialog>
 
     <CommandDialog
       v-model:open="searchOpen"
@@ -609,8 +721,8 @@ onUnmounted(() => {
             :key="tool.id"
             :value="`${tool.title} ${tool.description} ${categoryLabels[tool.category]} ${tool.group ?? ''} ${tool.keywords.join(' ')} ${(tool.aliases ?? []).join(' ')}`"
             class="gap-3 rounded-md px-3 py-2.5"
-            @select="navigateToTool(tool.path)"
-            @click="navigateToTool(tool.path)"
+            @select="openToolByPath(tool.path)"
+            @click="openToolByPath(tool.path)"
           >
             <span class="flex h-8 w-8 items-center justify-center rounded border border-border/65 bg-background/55 text-primary">
               <component :is="getToolIcon(tool.id)" class="h-4 w-4" />
