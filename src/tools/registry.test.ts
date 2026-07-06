@@ -69,6 +69,10 @@ describe('tool registry', () => {
     expect(getToolById('ip-convert')?.title).toBe('IPv4 / IPv6 转换')
     expect(getToolById('mac-address')?.title).toBe('MAC 地址格式化 / 厂商查询')
     expect(getToolById('dns-query')?.title).toBe('DNS 查询')
+    expect(getToolById('connection-string')?.title).toBe('连接字符串解析器')
+    expect(getToolById('sql-bind')?.title).toBe('SQL 参数绑定预览')
+    expect(getToolById('mongo-objectid')?.title).toBe('Mongo ObjectId 解析')
+    expect(getToolById('redis-command')?.title).toBe('Redis 命令格式化')
     expect(getToolById('curl')?.title).toBe('cURL 转代码')
     expect(getToolById('html')?.title).toBe('HTML 格式化')
     expect(getToolById('html-entity')?.title).toBe('HTML Entity 编解码')
@@ -950,6 +954,50 @@ describe('tool registry', () => {
       group: 'Network',
       aliases: expect.arrayContaining(['dns lookup', 'doh query']),
       order: 10,
+      status: 'active',
+    })
+  })
+
+  it('registers connection string parsing in the database code group', () => {
+    expect(getToolById('connection-string')).toMatchObject({
+      path: '/tools/connection-string',
+      category: 'code',
+      group: 'Database',
+      aliases: expect.arrayContaining(['database url', 'connection string']),
+      order: 45,
+      status: 'active',
+    })
+  })
+
+  it('registers SQL binding preview in the database code group', () => {
+    expect(getToolById('sql-bind')).toMatchObject({
+      path: '/tools/sql-bind',
+      category: 'code',
+      group: 'Database',
+      aliases: expect.arrayContaining(['sql bind', 'sql parameters']),
+      order: 55,
+      status: 'active',
+    })
+  })
+
+  it('registers Mongo ObjectId parsing in the database code group', () => {
+    expect(getToolById('mongo-objectid')).toMatchObject({
+      path: '/tools/mongo-objectid',
+      category: 'code',
+      group: 'Database',
+      aliases: expect.arrayContaining(['objectid parser', 'mongo id']),
+      order: 65,
+      status: 'active',
+    })
+  })
+
+  it('registers Redis command formatting in the database code group', () => {
+    expect(getToolById('redis-command')).toMatchObject({
+      path: '/tools/redis-command',
+      category: 'code',
+      group: 'Database',
+      aliases: expect.arrayContaining(['redis resp', 'redis formatter']),
+      order: 75,
       status: 'active',
     })
   })
