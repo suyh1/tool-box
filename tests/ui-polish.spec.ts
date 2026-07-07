@@ -27,6 +27,28 @@ test('shows a useful command palette empty state for filters with no tools', asy
   await expect(page.getByRole('dialog').getByText('还没有收藏工具')).toBeVisible()
 })
 
+test('keeps tool dialog favorite and close controls comfortably separated', async ({ page }) => {
+  await page.goto('/#/tools')
+
+  await page.getByRole('button', { name: /JSON 格式化/ }).first().click()
+
+  const dialog = page.getByRole('dialog')
+  const favoriteButton = dialog.getByRole('button', { name: /收藏/ })
+  const closeButton = dialog.getByRole('button', { name: '关闭' })
+
+  await expect(favoriteButton).toBeVisible()
+  await expect(closeButton).toBeVisible()
+
+  const favoriteBox = await favoriteButton.boundingBox()
+  const closeBox = await closeButton.boundingBox()
+
+  expect(favoriteBox).not.toBeNull()
+  expect(closeBox).not.toBeNull()
+
+  const horizontalGap = Math.abs(closeBox!.x - (favoriteBox!.x + favoriteBox!.width))
+  expect(horizontalGap).toBeGreaterThanOrEqual(32)
+})
+
 test('announces JSON action results to assistive technology', async ({ page }) => {
   await page.goto('/#/tools/json')
 

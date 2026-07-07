@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import AppShell from '@/app/layout/AppShell.vue'
 import { isToolCategory } from '@/tools/catalog'
-import { tools } from '@/tools/registry'
+import { legacyToolRedirects, tools } from '@/tools/registry'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -33,6 +33,10 @@ const router = createRouter({
             page: 'category',
           },
         },
+        ...Object.entries(legacyToolRedirects).map(([fromPath, toPath]) => ({
+          path: fromPath.replace(/^\//, ''),
+          redirect: toPath,
+        })),
         ...tools.map((tool) => ({
           path: tool.path.replace(/^\//, ''),
           component: tool.component,

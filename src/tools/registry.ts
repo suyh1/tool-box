@@ -1,6 +1,6 @@
 import type { ToolDefinition } from './types'
 
-export const tools: ToolDefinition[] = [
+const registeredTools: ToolDefinition[] = [
   {
     id: 'json',
     title: 'JSON 格式化',
@@ -1309,6 +1309,201 @@ export const tools: ToolDefinition[] = [
     component: () => import('./extractor/ExtractorTool.vue'),
   },
 ]
+
+const mergedToolTargets: Record<string, string> = {
+  brotli: 'gzip',
+  'qr-decode': 'qr-code',
+  'jwt-sign': 'jwt',
+  csr: 'x509-cert',
+  'rsa-sign': 'rsa-key',
+  hmac: 'hash',
+  snowflake: 'uuid',
+  ulid: 'uuid',
+  nanoid: 'uuid',
+  palette: 'color',
+  contrast: 'color',
+  passphrase: 'password',
+  'random-string': 'password',
+  'graphql-variables': 'graphql-format',
+  'markdown-toc': 'markdown-preview',
+  'url-parser': 'url',
+  'query-editor': 'url',
+  'cookie-parser': 'http-headers',
+  'user-agent': 'http-headers',
+  'xml-json': 'xml',
+  'xml-xpath': 'xml',
+  'csv-table': 'csv-json',
+  'csv-sql': 'csv-json',
+  'regex-helper': 'regex',
+  slug: 'case',
+  pinyin: 'case',
+  'list-random': 'line-tools',
+  'delimiter-convert': 'line-tools',
+  'kubernetes-yaml': 'docker-compose',
+  'ip-convert': 'ip-cidr',
+}
+
+const mergedToolOverrides: Record<string, Partial<ToolDefinition>> = {
+  gzip: {
+    title: '压缩 / 解压工作台',
+    description: '在同一个工作区执行 Gzip 和 Brotli Base64 压缩与解压。',
+    keywords: ['gzip', 'brotli', 'br', 'compression', 'compress', 'decompress', 'base64'],
+    aliases: ['gzip decode', 'gzip base64', 'brotli decode', 'br base64'],
+    component: () => import('./gzip/CompressionTool.vue'),
+  },
+  'qr-code': {
+    title: 'QR Code 工具',
+    description: '生成 QR Code，或从本地图片中识别和解码 QR Code 内容。',
+    keywords: ['qr', 'qrcode', 'code', 'generator', 'decode', 'scan', 'image', 'url'],
+    aliases: ['qr generator', 'qrcode', 'qr decoder', 'scan qr'],
+    component: () => import('./qr-code/QrTool.vue'),
+  },
+  jwt: {
+    title: 'JWT 工作台',
+    description: '本地解码 JWT，签发 HMAC JWT，并验证 JWT 签名。',
+    keywords: ['jwt', 'token', 'decode', 'header', 'payload', 'sign', 'verify', 'hmac', 'hs256'],
+    aliases: ['jsonwebtoken', 'bearer', 'jwt sign', 'jwt verify'],
+    component: () => import('./jwt/JwtWorkbenchTool.vue'),
+  },
+  'ip-cidr': {
+    title: 'IP 工具',
+    description: '计算 IPv4 CIDR，并转换 IPv4 的整数、HEX、二进制和 IPv4-mapped IPv6 表示。',
+    keywords: ['ip', 'cidr', 'subnet', 'network', 'ipv4', 'ipv6', 'integer', 'hex', 'binary'],
+    aliases: ['cidr calculator', 'subnet calculator', 'ipv4 converter', 'ipv6 mapped'],
+    component: () => import('./ip-cidr/IpTool.vue'),
+  },
+  'x509-cert': {
+    title: '证书 / CSR 解析',
+    description: '解析 PEM X.509 证书和证书签名请求的主体、算法、SAN 与有效期信息。',
+    keywords: ['x509', 'certificate', 'tls', 'ssl', 'pem', 'san', 'csr', 'certificate request', 'pkcs10'],
+    aliases: ['certificate parser', 'tls cert', 'csr parser', 'certificate request'],
+    component: () => import('./x509-cert/CertificateTool.vue'),
+  },
+  'rsa-key': {
+    title: 'RSA 工具',
+    description: '生成 RSA 公私钥，并使用 RSA PEM 密钥生成或验证签名。',
+    keywords: ['rsa', 'key', 'generate', 'pem', 'jwk', 'keypair', 'sign', 'verify', 'signature', 'pss', 'pkcs1'],
+    aliases: ['rsa generator', 'rsa keypair', 'rsa verify', 'rsa signature'],
+    component: () => import('./rsa-key/RsaTool.vue'),
+  },
+  hash: {
+    title: 'Hash / HMAC',
+    description: '生成 SHA 摘要，或使用 SHA 系列算法生成 HMAC 签名。',
+    keywords: ['hash', 'sha', 'digest', 'crypto', 'hmac', 'signature', 'secret'],
+    aliases: ['sha256', 'checksum', 'hmac sha256', 'signature hash'],
+    component: () => import('./hash/DigestTool.vue'),
+  },
+  uuid: {
+    title: 'ID 生成器',
+    description: '集中生成和检查 UUID、Snowflake、ULID 与 Nano ID。',
+    keywords: ['uuid', 'guid', 'random', 'snowflake', 'ulid', 'nanoid', 'nano id', 'identifier', 'timestamp', 'sortable'],
+    aliases: ['id generator', 'twitter snowflake', 'discord snowflake', 'sortable id', 'ulid generator', 'nano id'],
+    component: () => import('./uuid/IdTool.vue'),
+  },
+  color: {
+    title: '颜色工作台',
+    description: '转换颜色格式，生成调色板，并检查 WCAG 对比度。',
+    keywords: ['color', 'hex', 'rgb', 'hsl', 'oklch', 'palette', 'harmony', 'contrast', 'wcag', 'accessibility'],
+    aliases: ['color converter', 'hex rgb hsl', 'palette generator', 'color harmony', 'contrast checker', 'wcag contrast'],
+    component: () => import('./color/ColorWorkbenchTool.vue'),
+  },
+  password: {
+    title: '密码 / 随机生成',
+    description: '生成随机密码、passphrase 和自定义字符集随机字符串。',
+    keywords: ['password', 'random', 'generator', 'secure', 'secret', 'passphrase', 'diceware', 'words', 'string', 'chars', 'token'],
+    aliases: ['password generator', 'random password', 'passphrase generator', 'diceware', 'random text', 'random chars'],
+    component: () => import('./password/RandomCredentialTool.vue'),
+  },
+  'graphql-format': {
+    title: 'GraphQL 工作台',
+    description: '格式化 GraphQL query / mutation，并检查 variables JSON 是否匹配。',
+    keywords: ['graphql', 'gql', 'format', 'formatter', 'api', 'variables', 'json', 'schema'],
+    aliases: ['graphql formatter', 'gql format', 'graphql variables', 'gql variables'],
+    component: () => import('./graphql-format/GraphqlTool.vue'),
+  },
+  'markdown-preview': {
+    title: 'Markdown 工作台',
+    description: '本地渲染 Markdown，查看 HTML 输出，并从标题生成目录链接。',
+    keywords: ['markdown', 'md', 'preview', 'render', 'html', 'toc', 'heading', 'anchor', 'docs'],
+    aliases: ['markdown renderer', 'md preview', 'markdown toc', 'table of contents'],
+    component: () => import('./markdown-preview/MarkdownTool.vue'),
+  },
+  url: {
+    title: 'URL 工作台',
+    description: '编码、解码、解析 URL，并编辑 query 参数。',
+    keywords: ['url', 'uri', 'encode', 'decode', 'parse', 'http', 'query', 'params', 'parameters', 'search'],
+    aliases: ['percent encoding', 'escape', 'url parse', 'uri parser', 'query params', 'url parameters'],
+    component: () => import('./url/UrlWorkbenchTool.vue'),
+  },
+  'http-headers': {
+    title: 'HTTP 解析工具',
+    description: '解析 HTTP headers、Cookie / Set-Cookie 和 User-Agent。',
+    keywords: ['http', 'headers', 'request', 'response', 'parser', 'cookie', 'set-cookie', 'user-agent', 'ua', 'browser', 'os', 'device'],
+    aliases: ['header parser', 'http headers', 'cookie parser', 'set-cookie', 'user agent parser', 'ua parser'],
+    component: () => import('./http-headers/HttpInspectTool.vue'),
+  },
+  xml: {
+    title: 'XML 工作台',
+    description: '格式化、压缩并校验 XML，在 XML / JSON 之间转换，并测试 XPath。',
+    keywords: ['xml', 'format', 'formatter', 'minify', 'validate', 'json', 'convert', 'transform', 'xpath', 'query'],
+    aliases: ['xml formatter', 'xml validator', 'xml to json', 'json to xml', 'xpath tester', 'xml query'],
+    component: () => import('./xml/XmlWorkbenchTool.vue'),
+  },
+  'csv-json': {
+    title: 'CSV 工作台',
+    description: '在 CSV 和 JSON 之间转换，预览表格，并生成 SQL INSERT。',
+    keywords: ['csv', 'json', 'convert', 'table', 'tsv', 'preview', 'delimiter', 'sql', 'insert', 'database', 'seed'],
+    aliases: ['csv to json', 'json to csv', 'csv viewer', 'table preview', 'csv to sql', 'insert generator'],
+    component: () => import('./csv-json/CsvTool.vue'),
+  },
+  'docker-compose': {
+    title: 'DevOps YAML 工具',
+    description: '检查 Docker Compose 和 Kubernetes YAML，并汇总关键资源信息。',
+    keywords: ['docker', 'compose', 'yaml', 'devops', 'services', 'kubernetes', 'k8s', 'manifest'],
+    aliases: ['compose validator', 'docker compose', 'k8s yaml', 'kubernetes validator'],
+    component: () => import('./docker-compose/DevOpsYamlTool.vue'),
+  },
+  regex: {
+    title: '正则工作台',
+    description: '测试正则表达式，解释常见 token，并从预设生成表达式。',
+    keywords: ['regex', 'regexp', 'pattern', 'match', 'explain', 'builder', 'preset'],
+    aliases: ['regular expression', 'regex explain', 'regex builder'],
+    component: () => import('./regex/RegexWorkbenchTool.vue'),
+  },
+  case: {
+    title: '文本命名转换',
+    description: '在常见命名格式之间转换文本，生成 slug，并把中文文本转换为拼音。',
+    keywords: ['case', 'camel', 'snake', 'kebab', 'pascal', 'slug', 'url', 'title', 'filename', 'seo', 'pinyin', 'chinese', 'hanzi', 'transliteration'],
+    aliases: ['naming', 'identifier', 'slug generator', 'url slug', 'chinese pinyin', 'hanzi pinyin'],
+    component: () => import('./case/TextTransformTool.vue'),
+  },
+  'line-tools': {
+    title: '列表工具',
+    description: '对多行文本执行排序、去重、随机化、抽样和分隔符转换。',
+    keywords: ['line', 'sort', 'unique', 'dedupe', 'list', 'shuffle', 'random', 'sample', 'lines', 'delimiter', 'separator', 'csv', 'newline'],
+    aliases: ['line sort', 'dedupe lines', 'shuffle list', 'random sample', 'delimiter converter', 'list separator'],
+    component: () => import('./line-tools/ListTool.vue'),
+  },
+}
+
+export const legacyToolRedirects = Object.fromEntries(
+  Object.entries(mergedToolTargets).map(([fromId, toId]) => [`/tools/${fromId}`, `/tools/${toId}`]),
+) as Record<string, string>
+
+export const tools: ToolDefinition[] = registeredTools
+  .filter((tool) => !mergedToolTargets[tool.id])
+  .map((tool) => ({
+    ...tool,
+    ...(mergedToolOverrides[tool.id] ?? {}),
+  }))
+
+export function resolveToolId(toolId: string) {
+  return mergedToolTargets[toolId] ?? toolId
+}
+
+export function resolveToolPath(path: string) {
+  return legacyToolRedirects[path] ?? path
+}
 
 export function getToolById(toolId: string) {
   return tools.find((tool) => tool.id === toolId)

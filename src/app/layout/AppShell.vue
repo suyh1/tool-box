@@ -22,6 +22,7 @@ import {
   SunMedium,
   TerminalSquare,
   WandSparkles,
+  X,
 } from '@lucide/vue'
 import { gsap } from 'gsap'
 import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref, shallowRef, watch, type Component } from 'vue'
@@ -38,6 +39,7 @@ import {
 } from '@/components/ui/command'
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -608,12 +610,13 @@ onUnmounted(() => {
     <Dialog v-model:open="toolDialogOpen">
       <DialogContent
         class="max-h-[calc(100dvh-2rem)] w-[min(1280px,calc(100vw-2rem))] max-w-none gap-0 overflow-hidden border border-border/80 bg-popover/98 p-0 shadow-[0_32px_110px_rgba(0,0,0,0.42)] sm:max-w-none"
+        :show-close-button="false"
       >
         <DialogHeader
           v-if="dialogTool"
-          class="border-b border-border/70 bg-card/72 px-4 py-3 pr-14 md:px-5"
+          class="border-b border-border/70 bg-card/72 px-4 py-3 md:px-5"
         >
-          <div class="flex flex-wrap items-start justify-between gap-3">
+          <div class="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
             <div class="flex min-w-0 items-start gap-3">
               <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-primary/30 bg-primary/12 text-primary">
                 <component :is="dialogToolIcon" class="h-5 w-5" />
@@ -632,19 +635,33 @@ onUnmounted(() => {
                 </div>
               </div>
             </div>
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              class="h-8 w-8 shrink-0"
-              :aria-label="dialogFavoriteLabel"
-              @click="toolsStore.toggleFavorite(dialogTool.id)"
-            >
-              <Star
-                class="h-4 w-4"
-                :class="toolsStore.favoriteIds.includes(dialogTool.id) ? 'fill-primary text-primary' : 'text-muted-foreground'"
-              />
-            </Button>
+            <div class="flex shrink-0 items-center gap-9 pl-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                class="h-9 w-9"
+                :aria-label="dialogFavoriteLabel"
+                @click="toolsStore.toggleFavorite(dialogTool.id)"
+              >
+                <Star
+                  class="h-4 w-4"
+                  :class="toolsStore.favoriteIds.includes(dialogTool.id) ? 'fill-primary text-primary' : 'text-muted-foreground'"
+                />
+              </Button>
+
+              <DialogClose as-child>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  class="h-9 w-9 text-muted-foreground hover:text-foreground"
+                  aria-label="关闭"
+                >
+                  <X class="h-4 w-4" />
+                </Button>
+              </DialogClose>
+            </div>
           </div>
         </DialogHeader>
 

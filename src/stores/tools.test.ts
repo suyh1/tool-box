@@ -18,6 +18,16 @@ describe('useToolsStore', () => {
     expect(store.favoriteIds).toEqual(['base64'])
   })
 
+  it('normalizes merged tool ids in favorites', () => {
+    const store = useToolsStore()
+
+    store.toggleFavorite('jwt-sign')
+    store.toggleFavorite('jwt')
+    store.toggleFavorite('qr-decode')
+
+    expect(store.favoriteIds).toEqual(['qr-code'])
+  })
+
   it('records recent tools with newest first and a max of eight', () => {
     const store = useToolsStore()
 
@@ -26,5 +36,15 @@ describe('useToolsStore', () => {
     }
 
     expect(store.recentIds).toEqual(['diff', 'regex', 'uuid', 'hash', 'jwt', 'timestamp', 'url', 'base64'])
+  })
+
+  it('normalizes merged tool ids in recent tools', () => {
+    const store = useToolsStore()
+
+    store.recordRecent('url-parser')
+    store.recordRecent('query-editor')
+    store.recordRecent('csv-sql')
+
+    expect(store.recentIds).toEqual(['csv-json', 'url'])
   })
 })
