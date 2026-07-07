@@ -1,0 +1,9 @@
+npm run build
+
+nginx -t -c /Users/subeipo/Documents/code/toolbox/nginx/nginx-mac.conf
+
+nginx -c /Users/subeipo/Documents/code/toolbox/nginx/nginx-mac.conf
+
+nginx -s reload -c /Users/subeipo/Documents/code/toolbox/nginx/nginx-mac.conf
+
+nginx -s stop -c /Users/subeipo/Documents/code/toolbox/nginx/nginx-mac.conf
