@@ -373,7 +373,7 @@ onUnmounted(() => {
     <header class="shell-reveal sticky top-3 z-30 px-3 md:top-4 md:px-5">
       <div class="mx-auto flex h-16 max-w-[1500px] items-center justify-between gap-3 rounded-lg border border-border/70 bg-card/82 px-3 shadow-[0_18px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl md:px-4">
         <RouterLink to="/tools" class="group flex min-w-0 items-center gap-3">
-          <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-primary/35 bg-primary/14 text-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition-colors group-hover:bg-primary/20">
+          <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/10 bg-secondary/72 text-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition-colors group-hover:bg-secondary/86">
             <TerminalSquare class="h-5 w-5" />
           </span>
           <span class="min-w-0">
@@ -384,7 +384,7 @@ onUnmounted(() => {
 
         <div class="hidden min-w-0 flex-1 items-center justify-center gap-2 px-4 lg:flex">
           <Badge variant="secondary" class="gap-1.5">
-            <ShieldCheck class="h-3 w-3 text-primary" />
+            <ShieldCheck class="h-3 w-3 text-primary/85" />
             输入留在浏览器
           </Badge>
           <Badge variant="outline" class="gap-1.5">
@@ -431,30 +431,30 @@ onUnmounted(() => {
 
     <main class="mx-auto grid max-w-[1500px] gap-4 px-3 pb-8 pt-6 md:grid-cols-[19rem_minmax(0,1fr)] md:px-5 md:pb-10 lg:gap-6">
       <aside class="shell-reveal self-start overflow-hidden rounded-lg border border-border/70 bg-card/76 p-3 shadow-[0_22px_70px_rgba(0,0,0,0.2)] backdrop-blur-xl md:sticky md:top-24 md:max-h-[calc(100dvh-7rem)] md:overflow-auto">
-        <div class="mb-4 grid gap-3 rounded-md border border-border/60 bg-background/38 p-3">
+        <div class="mb-3 grid gap-2.5 rounded-md border border-border/60 bg-background/38 p-3">
           <div class="flex items-start justify-between gap-3">
             <div class="min-w-0">
               <p class="font-mono text-[11px] text-muted-foreground">tool dock</p>
-              <h2 class="mt-1 text-base font-semibold tracking-tight text-foreground">工作台</h2>
+              <h2 class="mt-0.5 text-base font-semibold tracking-tight text-foreground">工作台</h2>
             </div>
             <Badge variant="secondary" class="gap-1">
-              <Star class="h-3 w-3 text-primary" />
+              <Star class="h-3 w-3 text-primary/85" />
               {{ favoriteCount }}
             </Badge>
           </div>
 
           <div class="grid grid-cols-3 gap-2">
-            <div class="metric-tile rounded-md border border-border/55 bg-card/70 px-2 py-2">
+            <div class="metric-tile rounded-md border border-border/55 bg-card/70 px-2 py-1.5">
               <p class="font-mono text-[11px] text-muted-foreground">ACTIVE</p>
-              <p class="mt-1 text-lg font-semibold tabular-nums">{{ activeToolCount }}</p>
+              <p class="mt-0.5 text-lg font-semibold tabular-nums">{{ activeToolCount }}</p>
             </div>
-            <div class="metric-tile rounded-md border border-border/55 bg-card/70 px-2 py-2">
+            <div class="metric-tile rounded-md border border-border/55 bg-card/70 px-2 py-1.5">
               <p class="font-mono text-[11px] text-muted-foreground">FAV</p>
-              <p class="mt-1 text-lg font-semibold tabular-nums">{{ favoriteCount }}</p>
+              <p class="mt-0.5 text-lg font-semibold tabular-nums">{{ favoriteCount }}</p>
             </div>
-            <div class="metric-tile rounded-md border border-border/55 bg-card/70 px-2 py-2">
+            <div class="metric-tile rounded-md border border-border/55 bg-card/70 px-2 py-1.5">
               <p class="font-mono text-[11px] text-muted-foreground">RECENT</p>
-              <p class="mt-1 text-lg font-semibold tabular-nums">{{ recentTools.length }}</p>
+              <p class="mt-0.5 text-lg font-semibold tabular-nums">{{ recentTools.length }}</p>
             </div>
           </div>
         </div>
@@ -466,7 +466,7 @@ onUnmounted(() => {
               class="tool-row grid min-w-0 grid-cols-[1.5rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-3 py-2.5 transition-all"
               :class="[
                 isDirectoryRoute
-                  ? 'bg-primary/14 text-foreground ring-1 ring-primary/30'
+                  ? 'bg-secondary/88 text-foreground ring-1 ring-white/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]'
                   : 'text-muted-foreground hover:bg-secondary/80 hover:text-foreground',
               ]"
             >
@@ -521,7 +521,7 @@ onUnmounted(() => {
               class="tool-row grid min-w-0 grid-cols-[1.5rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-3 py-2.5 transition-all"
               :class="[
                 (currentCategory === category || currentTool?.category === category)
-                  ? 'bg-primary/14 text-foreground ring-1 ring-primary/30'
+                  ? 'bg-secondary/88 text-foreground ring-1 ring-white/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]'
                   : 'text-muted-foreground hover:bg-secondary/80 hover:text-foreground',
               ]"
             >
@@ -543,55 +543,30 @@ onUnmounted(() => {
 
       <section class="min-w-0">
         <div class="shell-reveal mb-4 overflow-hidden rounded-lg border border-border/70 bg-card/82 shadow-[0_22px_80px_rgba(0,0,0,0.22)] backdrop-blur-xl">
-          <div class="grid gap-4 p-4 md:grid-cols-[minmax(0,1fr)_18rem] md:p-5 lg:p-6">
+          <div class="grid gap-3 p-4 md:p-5 lg:p-5">
             <div class="min-w-0">
               <div class="flex flex-wrap items-center gap-2">
                 <Badge variant="secondary" class="gap-1.5">
-                  <component :is="statusIcon" class="h-3 w-3 text-primary" />
+                  <component :is="statusIcon" class="h-3 w-3 text-primary/85" />
                   {{ statusLabel }}
                 </Badge>
                 <Badge variant="outline">{{ pageCategoryLabel }}</Badge>
               </div>
-              <div class="mt-4 flex min-w-0 items-center gap-3">
-                <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-primary/30 bg-primary/12 text-primary">
+              <div class="mt-3 flex min-w-0 items-center gap-3">
+                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/10 bg-secondary/74 text-primary">
                   <component :is="pageIcon" class="h-6 w-6" />
                 </span>
                 <div class="min-w-0">
-                  <h1 class="text-balance text-3xl font-semibold leading-tight tracking-tight text-foreground md:text-4xl">
+                  <h1 class="text-balance text-3xl font-semibold leading-tight tracking-tight text-foreground md:text-[2.5rem]">
                     {{ pageTitle }}
                   </h1>
-                  <p class="mt-2 max-w-2xl text-pretty text-sm leading-6 text-muted-foreground md:text-base">
+                  <p class="mt-1.5 max-w-2xl text-pretty text-sm leading-6 text-muted-foreground md:text-[15px]">
                     {{ pageDescription }}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div class="grid gap-2 rounded-md border border-border/60 bg-background/40 p-3">
-              <div class="flex items-center gap-2 text-sm text-foreground">
-                <CommandIcon class="h-4 w-4 text-primary" />
-                快速入口
-              </div>
-              <button
-                type="button"
-                class="flex items-center justify-between gap-3 rounded-md border border-border/60 bg-card/68 px-3 py-2 text-left text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-                @click="searchOpen = true"
-              >
-                <span class="truncate">按名称、格式或关键词搜索工具</span>
-                <span class="rounded border border-border/70 bg-background/60 px-1.5 py-0.5 font-mono text-[10px]">⌘K</span>
-              </button>
-              <div v-if="recentTools.length > 0" class="flex flex-wrap gap-1.5 pt-1">
-                <button
-                  v-for="tool in recentTools"
-                  :key="tool.id"
-                  type="button"
-                  class="rounded border border-border/60 bg-card/58 px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-                  @click="openToolByPath(tool.path)"
-                >
-                  {{ tool.title }}
-                </button>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -618,7 +593,7 @@ onUnmounted(() => {
         >
           <div class="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
             <div class="flex min-w-0 items-start gap-3">
-              <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-primary/30 bg-primary/12 text-primary">
+              <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/10 bg-secondary/74 text-primary">
                 <component :is="dialogToolIcon" class="h-5 w-5" />
               </span>
               <div class="min-w-0">

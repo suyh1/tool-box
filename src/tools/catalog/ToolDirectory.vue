@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Search, Star } from '@lucide/vue'
-import { computed, ref } from 'vue'
+import { Star } from '@lucide/vue'
+import { computed } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -16,7 +16,6 @@ import type { ToolDefinition } from '@/tools/types'
 
 const route = useRoute()
 const toolsStore = useToolsStore()
-const query = ref('')
 const emit = defineEmits<{
   (event: 'open-tool', toolId: string): void
 }>()
@@ -27,7 +26,7 @@ const recentTools = computed(() => toolsStore.recentIds
   .map((toolId) => getToolById(toolId))
   .filter((tool): tool is ToolDefinition => Boolean(tool)))
 const featuredTools = computed(() => getFeaturedTools(tools).slice(0, 8))
-const matchingTools = computed(() => searchTools(tools, query.value))
+const matchingTools = computed(() => searchTools(tools, ''))
 const categorySections = computed(() => getCategorySections(matchingTools.value))
 const view = computed(() => typeof route.query.view === 'string' ? route.query.view : 'all')
 
@@ -42,20 +41,6 @@ function openTool(toolId: string) {
 
 <template>
   <section class="grid gap-4">
-    <div class="rounded-lg border border-border bg-card p-4 md:p-5">
-      <label class="grid gap-2">
-        <span class="text-sm font-medium text-foreground">搜索工具目录</span>
-        <span class="relative block">
-          <Search class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input
-            v-model="query"
-            type="search"
-            class="h-10 w-full rounded-md border border-border bg-background pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground"
-            placeholder="搜索 JSON、HTTP、时间、编码、数据库..."
-          >
-        </span>
-      </label>
-    </div>
 
     <div
       v-if="view === 'recent'"
@@ -102,7 +87,7 @@ function openTool(toolId: string) {
     </div>
 
     <template v-else>
-      <section v-if="!query && featuredTools.length" class="rounded-lg border border-border bg-card p-4 md:p-5">
+      <section v-if="featuredTools.length" class="rounded-lg border border-border bg-card p-4 md:p-5">
         <div class="mb-3 flex items-center justify-between gap-3">
           <h2 class="text-base font-semibold text-foreground">精选工具</h2>
           <Badge variant="secondary">{{ featuredTools.length }}</Badge>
@@ -132,7 +117,7 @@ function openTool(toolId: string) {
       <section class="grid gap-3">
         <div class="flex items-center justify-between gap-3">
           <h2 class="text-base font-semibold text-foreground">
-            {{ query ? '搜索结果' : '按分类浏览' }}
+            按分类浏览
           </h2>
           <Badge variant="outline">{{ matchingTools.length }} 个工具</Badge>
         </div>
