@@ -8,6 +8,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { buildDohUrl, normalizeDohResponse, type DnsProvider, type DnsRecordType } from './dns-query'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const name = ref('example.com')
 const type = ref<DnsRecordType>('A')
@@ -90,7 +91,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = 'DNS 输出已复制'
 }

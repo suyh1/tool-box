@@ -15,6 +15,7 @@ import {
   type EcdsaHash,
   verifyEcdsaSignature,
 } from './ecdsa-sign'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const message = ref('')
 const privatePem = ref('')
@@ -118,7 +119,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(value)
+  const clipboardResult = await copyToClipboard(value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = 'ECDSA 输出已复制'
 }

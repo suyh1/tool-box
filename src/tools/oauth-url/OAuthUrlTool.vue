@@ -8,6 +8,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { buildOAuthAuthorizationUrl } from './oauth-url'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const endpoint = ref('https://auth.example.com/oauth2/authorize')
 const clientId = ref('client-123')
@@ -96,7 +97,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = 'OAuth URL 已复制'
 }

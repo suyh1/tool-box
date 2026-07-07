@@ -8,6 +8,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { validateJsonSchema, type JsonSchemaValidationError } from './json-schema-validate'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const sampleData = JSON.stringify({
   name: 'Ada',
@@ -93,7 +94,11 @@ async function copyReport() {
     return
   }
 
-  await navigator.clipboard.writeText(reportText.value)
+  const clipboardResult = await copyToClipboard(reportText.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = '校验报告已复制'
 }

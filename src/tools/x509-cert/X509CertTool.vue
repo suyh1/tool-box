@@ -7,6 +7,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { parseX509Certificate } from './x509-cert'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const sampleCertificate = `-----BEGIN CERTIFICATE-----
 MIIDNDCCAhygAwIBAgIJANX0kt1+HovuMA0GCSqGSIb3DQEBCwUAMEExFjAUBgNV
@@ -80,7 +81,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = 'X.509 证书输出已复制'
 }

@@ -7,6 +7,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { parseUserAgent } from './user-agent'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const sample = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36'
 const input = ref(sample)
@@ -46,7 +47,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = 'User-Agent 结果已复制'
 }

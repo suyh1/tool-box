@@ -11,6 +11,7 @@ import {
   type MarkdownHeading,
   type MarkdownPreviewStats,
 } from './markdown-preview'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const sampleMarkdown = [
   '# Release Notes',
@@ -88,7 +89,11 @@ async function copyHtml() {
     return
   }
 
-  await navigator.clipboard.writeText(html.value)
+  const clipboardResult = await copyToClipboard(html.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = 'Markdown HTML 已复制'
 }
@@ -304,8 +309,10 @@ async function copyHtml() {
 }
 
 .markdown-preview :deep(blockquote) {
-  border-left: 3px solid var(--primary);
-  padding-left: 0.9rem;
+  border: 1px solid color-mix(in oklch, var(--border) 78%, transparent);
+  border-radius: 0.5rem;
+  background: color-mix(in oklch, var(--muted) 42%, transparent);
+  padding: 0.7rem 0.9rem;
   color: var(--muted-foreground);
 }
 

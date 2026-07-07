@@ -9,6 +9,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { queryJsonPath, type JsonPathMatch } from './jsonpath'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const sampleJson = JSON.stringify({
   store: {
@@ -80,14 +81,22 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copiedOutput.value = true
   copiedPath.value = ''
   liveMessage.value = 'JSONPath 输出已复制'
 }
 
 async function copyPath(match: JsonPathMatch) {
-  await navigator.clipboard.writeText(match.path)
+  const clipboardResult = await copyToClipboard(match.path)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copiedPath.value = match.path
   copiedOutput.value = false
   liveMessage.value = `${match.path} 已复制`

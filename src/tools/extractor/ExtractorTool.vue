@@ -7,6 +7,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { extractEntities } from './extractor'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const input = ref('Email admin@example.com, visit https://example.com/a?b=1 or http://localhost:5173. IPs: 192.168.1.10 and 2001:db8::1')
 const output = ref('')
@@ -45,7 +46,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = '提取结果已复制'
 }

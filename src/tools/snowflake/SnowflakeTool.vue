@@ -8,6 +8,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { defaultSnowflakeEpochMs, generateSnowflakeId, parseSnowflakeId } from './snowflake'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const input = ref('')
 const output = ref('')
@@ -85,7 +86,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = 'Snowflake 输出已复制'
 }

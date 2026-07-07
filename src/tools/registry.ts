@@ -1,6 +1,8 @@
 import type { ToolDefinition } from './types'
 
-const registeredTools: ToolDefinition[] = [
+type RegisteredToolDefinition = Omit<ToolDefinition, 'privacy'> & Partial<Pick<ToolDefinition, 'privacy'>>
+
+const registeredTools: RegisteredToolDefinition[] = [
   {
     id: 'json',
     title: 'JSON 格式化',
@@ -1494,6 +1496,9 @@ export const tools: ToolDefinition[] = registeredTools
   .filter((tool) => !mergedToolTargets[tool.id])
   .map((tool) => ({
     ...tool,
+    privacy: tool.privacy ?? (tool.id === 'dns-query' || tool.id === 'websocket-echo'
+      ? 'network-on-action'
+      : 'local'),
     ...(mergedToolOverrides[tool.id] ?? {}),
   }))
 

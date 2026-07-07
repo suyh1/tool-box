@@ -7,6 +7,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { configToJsonString, iniToJson, jsonToProperties, propertiesToJson } from './ini-properties'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const sampleIni = '[server]\nport=5173\nenabled=true\n\n[app]\nname=Toolbox'
 const sampleProperties = 'server.port=5173\nserver.enabled=true\napp.name=Toolbox'
@@ -80,7 +81,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = 'INI / Properties 输出已复制'
 }

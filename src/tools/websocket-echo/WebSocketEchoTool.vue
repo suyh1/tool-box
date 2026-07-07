@@ -8,6 +8,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { createWebSocketConfig, formatTranscript, type WebSocketTranscriptEntry } from './websocket-echo'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const url = ref('wss://echo.websocket.events')
 const protocols = ref('')
@@ -106,7 +107,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = 'WebSocket transcript 已复制'
 }

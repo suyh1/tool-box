@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { Check, Clipboard, ImageUp, QrCode, Trash2 } from '@lucide/vue'
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import { Button } from '@/components/ui/button'
 import ToolActionBar from '@/tools/_shared/ToolActionBar.vue'
 import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { decodeQrPixels } from './qr-decode'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const output = ref('')
 const previewUrl = ref('')
@@ -96,12 +97,22 @@ function clearAll() {
   liveMessage.value = 'QR Code 解码工作区已清空'
 }
 
+onBeforeUnmount(() => {
+  if (previewUrl.value) {
+    URL.revokeObjectURL(previewUrl.value)
+  }
+})
+
 async function copyOutput() {
   if (!canCopy.value) {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = 'QR Code 解码结果已复制'
 }

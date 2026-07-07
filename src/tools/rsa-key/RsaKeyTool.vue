@@ -15,6 +15,7 @@ import {
   type RsaKeyAlgorithm,
   type RsaModulusLength,
 } from './rsa-key'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const algorithm = ref<RsaKeyAlgorithm>('RSASSA-PKCS1-v1_5')
 const hash = ref<RsaHash>('SHA-256')
@@ -76,13 +77,17 @@ async function copyAll() {
     return
   }
 
-  await navigator.clipboard.writeText([
+  const clipboardResult = await copyToClipboard([
     publicOutput.value,
     '',
     privateOutput.value,
     '',
     jwkOutput.value,
   ].join('\n'))
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = 'RSA 密钥输出已复制'
 }

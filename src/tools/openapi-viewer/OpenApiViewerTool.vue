@@ -7,6 +7,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { validateOpenApiSpec } from './openapi-viewer'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const sample = `openapi: 3.0.3
 info:
@@ -65,7 +66,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = 'OpenAPI 摘要已复制'
 }

@@ -9,6 +9,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { testRegex, type RegexMatch, type RegexResult } from './regex'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const samplePattern = '(?<key>[a-z]+)=(\\d+)'
 const sampleText = 'port=443\nhost=8080\nmode=dev'
@@ -92,7 +93,11 @@ async function copyMatches() {
     return
   }
 
-  await navigator.clipboard.writeText(copyText.value)
+  const clipboardResult = await copyToClipboard(copyText.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = '正则匹配结果已复制'
 }

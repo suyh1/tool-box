@@ -7,6 +7,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { compressTextToGzipBase64, decompressGzipBase64ToText } from './gzip'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const sampleText = 'Hello 你好\nHello 你好\n'
 
@@ -81,7 +82,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = 'Gzip 输出已复制'
 }

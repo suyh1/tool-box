@@ -7,6 +7,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { convertCases, type CaseConversions } from './case'
+import { copyToClipboard } from '@/lib/clipboard'
 
 type CaseKey = keyof CaseConversions
 
@@ -47,7 +48,11 @@ async function copyValue(key: CaseKey) {
     return
   }
 
-  await navigator.clipboard.writeText(value)
+  const clipboardResult = await copyToClipboard(value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copiedKey.value = key
   liveMessage.value = `${formats.find((item) => item.key === key)?.label ?? '结果'} 已复制`
 }

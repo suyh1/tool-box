@@ -57,6 +57,7 @@ describe('tool registry', () => {
     expect(tools.every((tool) => tool.group)).toBe(true)
     expect(tools.every((tool) => typeof tool.order === 'number')).toBe(true)
     expect(tools.every((tool) => tool.keywords.length > 0)).toBe(true)
+    expect(tools.every((tool) => tool.privacy)).toBe(true)
   })
 
   it('looks up representative standalone tools by id', () => {
@@ -91,6 +92,12 @@ describe('tool registry', () => {
       title: 'CSV 工作台',
       aliases: expect.arrayContaining(['csv viewer', 'insert generator']),
     })
+  })
+
+  it('marks tools that connect to user-specified network endpoints', () => {
+    expect(getToolById('json')?.privacy).toBe('local')
+    expect(getToolById('dns-query')?.privacy).toBe('network-on-action')
+    expect(getToolById('websocket-echo')?.privacy).toBe('network-on-action')
   })
 
   it('keeps legacy ids and paths mapped to their merged workbenches', () => {

@@ -8,6 +8,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { parseConnectionString } from './connection-string'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const input = ref('postgres://user:pass@localhost:5432/app?sslmode=require')
 const output = ref('')
@@ -58,7 +59,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = '连接字符串结果已复制'
 }

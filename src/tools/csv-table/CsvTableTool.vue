@@ -8,6 +8,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { parseCsvTable, tableToTsv, type CsvTable } from './csv-table'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const sampleCsv = [
   'name,role,note',
@@ -88,7 +89,11 @@ async function copyTable() {
     return
   }
 
-  await navigator.clipboard.writeText(tableToTsv(table.value))
+  const clipboardResult = await copyToClipboard(tableToTsv(table.value))
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = '表格已按 TSV 复制'
 }

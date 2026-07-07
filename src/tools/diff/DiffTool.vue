@@ -8,6 +8,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { diffLines, summarizeDiff, type DiffRow, type DiffSummary } from './diff'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const sampleLeft = 'alpha\nbravo\ncharlie\ndelta'
 const sampleRight = 'alpha\nbravo updated\ncharlie\necho'
@@ -94,7 +95,11 @@ async function copyDiff() {
     return
   }
 
-  await navigator.clipboard.writeText(copyText.value)
+  const clipboardResult = await copyToClipboard(copyText.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = '文本差异已复制'
 }

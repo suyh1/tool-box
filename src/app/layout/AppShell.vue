@@ -77,7 +77,16 @@ const currentCategory = computed(() => {
   const value = String(route.params.category ?? '')
   return isToolCategory(value) ? value : null
 })
-const isDirectoryRoute = computed(() => route.path === '/tools')
+const directoryView = computed<'all' | 'recent' | 'favorites'>(() => {
+  if (route.path !== '/tools') {
+    return 'all'
+  }
+
+  return route.query.view === 'recent' || route.query.view === 'favorites'
+    ? route.query.view
+    : 'all'
+})
+const isDirectoryRoute = computed(() => route.path === '/tools' && directoryView.value === 'all')
 const themeIcon = computed(() => preferences.effectiveTheme === 'dark' ? SunMedium : Moon)
 const themeLabel = computed(() => preferences.effectiveTheme === 'dark' ? '切换到亮色' : '切换到深色')
 const favoriteCount = computed(() => toolsStore.favoriteIds.length)
@@ -214,11 +223,23 @@ const commandTools = computed(() => {
   return tools.filter((tool) => tool.category === commandFilter.value)
 })
 
-const statusLabel = computed(() => currentTool.value
-  ? currentTool.value.status === 'active' ? '本地可用' : '规划中'
-  : '工具目录')
+const statusLabel = computed(() => {
+  if (!currentTool.value) {
+    return '工具目录'
+  }
+
+  if (currentTool.value.status !== 'active') {
+    return '规划中'
+  }
+
+  return currentTool.value.privacy === 'network-on-action'
+    ? '按操作联网'
+    : '本地处理'
+})
 const statusIcon = computed(() => currentTool.value
-  ? currentTool.value.status === 'active' ? CheckCircle2 : WandSparkles
+  ? currentTool.value.status === 'active'
+    ? currentTool.value.privacy === 'network-on-action' ? Link2 : CheckCircle2
+    : WandSparkles
   : CommandIcon)
 const dialogToolIcon = computed(() => dialogTool.value ? getToolIcon(dialogTool.value.id) : Code2)
 const dialogFavoriteLabel = computed(() => {
@@ -385,7 +406,7 @@ onUnmounted(() => {
         <div class="hidden min-w-0 flex-1 items-center justify-center gap-2 px-4 lg:flex">
           <Badge variant="secondary" class="gap-1.5">
             <ShieldCheck class="h-3 w-3 text-primary/85" />
-            输入留在浏览器
+            本地优先
           </Badge>
           <Badge variant="outline" class="gap-1.5">
             <CopyCheck class="h-3 w-3" />
@@ -463,6 +484,7 @@ onUnmounted(() => {
           <div class="grid gap-1">
             <RouterLink
               to="/tools"
+              :aria-current="isDirectoryRoute ? 'page' : undefined"
               class="tool-row grid min-w-0 grid-cols-[1.5rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-3 py-2.5 transition-all"
               :class="[
                 isDirectoryRoute
@@ -482,7 +504,13 @@ onUnmounted(() => {
 
             <RouterLink
               to="/tools?view=recent"
-              class="tool-row grid min-w-0 grid-cols-[1.5rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-3 py-2.5 text-muted-foreground transition-all hover:bg-secondary/80 hover:text-foreground"
+              :aria-current="route.path === '/tools' && directoryView === 'recent' ? 'page' : undefined"
+              class="tool-row grid min-w-0 grid-cols-[1.5rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-3 py-2.5 transition-all"
+              :class="[
+                route.path === '/tools' && directoryView === 'recent'
+                  ? 'bg-secondary/88 text-foreground ring-1 ring-white/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]'
+                  : 'text-muted-foreground hover:bg-secondary/80 hover:text-foreground',
+              ]"
             >
               <span class="flex h-6 w-6 items-center justify-center rounded border border-border/60 bg-background/45">
                 <Clock3 class="h-3.5 w-3.5" />
@@ -496,7 +524,13 @@ onUnmounted(() => {
 
             <RouterLink
               to="/tools?view=favorites"
-              class="tool-row grid min-w-0 grid-cols-[1.5rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-3 py-2.5 text-muted-foreground transition-all hover:bg-secondary/80 hover:text-foreground"
+              :aria-current="route.path === '/tools' && directoryView === 'favorites' ? 'page' : undefined"
+              class="tool-row grid min-w-0 grid-cols-[1.5rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-3 py-2.5 transition-all"
+              :class="[
+                route.path === '/tools' && directoryView === 'favorites'
+                  ? 'bg-secondary/88 text-foreground ring-1 ring-white/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]'
+                  : 'text-muted-foreground hover:bg-secondary/80 hover:text-foreground',
+              ]"
             >
               <span class="flex h-6 w-6 items-center justify-center rounded border border-border/60 bg-background/45">
                 <Star class="h-3.5 w-3.5" />

@@ -7,6 +7,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { jsonToXml, xmlToJsonString } from './xml-json'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const sampleXml = '<user id="1"><name>Ada</name><role>admin</role><role>editor</role></user>'
 const sampleJson = JSON.stringify({
@@ -95,7 +96,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = '转换输出已复制'
 }

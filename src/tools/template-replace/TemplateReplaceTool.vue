@@ -7,6 +7,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { parseTemplateRows, renderTemplateRows } from './template-replace'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const template = ref('user {{id}}: {{name}}')
 const data = ref('[{"name":"Ada","id":1},{"name":"Linus","id":2}]')
@@ -73,7 +74,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = '模板输出已复制'
 }

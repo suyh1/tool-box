@@ -7,6 +7,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { formatJavaScriptTypeScript, type ScriptLanguage } from './js-ts-format'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const sampleJavaScript = 'const value={name:"Ada"};function greet(){return value.name}'
 const sampleTypeScript = 'type User={id:number;name:string}\nconst user:User={id:1,name:"Ada"}'
@@ -72,7 +73,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = '脚本输出已复制'
 }

@@ -22,6 +22,7 @@ const sampleTools: ToolDefinition[] = [
     aliases: ['requests'],
     order: 20,
     status: 'active',
+    privacy: 'local',
     component,
   },
   {
@@ -36,6 +37,7 @@ const sampleTools: ToolDefinition[] = [
     featured: true,
     order: 10,
     status: 'active',
+    privacy: 'local',
     component,
   },
   {
@@ -48,6 +50,7 @@ const sampleTools: ToolDefinition[] = [
     keywords: ['base64'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component,
   },
 ]

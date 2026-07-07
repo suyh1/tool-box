@@ -2,6 +2,7 @@
 import { Check, Clipboard, FileJson2, RotateCcw, Sparkles, Trash2 } from '@lucide/vue'
 import { computed, onBeforeUnmount, ref } from 'vue'
 import { Button } from '@/components/ui/button'
+import { copyToClipboard } from '@/lib/clipboard'
 import ToolActionBar from '@/tools/_shared/ToolActionBar.vue'
 import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
@@ -170,7 +171,13 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const result = await copyToClipboard(output.value)
+
+  if (!result.ok) {
+    liveMessage.value = result.message
+    return
+  }
+
   copied.value = true
   liveMessage.value = 'JSON 输出已复制'
 }

@@ -7,6 +7,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { checkGraphqlVariables } from './graphql-variables'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const query = ref('query GetUser($id: ID!, $limit: Int) { user(id: $id) { posts(limit: $limit) { title } } }')
 const variables = ref('{"limit":10,"extra":true}')
@@ -48,7 +49,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = 'GraphQL variables 检查结果已复制'
 }

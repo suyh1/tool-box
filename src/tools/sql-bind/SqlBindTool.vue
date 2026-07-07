@@ -7,6 +7,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { previewSqlBindings } from './sql-bind'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const sql = ref('select * from users where id = ? and name = ?')
 const params = ref(`[1,"Ada O'Neil"]`)
@@ -60,7 +61,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = 'SQL 预览已复制'
 }

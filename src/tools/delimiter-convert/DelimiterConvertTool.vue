@@ -8,6 +8,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { convertDelimiter, type DelimiterKind } from './delimiter-convert'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const input = ref('alpha\n beta\n\n gamma')
 const output = ref('')
@@ -70,7 +71,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = '分隔符转换结果已复制'
 }

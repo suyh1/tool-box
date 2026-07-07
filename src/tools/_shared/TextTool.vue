@@ -6,6 +6,7 @@ import ToolActionBar from './ToolActionBar.vue'
 import ToolAnnouncer from './ToolAnnouncer.vue'
 import ToolPanel from './ToolPanel.vue'
 import ToolTextareaPanel from './ToolTextareaPanel.vue'
+import { copyToClipboard } from '@/lib/clipboard'
 
 type ActionResult = {
   ok: true
@@ -84,7 +85,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = '输出已复制'
 }

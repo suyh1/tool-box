@@ -24,6 +24,7 @@ import {
   type JsonOrganizeStats,
   type JsonPathEntry,
 } from './json-organize'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const sampleJson = JSON.stringify({
   zeta: 'last',
@@ -142,14 +143,22 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copiedOutput.value = true
   copiedPath.value = ''
   liveMessage.value = 'JSON 输出已复制'
 }
 
 async function copyPath(entry: JsonPathEntry) {
-  await navigator.clipboard.writeText(entry.path)
+  const clipboardResult = await copyToClipboard(entry.path)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copiedPath.value = entry.path
   copiedOutput.value = false
   liveMessage.value = `${entry.path} 已复制`

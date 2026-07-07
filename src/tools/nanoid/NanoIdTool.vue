@@ -8,6 +8,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { defaultNanoIdAlphabet, generateNanoId } from './nanoid'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const length = ref(21)
 const alphabet = ref(defaultNanoIdAlphabet)
@@ -83,7 +84,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = 'Nano ID 输出已复制'
 }

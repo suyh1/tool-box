@@ -1,6 +1,7 @@
 import type { Component } from 'vue'
 
 export type ToolStatus = 'active' | 'planned'
+export type ToolPrivacy = 'local' | 'network-on-action'
 
 export type ToolCategory =
   | 'format'
@@ -25,5 +26,6 @@ export interface ToolDefinition {
   featured?: boolean
   order?: number
   status: ToolStatus
+  privacy: ToolPrivacy
   component: ToolComponentLoader
 }

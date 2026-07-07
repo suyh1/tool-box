@@ -15,6 +15,7 @@ import {
   type RsaSignHash,
   verifyRsaSignature,
 } from './rsa-sign'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const message = ref('')
 const privatePem = ref('')
@@ -122,7 +123,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(value)
+  const clipboardResult = await copyToClipboard(value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = 'RSA 签名输出已复制'
 }

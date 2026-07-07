@@ -7,6 +7,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { inspectSshKey } from './ssh-key'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const samplePublicKey =
   'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHRXoxcoDbj82TZ5Tfa61ZmGACsrsYY9v/XJVjMBq8NT dev@toolbox'
@@ -81,7 +82,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = 'SSH key 输出已复制'
 }

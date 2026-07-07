@@ -13,9 +13,39 @@ test('filters command palette by category', async ({ page }) => {
   await page.getByRole('button', { name: '安全' }).click()
 
   const palette = page.getByRole('dialog')
-  await expect(palette.getByText('JWT 解码')).toBeVisible()
-  await expect(palette.getByText('哈希生成')).toBeVisible()
+  await expect(palette.getByText('JWT 工作台')).toBeVisible()
+  await expect(palette.getByText('Hash / HMAC')).toBeVisible()
   await expect(palette.getByText('Base64 编解码')).toBeHidden()
+})
+
+test('keeps merged workbenches discoverable through legacy keywords', async ({ page }) => {
+  await page.goto('/#/tools/json')
+
+  await page.getByRole('button', { name: '搜索工具' }).first().click()
+  await page.getByPlaceholder('搜索 JSON、JWT、哈希、正则...').fill('jwt sign')
+
+  const palette = page.getByRole('dialog')
+  await expect(palette.getByText('JWT 工作台')).toBeVisible()
+})
+
+test('marks recent and favorite directory views as the current navigation item', async ({ page }) => {
+  await page.goto('/#/tools?view=recent')
+
+  await expect(page.getByRole('link', { name: /最近使用/ })).toHaveAttribute('aria-current', 'page')
+  await expect(page.getByRole('link', { name: /工具目录/ })).not.toHaveAttribute('aria-current', 'page')
+
+  await page.goto('/#/tools?view=favorites')
+
+  await expect(page.getByRole('link', { name: /收藏工具/ })).toHaveAttribute('aria-current', 'page')
+  await expect(page.getByRole('link', { name: /工具目录/ })).not.toHaveAttribute('aria-current', 'page')
+})
+
+test('distinguishes local-only tools from tools that connect on action', async ({ page }) => {
+  await page.goto('/#/tools/json')
+  await expect(page.getByText('本地处理')).toBeVisible()
+
+  await page.goto('/#/tools/dns-query')
+  await expect(page.getByText('按操作联网')).toBeVisible()
 })
 
 test('shows a useful command palette empty state for filters with no tools', async ({ page }) => {
@@ -71,4 +101,24 @@ test('announces hash generation results to assistive technology', async ({ page 
   await page.getByRole('button', { name: '生成哈希' }).click()
 
   await expect(page.getByTestId('tool-announcer')).toContainText('SHA-256 摘要已生成')
+})
+
+test('announces clipboard write failures instead of reporting a false copy success', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: {
+        writeText: async () => {
+          throw new Error('permission denied')
+        },
+      },
+    })
+  })
+  await page.goto('/#/tools/json')
+
+  await page.getByLabel('JSON 输入').fill('{"name":"Toolbox"}')
+  await page.getByRole('button', { name: '格式化 JSON' }).click()
+  await page.getByRole('button', { name: '复制输出' }).click()
+
+  await expect(page.getByTestId('tool-announcer')).toContainText('复制失败')
 })

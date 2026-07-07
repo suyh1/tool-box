@@ -7,6 +7,7 @@ import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import { formatSitemap, validateSitemap, type SitemapSummary } from './sitemap'
+import { copyToClipboard } from '@/lib/clipboard'
 
 const sampleSitemap = [
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
@@ -101,7 +102,11 @@ async function copyOutput() {
     return
   }
 
-  await navigator.clipboard.writeText(output.value)
+  const clipboardResult = await copyToClipboard(output.value)
+  if (!clipboardResult.ok) {
+    liveMessage.value = clipboardResult.message
+    return
+  }
   copied.value = true
   liveMessage.value = 'XML Sitemap 输出已复制'
 }
