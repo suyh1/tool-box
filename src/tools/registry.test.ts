@@ -62,7 +62,7 @@ describe('tool registry', () => {
   })
 
   it('consolidates overlapping tools into visible workbenches', () => {
-    expect(tools).toHaveLength(70)
+    expect(tools).toHaveLength(71)
     expect(tools.some((tool) => mergedToolIds.includes(tool.id))).toBe(false)
   })
 
@@ -80,6 +80,11 @@ describe('tool registry', () => {
     expect(getToolById('timestamp')?.title).toBe('时间戳转换')
     expect(getToolById('yaml-json')?.title).toBe('YAML / JSON 转换')
     expect(getToolById('json-schema-validate')?.title).toBe('JSON Schema 校验')
+    expect(getToolById('docker-run-compose')).toMatchObject({
+      title: 'Docker Run / Compose 互换',
+      path: '/tools/docker-run-compose',
+      privacy: 'local',
+    })
     expect(getToolById('missing')).toBeUndefined()
   })
 
