@@ -35,6 +35,7 @@ export default defineConfig({
         name: 'Developer Toolbox',
         short_name: 'Toolbox',
         description: 'A local-first developer toolbox for common encoding, parsing, and formatting tasks.',
+        lang: 'zh-CN',
         theme_color: '#08090c',
         background_color: '#08090c',
         display: 'standalone',

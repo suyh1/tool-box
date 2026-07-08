@@ -10,9 +10,12 @@ test('filters command palette by category', async ({ page }) => {
   await page.goto('/#/tools/json')
 
   await page.getByRole('button', { name: '搜索工具' }).first().click()
-  await page.getByRole('button', { name: '安全' }).click()
+  const securityFilter = page.getByRole('button', { name: '安全' })
+  await securityFilter.click()
 
   const palette = page.getByRole('dialog')
+  await expect(securityFilter).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.getByRole('button', { name: '全部' })).toHaveAttribute('aria-pressed', 'false')
   await expect(palette.getByText('JWT 工作台')).toBeVisible()
   await expect(palette.getByText('Hash / HMAC')).toBeVisible()
   await expect(palette.getByText('Base64 编解码')).toBeHidden()
@@ -46,6 +49,16 @@ test('distinguishes local-only tools from tools that connect on action', async (
 
   await page.goto('/#/tools/dns-query')
   await expect(page.getByText('按操作联网')).toBeVisible()
+})
+
+test('shows network privacy status in tool dialogs', async ({ page }) => {
+  await page.goto('/#/tools/category/code')
+
+  await page.getByRole('button', { name: /DNS 查询/ }).first().click()
+
+  const dialog = page.getByRole('dialog')
+  await expect(dialog.getByText('点击后联网')).toBeVisible()
+  await expect(dialog.getByText('本地可用')).toBeHidden()
 })
 
 test('shows a useful command palette empty state for filters with no tools', async ({ page }) => {

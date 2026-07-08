@@ -9,22 +9,23 @@ The app is built with Vue 3, TypeScript, Vite, Pinia, Tailwind CSS, Vitest, and 
 - Node.js 24.x was used for the current review environment.
 - npm is expected because the project uses `package-lock.json`.
 - Playwright browsers are required before running E2E tests.
+- `npm run dev` and `npm run preview` bind to `127.0.0.1`; use the `:lan` scripts only when LAN access is intentional.
 
 ## Commands
 
 ```bash
 npm ci
-npm run typecheck
-npm test
-npm run build
-npm run test:e2e
+npm run verify
+npm run audit
 ```
 
 Common development commands:
 
 ```bash
 npm run dev
+npm run dev:lan
 npm run preview
+npm run preview:lan
 ```
 
 ## Verification Notes
@@ -33,10 +34,8 @@ Before publishing or handing off changes, run the full verification sequence:
 
 ```bash
 npm ci
-npm run typecheck
-npm test
-npm run build
-npm run test:e2e
+npm run verify
+npm run audit
 ```
 
 If Playwright has not been installed on the machine yet, run:

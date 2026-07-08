@@ -32,6 +32,13 @@ const markdown = new MarkdownIt({
   typographer: true,
 })
 
+markdown.renderer.rules.image = (tokens, index) => {
+  const alt = tokens[index].content.trim()
+  const label = alt ? `图片：${alt}` : '图片已禁用'
+
+  return `<span class="markdown-image-placeholder">${markdown.utils.escapeHtml(label)}</span>`
+}
+
 function slugify(text: string, fallback: string) {
   const slug = text
     .normalize('NFKD')

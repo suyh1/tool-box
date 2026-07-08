@@ -285,6 +285,18 @@ async function copyHtml() {
   text-underline-offset: 0.18em;
 }
 
+.markdown-preview :deep(.markdown-image-placeholder) {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  border: 1px solid color-mix(in oklch, var(--border) 78%, transparent);
+  border-radius: 0.35rem;
+  background: color-mix(in oklch, var(--muted) 50%, transparent);
+  padding: 0.12rem 0.38rem;
+  color: var(--muted-foreground);
+  font-size: 0.88em;
+}
+
 .markdown-preview :deep(code) {
   border: 1px solid color-mix(in oklch, var(--border) 78%, transparent);
   border-radius: 0.35rem;

@@ -52,6 +52,7 @@ import {
   isToolCategory,
 } from '@/tools/catalog'
 import { shouldOpenToolInDialog } from '@/tools/open-mode'
+import { getToolPrivacyLabel } from '@/tools/privacy'
 import { getToolById, getToolByPath, tools } from '@/tools/registry'
 import { usePreferencesStore } from '@/stores/preferences'
 import { useToolsStore } from '@/stores/tools'
@@ -242,6 +243,7 @@ const statusIcon = computed(() => currentTool.value
     : WandSparkles
   : CommandIcon)
 const dialogToolIcon = computed(() => dialogTool.value ? getToolIcon(dialogTool.value.id) : Code2)
+const dialogPrivacyLabel = computed(() => dialogTool.value ? getToolPrivacyLabel(dialogTool.value.privacy) : '本地处理')
 const dialogFavoriteLabel = computed(() => {
   if (!dialogTool.value) {
     return '切换收藏'
@@ -640,7 +642,9 @@ onUnmounted(() => {
                 <div class="mt-2 flex flex-wrap gap-1.5">
                   <Badge variant="secondary">{{ categoryLabels[dialogTool.category] }}</Badge>
                   <Badge v-if="dialogTool.group" variant="outline">{{ dialogTool.group }}</Badge>
-                  <Badge variant="outline">本地可用</Badge>
+                  <Badge :variant="dialogTool.privacy === 'network-on-action' ? 'secondary' : 'outline'">
+                    {{ dialogPrivacyLabel }}
+                  </Badge>
                 </div>
               </div>
             </div>
@@ -697,6 +701,7 @@ onUnmounted(() => {
             type="button"
             size="sm"
             :variant="commandFilter === 'all' ? 'default' : 'ghost'"
+            :aria-pressed="commandFilter === 'all'"
             @click="commandFilter = 'all'"
           >
             全部
@@ -705,6 +710,7 @@ onUnmounted(() => {
             type="button"
             size="sm"
             :variant="commandFilter === 'recent' ? 'default' : 'ghost'"
+            :aria-pressed="commandFilter === 'recent'"
             @click="commandFilter = 'recent'"
           >
             最近
@@ -713,6 +719,7 @@ onUnmounted(() => {
             type="button"
             size="sm"
             :variant="commandFilter === 'favorites' ? 'default' : 'ghost'"
+            :aria-pressed="commandFilter === 'favorites'"
             @click="commandFilter = 'favorites'"
           >
             收藏
@@ -725,6 +732,7 @@ onUnmounted(() => {
             type="button"
             size="sm"
             :variant="commandFilter === category ? 'default' : 'outline'"
+            :aria-pressed="commandFilter === category"
             class="shrink-0"
             @click="commandFilter = category"
           >

@@ -1,4 +1,6 @@
-npm run build
+npm run verify
+
+npm run audit
 
 nginx -t -c /Users/subeipo/Documents/code/toolbox/nginx/nginx-mac.conf
 

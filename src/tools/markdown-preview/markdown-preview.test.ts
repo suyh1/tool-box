@@ -53,6 +53,20 @@ describe('markdown preview utilities', () => {
     expect(result.html).not.toContain('href="javascript:')
   })
 
+  it('does not render remote markdown images', () => {
+    const result = renderMarkdownPreview('![secret diagram](https://example.com/secret.png)')
+
+    expect(result.ok).toBe(true)
+
+    if (!result.ok) {
+      return
+    }
+
+    expect(result.html).not.toContain('<img')
+    expect(result.html).not.toContain('https://example.com/secret.png')
+    expect(result.html).toContain('secret diagram')
+  })
+
   it('rejects empty markdown input', () => {
     expect(renderMarkdownPreview('   ')).toEqual({
       ok: false,
