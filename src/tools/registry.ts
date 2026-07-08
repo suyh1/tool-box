@@ -1,8 +1,6 @@
 import type { ToolDefinition } from './types'
 
-type RegisteredToolDefinition = Omit<ToolDefinition, 'privacy'> & Partial<Pick<ToolDefinition, 'privacy'>>
-
-const registeredTools: RegisteredToolDefinition[] = [
+const registeredTools: ToolDefinition[] = [
   {
     id: 'json',
     title: 'JSON 格式化',
@@ -15,6 +13,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     featured: true,
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./json/JsonTool.vue'),
   },
   {
@@ -28,6 +27,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['b64'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./base64/Base64Tool.vue'),
   },
   {
@@ -41,6 +41,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['html entities', 'entity decode'],
     order: 30,
     status: 'active',
+    privacy: 'local',
     component: () => import('./html-entity/HtmlEntityTool.vue'),
   },
   {
@@ -54,6 +55,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['hex decode', 'hexadecimal'],
     order: 50,
     status: 'active',
+    privacy: 'local',
     component: () => import('./hex/HexTool.vue'),
   },
   {
@@ -67,6 +69,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['binary decode', 'base2'],
     order: 60,
     status: 'active',
+    privacy: 'local',
     component: () => import('./binary/BinaryTool.vue'),
   },
   {
@@ -80,6 +83,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['base converter', 'radix'],
     order: 70,
     status: 'active',
+    privacy: 'local',
     component: () => import('./number-base/NumberBaseTool.vue'),
   },
   {
@@ -93,6 +97,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['ascii table', 'character code'],
     order: 80,
     status: 'active',
+    privacy: 'local',
     component: () => import('./ascii/AsciiTool.vue'),
   },
   {
@@ -106,6 +111,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['gzip decode', 'gzip base64'],
     order: 90,
     status: 'active',
+    privacy: 'local',
     component: () => import('./gzip/GzipTool.vue'),
   },
   {
@@ -119,6 +125,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['brotli decode', 'br base64'],
     order: 100,
     status: 'active',
+    privacy: 'local',
     component: () => import('./brotli/BrotliTool.vue'),
   },
   {
@@ -132,6 +139,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['qr decoder', 'scan qr'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./qr-decode/QrDecodeTool.vue'),
   },
   {
@@ -145,6 +153,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['unicode escape', 'u escape'],
     order: 40,
     status: 'active',
+    privacy: 'local',
     component: () => import('./unicode-escape/UnicodeEscapeTool.vue'),
   },
   {
@@ -158,6 +167,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['json sort', 'json dedupe', 'json path'],
     order: 15,
     status: 'active',
+    privacy: 'local',
     component: () => import('./json-organize/JsonOrganizeTool.vue'),
   },
   {
@@ -171,6 +181,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['percent encoding', 'escape'],
     order: 20,
     status: 'active',
+    privacy: 'local',
     component: () => import('./url/UrlTool.vue'),
   },
   {
@@ -185,6 +196,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     featured: true,
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./timestamp/TimestampTool.vue'),
   },
   {
@@ -199,6 +211,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     featured: true,
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./jwt/JwtTool.vue'),
   },
   {
@@ -212,6 +225,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['jwt sign', 'jwt verify'],
     order: 15,
     status: 'active',
+    privacy: 'local',
     component: () => import('./jwt-sign/JwtSignTool.vue'),
   },
   {
@@ -225,6 +239,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['otp', '2fa'],
     order: 20,
     status: 'active',
+    privacy: 'local',
     component: () => import('./totp/TotpTool.vue'),
   },
   {
@@ -238,6 +253,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['oauth authorize url', 'authorization url'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./oauth-url/OAuthUrlTool.vue'),
   },
   {
@@ -251,6 +267,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['cidr calculator', 'subnet calculator'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./ip-cidr/IpCidrTool.vue'),
   },
   {
@@ -264,6 +281,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['ipv4 converter', 'ipv6 mapped'],
     order: 20,
     status: 'active',
+    privacy: 'local',
     component: () => import('./ip-convert/IpConvertTool.vue'),
   },
   {
@@ -277,6 +295,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['mac formatter', 'oui lookup'],
     order: 30,
     status: 'active',
+    privacy: 'local',
     component: () => import('./mac-address/MacAddressTool.vue'),
   },
   {
@@ -290,6 +309,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['certificate parser', 'tls cert'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./x509-cert/X509CertTool.vue'),
   },
   {
@@ -303,6 +323,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['csr parser', 'certificate request'],
     order: 20,
     status: 'active',
+    privacy: 'local',
     component: () => import('./csr/CsrTool.vue'),
   },
   {
@@ -316,6 +337,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['jwk to pem', 'pem to jwk'],
     order: 20,
     status: 'active',
+    privacy: 'local',
     component: () => import('./jwk-pem/JwkPemTool.vue'),
   },
   {
@@ -329,6 +351,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['rsa generator', 'rsa keypair'],
     order: 30,
     status: 'active',
+    privacy: 'local',
     component: () => import('./rsa-key/RsaKeyTool.vue'),
   },
   {
@@ -342,6 +365,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['ssh public key', 'authorized_keys'],
     order: 40,
     status: 'active',
+    privacy: 'local',
     component: () => import('./ssh-key/SshKeyTool.vue'),
   },
   {
@@ -355,6 +379,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['rsa verify', 'rsa signature'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./rsa-sign/RsaSignTool.vue'),
   },
   {
@@ -368,6 +393,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['ecdsa verify', 'ec signature'],
     order: 20,
     status: 'active',
+    privacy: 'local',
     component: () => import('./ecdsa-sign/EcdsaSignTool.vue'),
   },
   {
@@ -381,6 +407,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['bcrypt verify', 'password hash'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./bcrypt/BcryptTool.vue'),
   },
   {
@@ -394,6 +421,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['aes gcm', 'aes decrypt'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./aes/AesTool.vue'),
   },
   {
@@ -407,6 +435,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['sha256', 'checksum'],
     order: 20,
     status: 'active',
+    privacy: 'local',
     component: () => import('./hash/HashTool.vue'),
   },
   {
@@ -420,6 +449,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['hmac sha256', 'signature hash'],
     order: 30,
     status: 'active',
+    privacy: 'local',
     component: () => import('./hmac/HmacTool.vue'),
   },
   {
@@ -433,6 +463,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['id generator'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./uuid/UuidTool.vue'),
   },
   {
@@ -446,6 +477,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['twitter snowflake', 'discord snowflake'],
     order: 20,
     status: 'active',
+    privacy: 'local',
     component: () => import('./snowflake/SnowflakeTool.vue'),
   },
   {
@@ -459,6 +491,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['sortable id', 'ulid generator'],
     order: 30,
     status: 'active',
+    privacy: 'local',
     component: () => import('./ulid/UlidTool.vue'),
   },
   {
@@ -472,6 +505,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['nano id', 'nanoid'],
     order: 40,
     status: 'active',
+    privacy: 'local',
     component: () => import('./nanoid/NanoIdTool.vue'),
   },
   {
@@ -485,6 +519,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['qr generator', 'qrcode'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./qr-code/QrCodeTool.vue'),
   },
   {
@@ -498,6 +533,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['palette generator', 'color harmony'],
     order: 50,
     status: 'active',
+    privacy: 'local',
     component: () => import('./palette/PaletteTool.vue'),
   },
   {
@@ -511,6 +547,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['password generator', 'random password'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./password/PasswordTool.vue'),
   },
   {
@@ -524,6 +561,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['passphrase generator', 'diceware'],
     order: 20,
     status: 'active',
+    privacy: 'local',
     component: () => import('./passphrase/PassphraseTool.vue'),
   },
   {
@@ -537,6 +575,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['lorem ipsum', 'dummy text'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./lorem-ipsum/LoremIpsumTool.vue'),
   },
   {
@@ -550,6 +589,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['mock data', 'json faker'],
     order: 20,
     status: 'active',
+    privacy: 'local',
     component: () => import('./mock-json/MockJsonTool.vue'),
   },
   {
@@ -563,6 +603,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['random text', 'random chars'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./random-string/RandomStringTool.vue'),
   },
   {
@@ -577,6 +618,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     featured: true,
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./json-type/JsonTypeTool.vue'),
   },
   {
@@ -590,6 +632,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['json query', 'json path tester'],
     order: 30,
     status: 'active',
+    privacy: 'local',
     component: () => import('./jsonpath/JsonPathTool.vue'),
   },
   {
@@ -603,6 +646,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['schema generator', 'json schema infer'],
     order: 40,
     status: 'active',
+    privacy: 'local',
     component: () => import('./json-schema-generate/JsonSchemaGenerateTool.vue'),
   },
   {
@@ -616,6 +660,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['json diff', 'rfc6902', 'rfc7396'],
     order: 50,
     status: 'active',
+    privacy: 'local',
     component: () => import('./json-patch/JsonPatchTool.vue'),
   },
   {
@@ -629,6 +674,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['openapi validator', 'swagger viewer'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./openapi-viewer/OpenApiViewerTool.vue'),
   },
   {
@@ -642,6 +688,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['graphql variables', 'gql variables'],
     order: 30,
     status: 'active',
+    privacy: 'local',
     component: () => import('./graphql-variables/GraphqlVariablesTool.vue'),
   },
   {
@@ -656,6 +703,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     featured: true,
     order: 20,
     status: 'active',
+    privacy: 'local',
     component: () => import('./yaml-json/YamlJsonTool.vue'),
   },
   {
@@ -669,6 +717,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['markdown renderer', 'md preview'],
     order: 120,
     status: 'active',
+    privacy: 'local',
     component: () => import('./markdown-preview/MarkdownPreviewTool.vue'),
   },
   {
@@ -682,6 +731,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['html formatter', 'html minifier'],
     order: 130,
     status: 'active',
+    privacy: 'local',
     component: () => import('./html/HtmlTool.vue'),
   },
   {
@@ -695,6 +745,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['sitemap validator', 'xml sitemap'],
     order: 135,
     status: 'active',
+    privacy: 'local',
     component: () => import('./sitemap/SitemapTool.vue'),
   },
   {
@@ -708,6 +759,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['css formatter', 'css minifier'],
     order: 140,
     status: 'active',
+    privacy: 'local',
     component: () => import('./css/CssTool.vue'),
   },
   {
@@ -721,6 +773,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['javascript formatter', 'typescript formatter'],
     order: 150,
     status: 'active',
+    privacy: 'local',
     component: () => import('./js-ts-format/JsTsFormatTool.vue'),
   },
   {
@@ -734,6 +787,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['color converter', 'hex rgb hsl'],
     order: 160,
     status: 'active',
+    privacy: 'local',
     component: () => import('./color/ColorTool.vue'),
   },
   {
@@ -747,6 +801,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['contrast checker', 'wcag contrast'],
     order: 170,
     status: 'active',
+    privacy: 'local',
     component: () => import('./contrast/ContrastTool.vue'),
   },
   {
@@ -760,6 +815,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['graphql formatter', 'gql format'],
     order: 20,
     status: 'active',
+    privacy: 'local',
     component: () => import('./graphql-format/GraphqlFormatTool.vue'),
   },
   {
@@ -773,6 +829,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['markdown toc', 'table of contents'],
     order: 40,
     status: 'active',
+    privacy: 'local',
     component: () => import('./markdown-toc/MarkdownTocTool.vue'),
   },
   {
@@ -786,6 +843,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['scheduler', 'next run'],
     order: 20,
     status: 'active',
+    privacy: 'local',
     component: () => import('./cron/CronTool.vue'),
   },
   {
@@ -800,6 +858,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     featured: true,
     order: 20,
     status: 'active',
+    privacy: 'local',
     component: () => import('./curl/CurlTool.vue'),
   },
   {
@@ -813,6 +872,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['url parse', 'uri parser'],
     order: 30,
     status: 'active',
+    privacy: 'local',
     component: () => import('./url-parser/UrlParserTool.vue'),
   },
   {
@@ -826,6 +886,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['query params', 'url parameters'],
     order: 40,
     status: 'active',
+    privacy: 'local',
     component: () => import('./query-editor/QueryEditorTool.vue'),
   },
   {
@@ -839,6 +900,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['header parser', 'http headers'],
     order: 50,
     status: 'active',
+    privacy: 'local',
     component: () => import('./http-headers/HttpHeadersTool.vue'),
   },
   {
@@ -852,6 +914,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['cookie parser', 'set-cookie'],
     order: 60,
     status: 'active',
+    privacy: 'local',
     component: () => import('./cookie-parser/CookieParserTool.vue'),
   },
   {
@@ -865,6 +928,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['user agent parser', 'ua parser'],
     order: 70,
     status: 'active',
+    privacy: 'local',
     component: () => import('./user-agent/UserAgentTool.vue'),
   },
   {
@@ -878,6 +942,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['websocket client', 'ws echo'],
     order: 80,
     status: 'active',
+    privacy: 'network-on-action',
     component: () => import('./websocket-echo/WebSocketEchoTool.vue'),
   },
   {
@@ -891,6 +956,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['har parser', 'network log'],
     order: 90,
     status: 'active',
+    privacy: 'local',
     component: () => import('./har-viewer/HarViewerTool.vue'),
   },
   {
@@ -904,6 +970,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['dns lookup', 'doh query'],
     order: 10,
     status: 'active',
+    privacy: 'network-on-action',
     component: () => import('./dns-query/DnsQueryTool.vue'),
   },
   {
@@ -918,6 +985,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     featured: true,
     order: 30,
     status: 'active',
+    privacy: 'local',
     component: () => import('./sql/SqlTool.vue'),
   },
   {
@@ -931,6 +999,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['xml formatter', 'xml validator'],
     order: 50,
     status: 'active',
+    privacy: 'local',
     component: () => import('./xml/XmlTool.vue'),
   },
   {
@@ -944,6 +1013,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['xml to json', 'json to xml'],
     order: 60,
     status: 'active',
+    privacy: 'local',
     component: () => import('./xml-json/XmlJsonTool.vue'),
   },
   {
@@ -957,6 +1027,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['xpath tester', 'xml query'],
     order: 70,
     status: 'active',
+    privacy: 'local',
     component: () => import('./xml-xpath/XmlXPathTool.vue'),
   },
   {
@@ -970,6 +1041,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['toml formatter', 'toml to json'],
     order: 80,
     status: 'active',
+    privacy: 'local',
     component: () => import('./toml/TomlTool.vue'),
   },
   {
@@ -983,6 +1055,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['ini converter', 'properties converter'],
     order: 90,
     status: 'active',
+    privacy: 'local',
     component: () => import('./ini-properties/IniPropertiesTool.vue'),
   },
   {
@@ -996,6 +1069,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['.env parser', 'env to json'],
     order: 100,
     status: 'active',
+    privacy: 'local',
     component: () => import('./env-convert/EnvConvertTool.vue'),
   },
   {
@@ -1009,6 +1083,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['csv to json', 'json to csv'],
     order: 100,
     status: 'active',
+    privacy: 'local',
     component: () => import('./csv-json/CsvJsonTool.vue'),
   },
   {
@@ -1022,6 +1097,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['csv viewer', 'table preview'],
     order: 110,
     status: 'active',
+    privacy: 'local',
     component: () => import('./csv-table/CsvTableTool.vue'),
   },
   {
@@ -1035,6 +1111,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['csv to sql', 'insert generator'],
     order: 35,
     status: 'active',
+    privacy: 'local',
     component: () => import('./csv-sql/CsvSqlTool.vue'),
   },
   {
@@ -1048,6 +1125,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['database url', 'connection string'],
     order: 45,
     status: 'active',
+    privacy: 'local',
     component: () => import('./connection-string/ConnectionStringTool.vue'),
   },
   {
@@ -1061,6 +1139,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['sql bind', 'sql parameters'],
     order: 55,
     status: 'active',
+    privacy: 'local',
     component: () => import('./sql-bind/SqlBindTool.vue'),
   },
   {
@@ -1074,6 +1153,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['objectid parser', 'mongo id'],
     order: 65,
     status: 'active',
+    privacy: 'local',
     component: () => import('./mongo-objectid/MongoObjectIdTool.vue'),
   },
   {
@@ -1087,6 +1167,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['redis resp', 'redis formatter'],
     order: 75,
     status: 'active',
+    privacy: 'local',
     component: () => import('./redis-command/RedisCommandTool.vue'),
   },
   {
@@ -1100,6 +1181,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['compose validator', 'docker compose'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./docker-compose/DockerComposeTool.vue'),
   },
   {
@@ -1113,6 +1195,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['k8s yaml', 'kubernetes validator'],
     order: 20,
     status: 'active',
+    privacy: 'local',
     component: () => import('./kubernetes-yaml/KubernetesYamlTool.vue'),
   },
   {
@@ -1126,6 +1209,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['semantic version', 'version range'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./semver/SemverTool.vue'),
   },
   {
@@ -1139,6 +1223,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['json schema validator', 'schema validation'],
     order: 40,
     status: 'active',
+    privacy: 'local',
     component: () => import('./json-schema-validate/JsonSchemaValidateTool.vue'),
   },
   {
@@ -1152,6 +1237,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['regular expression'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./regex/RegexTool.vue'),
   },
   {
@@ -1165,6 +1251,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['regex explain', 'regex builder'],
     order: 15,
     status: 'active',
+    privacy: 'local',
     component: () => import('./regex-helper/RegexHelperTool.vue'),
   },
   {
@@ -1178,6 +1265,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['compare text', 'line diff'],
     order: 20,
     status: 'active',
+    privacy: 'local',
     component: () => import('./diff/DiffTool.vue'),
   },
   {
@@ -1191,6 +1279,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['word count', 'character count'],
     order: 25,
     status: 'active',
+    privacy: 'local',
     component: () => import('./text-stats/TextStatsTool.vue'),
   },
   {
@@ -1204,6 +1293,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['naming', 'identifier'],
     order: 30,
     status: 'active',
+    privacy: 'local',
     component: () => import('./case/CaseTool.vue'),
   },
   {
@@ -1217,6 +1307,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['slug generator', 'url slug'],
     order: 40,
     status: 'active',
+    privacy: 'local',
     component: () => import('./slug/SlugTool.vue'),
   },
   {
@@ -1230,6 +1321,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['chinese pinyin', 'hanzi pinyin'],
     order: 50,
     status: 'active',
+    privacy: 'local',
     component: () => import('./pinyin/PinyinTool.vue'),
   },
   {
@@ -1243,6 +1335,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['template replace', 'variable replacement'],
     order: 60,
     status: 'active',
+    privacy: 'local',
     component: () => import('./template-replace/TemplateReplaceTool.vue'),
   },
   {
@@ -1256,6 +1349,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['line sort', 'dedupe lines'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./line-tools/LineToolsTool.vue'),
   },
   {
@@ -1269,6 +1363,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['shuffle list', 'random sample'],
     order: 20,
     status: 'active',
+    privacy: 'local',
     component: () => import('./list-random/ListRandomTool.vue'),
   },
   {
@@ -1282,6 +1377,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['delimiter converter', 'list separator'],
     order: 30,
     status: 'active',
+    privacy: 'local',
     component: () => import('./delimiter-convert/DelimiterConvertTool.vue'),
   },
   {
@@ -1295,6 +1391,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['string escape', 'json escape'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./string-escape/StringEscapeTool.vue'),
   },
   {
@@ -1308,6 +1405,7 @@ const registeredTools: RegisteredToolDefinition[] = [
     aliases: ['extract urls', 'email extractor'],
     order: 10,
     status: 'active',
+    privacy: 'local',
     component: () => import('./extractor/ExtractorTool.vue'),
   },
 ]
@@ -1496,9 +1594,6 @@ export const tools: ToolDefinition[] = registeredTools
   .filter((tool) => !mergedToolTargets[tool.id])
   .map((tool) => ({
     ...tool,
-    privacy: tool.privacy ?? (tool.id === 'dns-query' || tool.id === 'websocket-echo'
-      ? 'network-on-action'
-      : 'local'),
     ...(mergedToolOverrides[tool.id] ?? {}),
   }))
 

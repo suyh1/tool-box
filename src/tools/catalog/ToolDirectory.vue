@@ -5,6 +5,7 @@ import { RouterLink, useRoute } from 'vue-router'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useToolsStore } from '@/stores/tools'
+import ToolPrivacyBadge from '@/tools/_shared/ToolPrivacyBadge.vue'
 import {
   categoryCodes,
   getCategorySections,
@@ -55,7 +56,10 @@ function openTool(toolId: string) {
           <button type="button" class="block w-full text-left" @click="openTool(tool.id)">
             <div class="flex items-center justify-between gap-2">
               <h3 class="truncate text-sm font-medium text-foreground">{{ tool.title }}</h3>
-              <Badge variant="outline">{{ categoryCodes[tool.category] }}</Badge>
+              <div class="flex shrink-0 items-center gap-1.5">
+                <Badge variant="outline">{{ categoryCodes[tool.category] }}</Badge>
+                <ToolPrivacyBadge :privacy="tool.privacy" compact />
+              </div>
             </div>
             <p class="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">{{ tool.description }}</p>
           </button>
@@ -77,7 +81,10 @@ function openTool(toolId: string) {
           <button type="button" class="block w-full text-left" @click="openTool(tool.id)">
             <div class="flex items-center justify-between gap-2">
               <h3 class="truncate text-sm font-medium text-foreground">{{ tool.title }}</h3>
-              <Badge variant="outline">{{ categoryCodes[tool.category] }}</Badge>
+              <div class="flex shrink-0 items-center gap-1.5">
+                <Badge variant="outline">{{ categoryCodes[tool.category] }}</Badge>
+                <ToolPrivacyBadge :privacy="tool.privacy" compact />
+              </div>
             </div>
             <p class="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">{{ tool.description }}</p>
           </button>
@@ -96,7 +103,10 @@ function openTool(toolId: string) {
           <article v-for="tool in featuredTools" :key="tool.id" class="rounded-md border border-border bg-background/55 p-3">
             <div class="flex items-start justify-between gap-2">
               <button type="button" class="min-w-0 text-left" @click="openTool(tool.id)">
-                <h3 class="truncate text-sm font-medium text-foreground">{{ tool.title }}</h3>
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <h3 class="truncate text-sm font-medium text-foreground">{{ tool.title }}</h3>
+                  <ToolPrivacyBadge :privacy="tool.privacy" compact />
+                </div>
                 <p class="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">{{ tool.description }}</p>
               </button>
               <Button

@@ -28,6 +28,8 @@ const isProcessing = ref(false)
 const copied = ref(false)
 const liveMessage = ref('')
 let worker: Worker | null = null
+let nextWorkerRequestId = 0
+let latestRunId = 0
 
 const metadataLabel = computed(() => {
   if (!metadata.value?.ok) {
@@ -73,16 +75,31 @@ function getWorker() {
 function processWithWorker(mode: JsonMode, value: string) {
   return new Promise<JsonWorkerResponse>((resolve, reject) => {
     const activeWorker = getWorker()
+    const requestId = nextWorkerRequestId + 1
+    nextWorkerRequestId = requestId
 
-    activeWorker.onmessage = (event: MessageEvent<JsonWorkerResponse>) => {
+    const cleanup = () => {
+      activeWorker.removeEventListener('message', handleMessage)
+      activeWorker.removeEventListener('error', handleError)
+    }
+
+    const handleMessage = (event: MessageEvent<JsonWorkerResponse>) => {
+      if (event.data.requestId !== requestId) {
+        return
+      }
+
+      cleanup()
       resolve(event.data)
     }
 
-    activeWorker.onerror = () => {
+    const handleError = () => {
+      cleanup()
       reject(new Error('JSON Worker 处理失败'))
     }
 
-    activeWorker.postMessage({ mode, input: value } satisfies JsonWorkerRequest)
+    activeWorker.addEventListener('message', handleMessage)
+    activeWorker.addEventListener('error', handleError)
+    activeWorker.postMessage({ requestId, mode, input: value } satisfies JsonWorkerRequest)
   })
 }
 
@@ -90,10 +107,11 @@ function processWithoutWorker(mode: JsonMode, value: string): JsonWorkerResponse
   const parsed = parseJson(value)
 
   if (!parsed.ok) {
-    return parsed
+    return { requestId: 0, ...parsed }
   }
 
   return {
+    requestId: 0,
     ok: true,
     output: mode === 'minify'
       ? minifyJson(value)
@@ -105,12 +123,18 @@ function processWithoutWorker(mode: JsonMode, value: string): JsonWorkerResponse
 }
 
 async function runJson(mode: JsonMode) {
+  const runId = latestRunId + 1
+  latestRunId = runId
   errorMessage.value = ''
   copied.value = false
   isProcessing.value = true
 
   try {
     const result = await processWithWorker(mode, input.value)
+
+    if (runId !== latestRunId) {
+      return
+    }
 
     if (!result.ok) {
       errorMessage.value = result.message
@@ -129,6 +153,10 @@ async function runJson(mode: JsonMode) {
   } catch {
     const result = processWithoutWorker(mode, input.value)
 
+    if (runId !== latestRunId) {
+      return
+    }
+
     if (!result.ok) {
       errorMessage.value = result.message
       metadata.value = result
@@ -144,7 +172,9 @@ async function runJson(mode: JsonMode) {
         ? 'JSON 已压缩'
         : 'JSON 校验通过'
   } finally {
-    isProcessing.value = false
+    if (runId === latestRunId) {
+      isProcessing.value = false
+    }
   }
 }
 

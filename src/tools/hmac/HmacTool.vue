@@ -138,6 +138,13 @@ async function copyOutput() {
       </ToolActionBar>
 
       <p
+        v-if="algorithm === 'SHA-1'"
+        class="mt-3 rounded-md border border-border bg-background/45 px-3 py-2 text-sm text-muted-foreground"
+      >
+        SHA-1 仅用于兼容旧系统，新签名优先使用 SHA-256 或更高强度算法。
+      </p>
+
+      <p
         v-if="errorMessage"
         role="alert"
         class="mt-3 rounded-md border border-destructive/45 bg-destructive/10 px-3 py-2 text-sm text-destructive"

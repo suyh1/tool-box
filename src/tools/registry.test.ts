@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import {
   getToolById,
   getToolByPath,
@@ -7,6 +9,8 @@ import {
   resolveToolPath,
   tools,
 } from './registry'
+
+const registrySource = readFileSync(join(process.cwd(), 'src/tools/registry.ts'), 'utf8')
 
 const mergedToolIds = [
   'brotli',
@@ -42,6 +46,16 @@ const mergedToolIds = [
 ]
 
 describe('tool registry', () => {
+  it('requires privacy to be declared explicitly in every registered tool', () => {
+    const registeredToolsSource = registrySource.match(/const registeredTools:[\s\S]*?\n]\n\nconst mergedToolTargets/)?.[0] ?? ''
+    const ids = [...registeredToolsSource.matchAll(/\n\s+id: '/g)]
+    const explicitPrivacy = [...registeredToolsSource.matchAll(/\n\s+privacy: '/g)]
+
+    expect(registrySource).not.toContain('Partial<Pick<ToolDefinition, \'privacy\'>>')
+    expect(registrySource).not.toContain('privacy: tool.privacy ??')
+    expect(explicitPrivacy).toHaveLength(ids.length)
+  })
+
   it('contains unique ids and paths for visible tools', () => {
     expect(new Set(tools.map((tool) => tool.id)).size).toBe(tools.length)
     expect(new Set(tools.map((tool) => tool.path)).size).toBe(tools.length)

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { renderMarkdownPreview } from './markdown-preview'
+import { renderMarkdownPreview, sanitizeMarkdownHtml } from './markdown-preview'
 
 describe('markdown preview utilities', () => {
   it('renders common markdown blocks and inline emphasis', () => {
@@ -53,6 +53,33 @@ describe('markdown preview utilities', () => {
     expect(result.html).not.toContain('href="javascript:')
   })
 
+  it('does not render data url links', () => {
+    const result = renderMarkdownPreview('[Open](data:text/html,<script>alert(1)</script>)')
+
+    expect(result.ok).toBe(true)
+
+    if (!result.ok) {
+      return
+    }
+
+    expect(result.html).not.toContain('href="data:')
+    expect(result.html).not.toContain('<script>')
+  })
+
+  it('keeps http links inert for tabnabbing', () => {
+    const result = renderMarkdownPreview('[Docs](https://example.com/docs)')
+
+    expect(result.ok).toBe(true)
+
+    if (!result.ok) {
+      return
+    }
+
+    expect(result.html).toContain('href="https://example.com/docs"')
+    expect(result.html).toContain('target="_blank"')
+    expect(result.html).toContain('rel="noopener noreferrer"')
+  })
+
   it('does not render remote markdown images', () => {
     const result = renderMarkdownPreview('![secret diagram](https://example.com/secret.png)')
 
@@ -65,6 +92,16 @@ describe('markdown preview utilities', () => {
     expect(result.html).not.toContain('<img')
     expect(result.html).not.toContain('https://example.com/secret.png')
     expect(result.html).toContain('secret diagram')
+  })
+
+  it('sanitizes future raw HTML renderer output before preview injection', () => {
+    const html = sanitizeMarkdownHtml('<p onclick="alert(1)">Hi</p><img src="https://example.com/a.png"><a href="javascript:alert(1)">x</a><script>alert(1)</script>')
+
+    expect(html).toContain('<p>Hi</p>')
+    expect(html).not.toContain('onclick')
+    expect(html).not.toContain('<img')
+    expect(html).not.toContain('<script>')
+    expect(html).not.toContain('href="javascript:')
   })
 
   it('rejects empty markdown input', () => {

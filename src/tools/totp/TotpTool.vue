@@ -11,6 +11,7 @@ import { generateTotp, supportedTotpAlgorithms, supportedTotpDigits, type TotpAl
 import { copyToClipboard } from '@/lib/clipboard'
 
 const secret = ref('')
+const showSecret = ref(false)
 const code = ref('')
 const output = ref('')
 const algorithm = ref<TotpAlgorithm>('SHA-1')
@@ -125,7 +126,28 @@ async function copyOutput() {
       </template>
 
       <div class="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.55fr)]">
-        <Input v-model="secret" aria-label="TOTP Base32 secret" placeholder="Base32 secret" />
+        <div class="grid gap-2">
+          <div class="flex gap-2">
+            <Input
+              v-model="secret"
+              :type="showSecret ? 'text' : 'password'"
+              autocomplete="off"
+              aria-label="TOTP Base32 secret"
+              placeholder="Base32 secret"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              :aria-label="showSecret ? '隐藏 TOTP secret' : '显示 TOTP secret'"
+              @click="showSecret = !showSecret"
+            >
+              {{ showSecret ? '隐藏' : '显示' }}
+            </Button>
+          </div>
+          <p class="text-xs leading-5 text-muted-foreground">
+            TOTP secret 默认隐藏。SHA-1 是 TOTP 的兼容默认值；新系统优先选择 SHA-256 或 SHA-512。
+          </p>
+        </div>
         <Input v-model="code" aria-label="TOTP code" placeholder="TOTP code" />
       </div>
 

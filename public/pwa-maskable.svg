@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Developer Toolbox">
+  <rect width="512" height="512" fill="#111217"/>
+  <circle cx="256" cy="256" r="208" fill="#1a1d24"/>
+  <path fill="#d8f3ff" d="M150 174h212c24.3 0 44 19.7 44 44v92c0 24.3-19.7 44-44 44H150c-24.3 0-44-19.7-44-44v-92c0-24.3 19.7-44 44-44Z"/>
+  <path fill="#111217" d="M162 228l43 36-43 36-20-22 19-14-19-15 20-21Zm190 72h-96v-33h96v33Z"/>
+  <path fill="#2f8cff" d="M304 174h58c24.3 0 44 19.7 44 44v92c0 24.3-19.7 44-44 44h-58V174Z" opacity=".22"/>
+</svg>

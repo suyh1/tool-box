@@ -16,7 +16,7 @@ const samplePayload = '{\n  "sub": "1234567890",\n  "name": "Toolbox",\n  "admin
 const headerJson = ref(sampleHeader)
 const payloadJson = ref(samplePayload)
 const token = ref('')
-const secret = ref('secret')
+const secret = ref('')
 const algorithm = ref<JwtAlgorithm>('HS256')
 const resultOutput = ref('')
 const errorMessage = ref('')
@@ -119,7 +119,7 @@ function useSample() {
   headerJson.value = sampleHeader
   payloadJson.value = samplePayload
   token.value = ''
-  secret.value = 'secret'
+  secret.value = 'local-demo-secret-change-me'
   algorithm.value = 'HS256'
   resultOutput.value = ''
   resetFeedback()
@@ -191,7 +191,7 @@ async function copyOutput() {
             type="password"
             autocomplete="off"
             aria-label="JWT HMAC 密钥"
-            placeholder="secret"
+            placeholder="粘贴高熵 HMAC 密钥"
             class="h-9 w-44"
           />
           <Button type="button" variant="secondary" :disabled="isProcessing || !token || !secret" @click="verifyInput">
@@ -212,6 +212,10 @@ async function copyOutput() {
           </Button>
         </template>
       </ToolActionBar>
+
+      <p class="mt-3 rounded-md border border-border bg-background/45 px-3 py-2 text-sm text-muted-foreground">
+        示例密钥只适合本地演示，生产 JWT 必须使用高熵密钥。
+      </p>
 
       <p
         v-if="errorMessage"

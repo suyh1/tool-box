@@ -121,6 +121,9 @@ async function copyOutput() {
         <Input v-model="keyHex" aria-label="AES key 十六进制" placeholder="AES key hex" />
         <Input v-model="ivHex" aria-label="AES-GCM IV 十六进制" placeholder="12-byte IV hex" />
       </div>
+      <p class="mt-2 text-xs leading-5 text-muted-foreground">
+        同一 AES-GCM key 下 IV 不得重复。复用 IV 会破坏密文和认证标签的安全性。
+      </p>
 
       <ToolActionBar>
         <template #primary>

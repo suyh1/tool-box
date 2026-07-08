@@ -45,14 +45,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import MobileToolNav from './MobileToolNav.vue'
 import {
   categoryCodes,
   categoryLabels,
   categoryOrder,
   isToolCategory,
 } from '@/tools/catalog'
+import ToolPrivacyBadge from '@/tools/_shared/ToolPrivacyBadge.vue'
 import { shouldOpenToolInDialog } from '@/tools/open-mode'
-import { getToolPrivacyLabel } from '@/tools/privacy'
 import { getToolById, getToolByPath, tools } from '@/tools/registry'
 import { usePreferencesStore } from '@/stores/preferences'
 import { useToolsStore } from '@/stores/tools'
@@ -65,13 +66,16 @@ const toolsStore = useToolsStore()
 
 const shellRoot = ref<HTMLElement | null>(null)
 const contentPanel = ref<HTMLElement | null>(null)
+const pageTitleRef = ref<HTMLElement | null>(null)
 const searchOpen = ref(false)
+const mobileNavOpen = ref(false)
 const commandFilter = ref<'all' | 'recent' | 'favorites' | ToolCategory>('all')
 const toolDialogOpen = ref(false)
 const dialogTool = ref<ToolDefinition | null>(null)
 const dialogToolComponent = shallowRef<Component | null>(null)
 let motionMedia: gsap.MatchMedia | null = null
 let routeTween: ReturnType<typeof gsap.fromTo> | null = null
+let routeFocusReady = false
 
 const currentTool = computed(() => getToolByPath(route.path))
 const currentCategory = computed(() => {
@@ -243,7 +247,6 @@ const statusIcon = computed(() => currentTool.value
     : WandSparkles
   : CommandIcon)
 const dialogToolIcon = computed(() => dialogTool.value ? getToolIcon(dialogTool.value.id) : Code2)
-const dialogPrivacyLabel = computed(() => dialogTool.value ? getToolPrivacyLabel(dialogTool.value.privacy) : '本地处理')
 const dialogFavoriteLabel = computed(() => {
   if (!dialogTool.value) {
     return '切换收藏'
@@ -266,6 +269,9 @@ watch(
   () => route.fullPath,
   async () => {
     await nextTick()
+    if (routeFocusReady) {
+      focusPageTitle({ preventScroll: true })
+    }
 
     if (!contentPanel.value || prefersReducedMotion()) {
       return
@@ -301,6 +307,10 @@ function getToolIcon(toolId: string) {
 
 function toggleTheme() {
   preferences.setTheme(preferences.effectiveTheme === 'dark' ? 'light' : 'dark')
+}
+
+function focusPageTitle(options?: FocusOptions) {
+  pageTitleRef.value?.focus(options)
 }
 
 function openToolDialog(tool: ToolDefinition) {
@@ -349,6 +359,9 @@ function prefersReducedMotion() {
 
 onMounted(() => {
   window.addEventListener('keydown', handleKeydown)
+  nextTick(() => {
+    routeFocusReady = true
+  })
 
   if (!shellRoot.value) {
     return
@@ -393,6 +406,14 @@ onUnmounted(() => {
 
 <template>
   <div ref="shellRoot" class="toolbox-shell min-h-[100dvh] bg-background text-foreground">
+    <a
+      href="#main-content"
+      class="sr-only fixed left-3 top-3 z-50 rounded-md border border-border bg-popover px-3 py-2 text-sm font-medium text-foreground shadow-lg focus:not-sr-only"
+      @click.prevent="focusPageTitle()"
+    >
+      跳到主内容
+    </a>
+
     <header class="shell-reveal sticky top-3 z-30 px-3 md:top-4 md:px-5">
       <div class="mx-auto flex h-16 max-w-[1500px] items-center justify-between gap-3 rounded-lg border border-border/70 bg-card/82 px-3 shadow-[0_18px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl md:px-4">
         <RouterLink to="/tools" class="group flex min-w-0 items-center gap-3">
@@ -417,6 +438,16 @@ onUnmounted(() => {
         </div>
 
         <div class="flex items-center gap-2">
+          <Button
+            variant="outline"
+            type="button"
+            aria-label="打开工具导航"
+            class="h-9 gap-2 border-border/90 bg-background/45 px-3 text-muted-foreground hover:bg-secondary hover:text-foreground md:hidden"
+            @click="mobileNavOpen = true"
+          >
+            <TerminalSquare class="h-4 w-4" />
+            <span class="text-sm">导航</span>
+          </Button>
           <Button
             variant="outline"
             type="button"
@@ -452,8 +483,10 @@ onUnmounted(() => {
       </div>
     </header>
 
-    <main class="mx-auto grid max-w-[1500px] gap-4 px-3 pb-8 pt-6 md:grid-cols-[19rem_minmax(0,1fr)] md:px-5 md:pb-10 lg:gap-6">
-      <aside class="shell-reveal self-start overflow-hidden rounded-lg border border-border/70 bg-card/76 p-3 shadow-[0_22px_70px_rgba(0,0,0,0.2)] backdrop-blur-xl md:sticky md:top-24 md:max-h-[calc(100dvh-7rem)] md:overflow-auto">
+    <MobileToolNav v-model:open="mobileNavOpen" />
+
+    <main class="mx-auto grid max-w-[1500px] gap-4 px-3 pb-8 pt-4 md:grid-cols-[19rem_minmax(0,1fr)] md:px-5 md:pb-10 md:pt-6 lg:gap-6">
+      <aside class="shell-reveal hidden self-start overflow-hidden rounded-lg border border-border/70 bg-card/76 p-3 shadow-[0_22px_70px_rgba(0,0,0,0.2)] backdrop-blur-xl md:sticky md:top-24 md:block md:max-h-[calc(100dvh-7rem)] md:overflow-auto">
         <div class="mb-3 grid gap-2.5 rounded-md border border-border/60 bg-background/38 p-3">
           <div class="flex items-start justify-between gap-3">
             <div class="min-w-0">
@@ -582,7 +615,15 @@ onUnmounted(() => {
           <div class="grid gap-3 p-4 md:p-5 lg:p-5">
             <div class="min-w-0">
               <div class="flex flex-wrap items-center gap-2">
-                <Badge variant="secondary" class="gap-1.5">
+                <Badge
+                  v-if="currentTool"
+                  :variant="currentTool.privacy === 'network-on-action' ? 'secondary' : 'outline'"
+                  class="gap-1.5"
+                >
+                  <component :is="statusIcon" class="h-3 w-3 text-primary/85" />
+                  {{ statusLabel }}
+                </Badge>
+                <Badge v-else variant="secondary" class="gap-1.5">
                   <component :is="statusIcon" class="h-3 w-3 text-primary/85" />
                   {{ statusLabel }}
                 </Badge>
@@ -593,7 +634,12 @@ onUnmounted(() => {
                   <component :is="pageIcon" class="h-6 w-6" />
                 </span>
                 <div class="min-w-0">
-                  <h1 class="text-balance text-3xl font-semibold leading-tight tracking-tight text-foreground md:text-[2.5rem]">
+                  <h1
+                    id="main-content"
+                    ref="pageTitleRef"
+                    tabindex="-1"
+                    class="text-balance text-3xl font-semibold leading-tight tracking-tight text-foreground outline-none focus-visible:ring-3 focus-visible:ring-ring/50 md:text-[2.5rem]"
+                  >
                     {{ pageTitle }}
                   </h1>
                   <p class="mt-1.5 max-w-2xl text-pretty text-sm leading-6 text-muted-foreground md:text-[15px]">
@@ -605,6 +651,52 @@ onUnmounted(() => {
 
           </div>
         </div>
+
+        <nav
+          v-if="route.path === '/tools'"
+          aria-label="目录视图"
+          class="shell-reveal mb-4 grid grid-cols-3 gap-2 md:hidden"
+        >
+          <RouterLink
+            to="/tools"
+            :aria-current="isDirectoryRoute ? 'page' : undefined"
+            class="flex min-h-11 items-center justify-center gap-1.5 rounded-md border border-border/70 px-2.5 py-2 text-center text-sm font-medium transition-colors"
+            :class="[
+              isDirectoryRoute
+                ? 'bg-secondary/88 text-foreground'
+                : 'bg-card/72 text-muted-foreground hover:bg-secondary hover:text-foreground',
+            ]"
+          >
+            <TerminalSquare class="h-4 w-4 shrink-0" />
+            <span class="truncate">工具目录</span>
+          </RouterLink>
+          <RouterLink
+            to="/tools?view=recent"
+            :aria-current="route.path === '/tools' && directoryView === 'recent' ? 'page' : undefined"
+            class="flex min-h-11 items-center justify-center gap-1.5 rounded-md border border-border/70 px-2.5 py-2 text-center text-sm font-medium transition-colors"
+            :class="[
+              route.path === '/tools' && directoryView === 'recent'
+                ? 'bg-secondary/88 text-foreground'
+                : 'bg-card/72 text-muted-foreground hover:bg-secondary hover:text-foreground',
+            ]"
+          >
+            <Clock3 class="h-4 w-4 shrink-0" />
+            <span class="truncate">最近使用</span>
+          </RouterLink>
+          <RouterLink
+            to="/tools?view=favorites"
+            :aria-current="route.path === '/tools' && directoryView === 'favorites' ? 'page' : undefined"
+            class="flex min-h-11 items-center justify-center gap-1.5 rounded-md border border-border/70 px-2.5 py-2 text-center text-sm font-medium transition-colors"
+            :class="[
+              route.path === '/tools' && directoryView === 'favorites'
+                ? 'bg-secondary/88 text-foreground'
+                : 'bg-card/72 text-muted-foreground hover:bg-secondary hover:text-foreground',
+            ]"
+          >
+            <Star class="h-4 w-4 shrink-0" />
+            <span class="truncate">收藏工具</span>
+          </RouterLink>
+        </nav>
 
         <div ref="contentPanel" class="shell-reveal min-w-0">
           <RouterView v-slot="{ Component }">
@@ -642,9 +734,7 @@ onUnmounted(() => {
                 <div class="mt-2 flex flex-wrap gap-1.5">
                   <Badge variant="secondary">{{ categoryLabels[dialogTool.category] }}</Badge>
                   <Badge v-if="dialogTool.group" variant="outline">{{ dialogTool.group }}</Badge>
-                  <Badge :variant="dialogTool.privacy === 'network-on-action' ? 'secondary' : 'outline'">
-                    {{ dialogPrivacyLabel }}
-                  </Badge>
+                  <ToolPrivacyBadge :privacy="dialogTool.privacy" />
                 </div>
               </div>
             </div>
@@ -696,12 +786,18 @@ onUnmounted(() => {
     >
       <CommandInput placeholder="搜索 JSON、JWT、哈希、正则..." />
       <div class="grid gap-2 border-b border-border/70 px-2 pb-2 pt-1">
-        <div class="flex gap-1 overflow-x-auto">
+        <div
+          class="flex gap-1 overflow-x-auto"
+          role="radiogroup"
+          aria-label="命令面板筛选"
+        >
           <Button
             type="button"
             size="sm"
             :variant="commandFilter === 'all' ? 'default' : 'ghost'"
             :aria-pressed="commandFilter === 'all'"
+            :aria-checked="commandFilter === 'all'"
+            role="radio"
             @click="commandFilter = 'all'"
           >
             全部
@@ -711,6 +807,8 @@ onUnmounted(() => {
             size="sm"
             :variant="commandFilter === 'recent' ? 'default' : 'ghost'"
             :aria-pressed="commandFilter === 'recent'"
+            :aria-checked="commandFilter === 'recent'"
+            role="radio"
             @click="commandFilter = 'recent'"
           >
             最近
@@ -720,12 +818,12 @@ onUnmounted(() => {
             size="sm"
             :variant="commandFilter === 'favorites' ? 'default' : 'ghost'"
             :aria-pressed="commandFilter === 'favorites'"
+            :aria-checked="commandFilter === 'favorites'"
+            role="radio"
             @click="commandFilter = 'favorites'"
           >
             收藏
           </Button>
-        </div>
-        <div class="flex gap-1 overflow-x-auto">
           <Button
             v-for="category in categoryOrder"
             :key="category"
@@ -733,6 +831,8 @@ onUnmounted(() => {
             size="sm"
             :variant="commandFilter === category ? 'default' : 'outline'"
             :aria-pressed="commandFilter === category"
+            :aria-checked="commandFilter === category"
+            role="radio"
             class="shrink-0"
             @click="commandFilter = category"
           >
@@ -768,7 +868,10 @@ onUnmounted(() => {
                 {{ categoryLabels[tool.category] }} {{ tool.group }} {{ tool.keywords.join(' ') }} {{ tool.aliases?.join(' ') }}
               </span>
             </span>
-            <Badge variant="secondary" class="ml-auto">{{ categoryCodes[tool.category] }}</Badge>
+            <div class="ml-auto flex shrink-0 items-center gap-1.5">
+              <Badge variant="secondary">{{ categoryCodes[tool.category] }}</Badge>
+              <ToolPrivacyBadge :privacy="tool.privacy" compact />
+            </div>
           </CommandItem>
         </CommandGroup>
       </CommandList>

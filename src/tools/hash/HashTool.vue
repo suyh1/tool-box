@@ -120,6 +120,13 @@ async function copyOutput() {
       </ToolActionBar>
 
       <p
+        v-if="algorithm === 'SHA-1'"
+        class="mt-3 rounded-md border border-border bg-background/45 px-3 py-2 text-sm text-muted-foreground"
+      >
+        SHA-1 仅用于兼容旧校验，不适合安全用途。
+      </p>
+
+      <p
         v-if="errorMessage"
         role="alert"
         class="mt-3 rounded-md border border-destructive/45 bg-destructive/10 px-3 py-2 text-sm text-destructive"

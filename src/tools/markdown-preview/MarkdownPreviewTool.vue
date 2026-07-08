@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import ToolActionBar from '@/tools/_shared/ToolActionBar.vue'
 import ToolAnnouncer from '@/tools/_shared/ToolAnnouncer.vue'
 import ToolPanel from '@/tools/_shared/ToolPanel.vue'
+import SafeHtmlPreview from '@/tools/_shared/SafeHtmlPreview.vue'
 import ToolTextareaPanel from '@/tools/_shared/ToolTextareaPanel.vue'
 import {
   renderMarkdownPreview,
@@ -188,10 +189,10 @@ async function copyHtml() {
             </div>
           </div>
 
-          <div
+          <SafeHtmlPreview
             v-if="html"
+            :html="html"
             class="markdown-preview min-h-[22rem] overflow-auto rounded-md border border-border bg-background/65 p-5"
-            v-html="html"
           />
           <p
             v-else

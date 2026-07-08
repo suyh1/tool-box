@@ -5,6 +5,7 @@ import { RouterLink, useRoute } from 'vue-router'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useToolsStore } from '@/stores/tools'
+import ToolPrivacyBadge from '@/tools/_shared/ToolPrivacyBadge.vue'
 import {
   categoryCodes,
   categoryLabels,
@@ -100,6 +101,7 @@ function openTool(toolId: string) {
               <div class="flex flex-wrap items-center gap-2">
                 <h4 class="text-sm font-medium text-foreground">{{ tool.title }}</h4>
                 <Badge variant="secondary">{{ categoryCodes[tool.category] }}</Badge>
+                <ToolPrivacyBadge :privacy="tool.privacy" compact />
               </div>
               <p class="mt-1 text-xs leading-5 text-muted-foreground">{{ tool.description }}</p>
               <p v-if="tool.keywords.length" class="mt-2 truncate font-mono text-[10px] text-muted-foreground">
